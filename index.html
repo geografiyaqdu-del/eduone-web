@@ -235,6 +235,15 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 #edu-confirm-choice{border:0;border-radius:16px;background:linear-gradient(100deg,#0b75ff,#0739c7);color:#fff;font-size:17px;font-weight:850;padding:15px 12px;box-shadow:0 5px 12px #0758cc40;cursor:pointer}
 #edu-confirm-choice:disabled{background:#a9b7cb;box-shadow:none;cursor:not-allowed}
 </style>
+<style id="edu-choice-v5-fix">
+/* Fixed confirmation panel: visible even while browsing the first cards. */
+.edu-catalog{padding-bottom:210px!important}
+.edu-choice-footer{position:fixed!important;bottom:0!important;left:0!important;right:0!important;margin:0!important;padding:12px max(16px,env(safe-area-inset-right)) calc(15px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))!important;z-index:9999!important;background:#fff!important;box-shadow:0 -8px 25px #103b7440!important}
+.edu-choice-label{font-size:14px!important}
+#edu-confirm-choice{width:100%;min-height:52px}
+.edu-card.edu-selected{outline:3px solid #0b6fff;outline-offset:1px}
+@media(min-width:800px){.edu-choice-footer{left:50%!important;right:auto!important;transform:translateX(-50%);width:min(100%,800px)}}
+</style>
 </head>
 <body>
 
@@ -718,7 +727,7 @@ V['edu-pick']=()=>{
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
  const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${x[2]}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
  const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:45px">${x[3]}</span><span style="font-size:43px">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
- return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo">EduOne</div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-build">EduOne • Fan tanlash v3</div><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div><div class="edu-choice-footer"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div></div>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo">EduOne</div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-build">EduOne • Fan tanlash V5</div><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div><div class="edu-choice-footer"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div></div>`;
 };
 
 function render(){
@@ -779,12 +788,12 @@ function bind(){
   app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premFan,tile=eduFanTiles.find(x=>x[0]===id);
    if(!tile?.[5]){toast('Bu fan hozircha mavjud emas');return}
-   eduPendingChoice={id,type:'fan'};render();
+   eduPendingChoice={id,type:'fan'};const y=window.scrollY;render();window.scrollTo(0,y);
   });
   app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premLang,tile=eduLangTiles.find(x=>x[0]===id);
    if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return}
-   eduPendingChoice={id,type:'til'};render();
+   eduPendingChoice={id,type:'til'};const y=window.scrollY;render();window.scrollTo(0,y);
   });
   const confirm=app.querySelector('#edu-confirm-choice');
   if(confirm)confirm.onclick=()=>{
