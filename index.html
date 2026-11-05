@@ -222,6 +222,9 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 }
 .edu-home-icon img {display:block;width:100%;height:100%;object-fit:contain;border:0!important;outline:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
 </style>
+<style id="eduone-subject-premium">
+.edu-catalog{padding:0 12px 100px;background:linear-gradient(180deg,#e5f5ff 0%,#f6fbff 48%,#e9f4ff 100%);min-height:100vh;color:#0a214d}.edu-catalog .edu-banner{margin:0 -12px 14px;padding:23px 16px 25px;position:relative;overflow:hidden;background:radial-gradient(circle at 8% 20%,#35b8ff 0%,transparent 30%),linear-gradient(120deg,#e1f8ff,#9cdaff 52%,#e9f7ff);border-radius:0 0 30px 30px}.edu-banner:before{content:'🌍';position:absolute;font-size:110px;left:-34px;top:10px;opacity:.55}.edu-banner:after{content:'🏔️';position:absolute;font-size:115px;right:-25px;top:-20px;opacity:.48}.edu-banner-inner{position:relative;z-index:1;text-align:center}.edu-banner .edu-logo{font-size:25px;font-weight:950;color:#0649c4;text-shadow:0 2px 2px #fff}.edu-banner h1{font-size:clamp(25px,6vw,36px);margin:8px 0 4px;color:#071b43;line-height:1.1;font-weight:900}.edu-banner p{margin:0;font-size:13px;font-weight:700}.edu-filter{display:flex;gap:7px;margin:10px 0 18px}.edu-filter button{flex:1;min-width:0;border-radius:25px;border:1px solid #c1d6f0;padding:11px 5px;font-size:12px;font-weight:800;color:#183259;background:linear-gradient(#fff,#dce8f7);box-shadow:0 3px 7px #184d8717}.edu-filter button.active{background:linear-gradient(120deg,#1678ff,#0738bc);color:white;border-color:#0d55de}.edu-section{display:flex;align-items:center;gap:0;margin:20px 0 12px}.edu-section strong{background:linear-gradient(110deg,#082eaf,#126cff 65%,#9444ef);color:white;border-radius:30px;padding:9px 19px;font-size:20px;white-space:nowrap;box-shadow:0 3px 9px #194ba635}.edu-section:after{content:'';height:13px;flex:1;border-radius:0 20px 20px 0;background:linear-gradient(90deg,#ffc629,#b1ddff);margin-left:-5px}.edu-section.lang:after{background:linear-gradient(90deg,#a95dff,#a6ddff)}.edu-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.edu-card{border:1px solid #bdd8f5;background:linear-gradient(#fff,#f6faff);border-radius:20px;overflow:hidden;min-width:0;box-shadow:0 4px 9px #1b64a638;display:flex;flex-direction:column;align-items:stretch;padding:0 0 9px;color:#081d43;cursor:pointer}.edu-card:active{transform:scale(.98)}.edu-art{height:95px;display:flex;justify-content:center;align-items:center;font-size:62px;position:relative;overflow:hidden;background:linear-gradient(145deg,var(--art1),var(--art2))}.edu-art:after{content:'';position:absolute;bottom:-17px;left:-5%;width:110%;height:35px;background:linear-gradient(#ffffff44,#fff);filter:blur(5px)}.edu-card-name{font-size:clamp(14px,3.5vw,19px);font-weight:900;line-height:1.12;min-height:34px;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px 4px 2px}.edu-state{display:inline-flex;align-items:center;justify-content:center;gap:5px;align-self:center;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:800;background:#d6f8e3;color:#146d36;white-space:nowrap;max-width:calc(100% - 8px)}.edu-state.off{background:#e8eef8;color:#45536b;font-size:10px}.edu-card.off .edu-art{filter:saturate(.77)}.edu-empty{text-align:center;padding:20px;color:#47618b}.edu-catalog .edu-back{position:absolute;left:14px;top:18px;background:#0c52d8;color:white;border-radius:50%;width:40px;height:40px;display:grid;place-items:center;border:1px solid #fff;font-size:24px;z-index:3}@media(min-width:680px){.edu-cards{grid-template-columns:repeat(4,minmax(0,1fr))}.edu-art{height:125px}.edu-catalog{max-width:1120px;margin:auto}.edu-filter button{font-size:15px}}@media(min-width:1000px){.edu-cards.fans{grid-template-columns:repeat(5,minmax(0,1fr))}}
+</style>
 </head>
 <body>
 
@@ -678,6 +681,22 @@ V.profil=()=>{const u=S.user||{};const dark=document.documentElement.getAttribut
 function startTest(){T={i:0,ans:Array(Q.length).fill(null),mark:Array(Q.length).fill(false),left:TOTAL_TIME};clearInterval(timerId);timerId=setInterval(()=>{if(cur!=='test'){return}T.left--;const el=$('#tm');if(el){const mm=String(Math.floor(T.left/60)).padStart(2,'0'),ss=String(T.left%60).padStart(2,'0');el.innerHTML=ic('clock',18)+mm+':'+ss}if(T.left<=0)finish()},1000)}
 function finish(){clearInterval(timerId);let ok=0,bad=0,skip=0,wrong=[],tp={};Q.forEach((q,k)=>{const a=T.ans[k];tp[q.t]=tp[q.t]||{t:q.t,bad:0};if(a==null){skip++;tp[q.t].bad++;wrong.push({k,a})}else if(a===q.c)ok++;else{bad++;tp[q.t].bad++;wrong.push({k,a})}});
  S.last={ok,bad,skip,n:Q.length,time:TOTAL_TIME-T.left,topics:Object.values(tp),wrong};S.xp+=ok*10;S.tests++;store.set('last',S.last);store.set('xp',S.xp);store.set('tests',S.tests);T=null;cur='natija';stack=['home'];render()}
+
+/* Premium Fanlar va chet tillari: original app routing and auth preserved. */
+const eduFanTiles=[
+ ['geo','Geografiya','🌍','#0074ef','#93ecff',1],['mat','Matematika','📐','#1250c7','#9fd7ff',1],['fiz','Fizika','⚛️','#0342a1','#68e3f5',1],['kim','Kimyo','⚗️','#0073b8','#a5e8ff',1],['bio','Biologiya','🧬','#008343','#b6f566',1],
+ ['tar','Tarix','🏛️','#bb722e','#fbe3a7',1],['ona','Ona tili va adabiyot','📖','#b32c50','#ffd2a2',1],['qq','Qoraqalpoq tili','📚','#0588c2','#ffe25c',1],['huq','Huquq','⚖️','#53738c','#d8e7f6',0],['iqt','Iqtisodiyot','📈','#287bb5','#d7efff',0],['inf','Informatika','💻','#39658b','#c6e6ff',0],['psi','Psixologiya','🧠','#667f9d','#e0e8f7',0]
+];
+const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','🇹🇷','🕌',1],['ru','Rus tili','🇷🇺','🏰',1],['ko','Koreys tili','🇰🇷','🏯',1],['de','Nemis tili','🇩🇪','🏛️',0],['fr','Fransuz tili','🇫🇷','🗼',0],['ar','Arab tili','🇸🇦','🕌',0]];
+let eduStatusFilter='all';
+V.fanlar=()=>{
+ const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
+ const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
+ const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${x[2]}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</span></button>`;
+ const langCard=x=>`<button class="edu-card ${x[4]?'':'off'}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:45px">${x[3]}</span><span style="font-size:43px">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</span></button>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo">📘 EduOne</div><h1>🎓 Fanlar va chet tillari</h1><p>EduOne’da mavjud bo‘lgan fanlar ro‘yxati</p></div></header><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-section"><strong>📚 Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>🌐 Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
+};
+
 function render(){
  if(!verified && (!publicViews.includes(cur) || ['signup','reset','phone','code'].includes(cur)))cur='email';
  if(verified&&!S.user&&!['reg','connecting'].includes(cur))cur='reg';
@@ -724,7 +743,25 @@ function bind(){
     er.textContent='Profil saqlanmadi: '+(error?.message||'Noma’lum xatolik');return;
    }
    S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='home';render();toast("Xush kelibsiz, "+first()+"!")}}
- if(cur==='fanlar'){app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;render()});$('#srch').onclick=()=>{const q=$('#q');q.hidden=!q.hidden;if(!q.hidden)q.focus()};$('#q').oninput=e=>{const v=e.target.value.toLowerCase();app.querySelectorAll('#sl [data-name]').forEach(x=>x.hidden=!x.dataset.name.includes(v))}}
+ if(cur==='fanlar'){
+  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>go('home'));
+  app.querySelectorAll('[data-prem-filter]').forEach(b=>b.onclick=()=>{eduStatusFilter=b.dataset.premFilter;render()});
+  app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
+   const id=b.dataset.premFan, tile=eduFanTiles.find(x=>x[0]===id);
+   if(!tile?.[5]){toast('Bu fan hozircha mavjud emas');return}
+   const sub=eduVisibleSubjects().find(x=>x.id===id);
+   if(!sub){toast('Bu fan uchun kontent tayyorlanmoqda');return}
+   try{localStorage.setItem('eduone_last_subject',id)}catch(e){}
+   eduCatalog.selected=sub.id;go('edu-subject');
+  });
+  app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
+   const id=b.dataset.premLang, tile=eduLangTiles.find(x=>x[0]===id);
+   if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return}
+   try{localStorage.setItem('eduone_last_language',id)}catch(e){}
+   go('tillar');
+  });
+ }
+
  if(cur==='test'){app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{T.ans[T.i]=+b.dataset.a;render()});app.querySelectorAll('[data-qn]').forEach(b=>b.onclick=()=>{T.i=+b.dataset.qn;render()});
   $('#mk').onclick=()=>{T.mark[T.i]=!T.mark[T.i];render()};$('#skip').onclick=()=>{if(T.i<Q.length-1){T.i++;render()}};$('#prev').onclick=()=>{T.i--;render()};$('#nxt').onclick=()=>{if(T.i<Q.length-1){T.i++;render()}else finish()};$('#finish').onclick=finish;
   app.querySelector('[data-back]').onclick=e=>{e.stopPropagation();clearInterval(timerId);T=null;back()}}
