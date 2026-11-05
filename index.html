@@ -422,7 +422,7 @@ function startAccount(user){
   if(S.user)loadRemoteAvatar();
   adminCheck(user);
   S.draft={reg:'',tuman:'',name:'',role:'Abituriyent',gen:'Erkak',age:'',...(S.user||{}),phone,email};
-  stack=[];cur=S.user?'home':'reg';render();
+  stack=[];cur=S.user?(eduHasChoice()?'home':'edu-pick'):'reg';render();
 }
 async function signInGoogle(){
  const button=document.querySelector('[data-google-login]');
@@ -682,6 +682,16 @@ function startTest(){T={i:0,ans:Array(Q.length).fill(null),mark:Array(Q.length).
 function finish(){clearInterval(timerId);let ok=0,bad=0,skip=0,wrong=[],tp={};Q.forEach((q,k)=>{const a=T.ans[k];tp[q.t]=tp[q.t]||{t:q.t,bad:0};if(a==null){skip++;tp[q.t].bad++;wrong.push({k,a})}else if(a===q.c)ok++;else{bad++;tp[q.t].bad++;wrong.push({k,a})}});
  S.last={ok,bad,skip,n:Q.length,time:TOTAL_TIME-T.left,topics:Object.values(tp),wrong};S.xp+=ok*10;S.tests++;store.set('last',S.last);store.set('xp',S.xp);store.set('tests',S.tests);T=null;cur='natija';stack=['home'];render()}
 
+
+// A fan or language is chosen only after registration; selection belongs to the signed-in account.
+function eduChoiceKey(){return 'eduone_choice_'+(verified?.id||'guest')}
+function eduReadChoice(){try{return JSON.parse(localStorage.getItem(eduChoiceKey())||'null')||verified?.user_metadata?.eduone_subject_choice||null}catch(e){return verified?.user_metadata?.eduone_subject_choice||null}}
+function eduHasChoice(){const c=eduReadChoice();return !!(c&&c.id&&['fan','til'].includes(c.type))}
+function eduSaveChoice(id,type){
+ try{localStorage.setItem(eduChoiceKey(),JSON.stringify({id,type}))}catch(e){}
+ // Store a second copy in Supabase auth metadata so choice can follow the account to another device.
+ if(client&&verified?.id)client.auth.updateUser({data:{eduone_subject_choice:{id,type}}}).catch(e=>console.warn('Choice sync:',e));
+}
 /* Premium Fanlar va chet tillari: original app routing and auth preserved. */
 const eduFanTiles=[
  ['geo','Geografiya','🌍','#0074ef','#93ecff',1],['mat','Matematika','📐','#1250c7','#9fd7ff',1],['fiz','Fizika','⚛️','#0342a1','#68e3f5',1],['kim','Kimyo','⚗️','#0073b8','#a5e8ff',1],['bio','Biologiya','🧬','#008343','#b6f566',1],
@@ -689,7 +699,7 @@ const eduFanTiles=[
 ];
 const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','🇹🇷','🕌',1],['ru','Rus tili','🇷🇺','🏰',1],['ko','Koreys tili','🇰🇷','🏯',1],['de','Nemis tili','🇩🇪','🏛️',0],['fr','Fransuz tili','🇫🇷','🗼',0],['ar','Arab tili','🇸🇦','🕌',0]];
 let eduStatusFilter='all';
-V.fanlar=()=>{
+V['edu-pick']=()=>{
  const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
  const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${x[2]}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</span></button>`;
@@ -700,9 +710,12 @@ V.fanlar=()=>{
 function render(){
  if(!verified && (!publicViews.includes(cur) || ['signup','reset','phone','code'].includes(cur)))cur='email';
  if(verified&&!S.user&&!['reg','connecting'].includes(cur))cur='reg';
+ if(verified&&S.user&&!['email','reg','connecting','edu-pick'].includes(cur)&&!eduHasChoice())cur='edu-pick';
  if(cur==='admin'&&!adminState.allowed)cur='profil';
  if(cur==='test'&&!T)startTest();
- app.innerHTML=V[cur]();window.scrollTo(0,0);
+ app.innerHTML=V[cur]();
+ if(cur==='profil'&&S.user){const sw=document.createElement('button');sw.className='btn';sw.style.cssText='display:block;width:calc(100% - 32px);margin:16px auto';sw.textContent='Fan yoki tilni o‘zgartirish';sw.onclick=()=>{cur='edu-pick';render()};app.appendChild(sw)}
+ window.scrollTo(0,0);
  tabbar(['home','fanlar','tillar','ai','profil'].includes(cur));
  bind();
  applyEduLanguage();
@@ -742,23 +755,22 @@ function bind(){
     button.disabled=false;er.hidden=false;
     er.textContent='Profil saqlanmadi: '+(error?.message||'Noma’lum xatolik');return;
    }
-   S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='home';render();toast("Xush kelibsiz, "+first()+"!")}}
- if(cur==='fanlar'){
-  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>go('home'));
+   S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='edu-pick';render();toast("Xush kelibsiz, "+first()+"!")}}
+ if(cur==='edu-pick'){
+  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>toast('Davom etish uchun fan yoki tilni tanlang'));
   app.querySelectorAll('[data-prem-filter]').forEach(b=>b.onclick=()=>{eduStatusFilter=b.dataset.premFilter;render()});
   app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premFan, tile=eduFanTiles.find(x=>x[0]===id);
    if(!tile?.[5]){toast('Bu fan hozircha mavjud emas');return}
+   eduSaveChoice(id,'fan');
    const sub=eduVisibleSubjects().find(x=>x.id===id);
-   if(!sub){toast('Bu fan uchun kontent tayyorlanmoqda');return}
-   try{localStorage.setItem('eduone_last_subject',id)}catch(e){}
-   eduCatalog.selected=sub.id;go('edu-subject');
+   if(sub)eduCatalog.selected=sub.id;
+   stack=[];cur='home';render();
   });
   app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premLang, tile=eduLangTiles.find(x=>x[0]===id);
    if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return}
-   try{localStorage.setItem('eduone_last_language',id)}catch(e){}
-   go('tillar');
+   eduSaveChoice(id,'til');stack=[];cur='home';render();
   });
  }
 
