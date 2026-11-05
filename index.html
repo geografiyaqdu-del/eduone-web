@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne</title>
+<title>EduOne — Fan tanlash v3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
@@ -210,7 +210,7 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .edu-login-card [data-google-login]{min-height:58px;border-radius:16px!important;box-shadow:0 4px 12px rgba(27,45,94,.06);font-size:15px}
 .edu-login-footnote{color:#e4e9ff;font-weight:600}
 @media(max-height:720px){.edu-login-screen{padding-top:10px;gap:8px}.edu-login-brandmark{width:112px;height:112px}}
-</style>
+.edu-build{text-align:center;font-size:11px;font-weight:800;color:#3769ad;margin:3px 0 12px}.edu-banner:before,.edu-banner:after{display:none}</style>
 <style id="eduone-admin-style">
 .ad-hero{background:linear-gradient(125deg,#172b65,#5144ba 65%,#7b55d7);color:#fff;padding:23px;border-radius:24px;box-shadow:0 16px 36px #283f9140;position:relative;overflow:hidden}.ad-hero:after{content:"✦";position:absolute;right:17px;top:0;font-size:100px;opacity:.12}.ad-hero h2{color:#fff;font-size:25px;margin:8px 0}.ad-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ad-kpi{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 4px 14px #00000009}.ad-kpi b{font-size:25px;display:block;margin-top:6px}.ad-kpi small{color:var(--muted)}.ad-tabs{display:flex;overflow-x:auto;gap:8px;padding:5px 0 10px;scrollbar-width:none}.ad-tabs button{white-space:nowrap;padding:11px 14px;border-radius:13px;background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:700}.ad-tabs button.active{background:#5144ba;color:#fff;border-color:#5144ba}.ad-form{display:grid;gap:12px}.ad-form label{font-size:12px;font-weight:700;display:grid;gap:5px;color:var(--ink)}.ad-form input,.ad-form select,.ad-form textarea,.ad-search{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:12px;font:inherit;box-sizing:border-box}.ad-form textarea{min-height:90px}.ad-entry{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.ad-entry:last-child{border:0}.ad-entry-main{flex:1;min-width:0}.ad-entry-main b{display:block;overflow-wrap:anywhere}.ad-entry-main small{display:block;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}.ad-mini{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--ink);padding:8px;font-size:12px;font-weight:700}.ad-danger{color:#d33a4d!important}.ad-note{border-left:3px solid #6d5ce6;background:var(--soft);border-radius:10px;padding:12px;font-size:13px;line-height:1.6}.ad-actions{display:flex;gap:8px;flex-wrap:wrap}.ad-empty{text-align:center;color:var(--muted);padding:26px 10px}.ad-badge{font-size:11px;border-radius:30px;padding:5px 9px;background:#dfeee9;color:#12654b;font-weight:800}
 </style>
@@ -223,7 +223,17 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .edu-home-icon img {display:block;width:100%;height:100%;object-fit:contain;border:0!important;outline:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
 </style>
 <style id="eduone-subject-premium">
-.edu-catalog{padding:0 12px 100px;background:linear-gradient(180deg,#e5f5ff 0%,#f6fbff 48%,#e9f4ff 100%);min-height:100vh;color:#0a214d}.edu-catalog .edu-banner{margin:0 -12px 14px;padding:23px 16px 25px;position:relative;overflow:hidden;background:radial-gradient(circle at 8% 20%,#35b8ff 0%,transparent 30%),linear-gradient(120deg,#e1f8ff,#9cdaff 52%,#e9f7ff);border-radius:0 0 30px 30px}.edu-banner:before{content:'🌍';position:absolute;font-size:110px;left:-34px;top:10px;opacity:.55}.edu-banner:after{content:'🏔️';position:absolute;font-size:115px;right:-25px;top:-20px;opacity:.48}.edu-banner-inner{position:relative;z-index:1;text-align:center}.edu-banner .edu-logo{font-size:25px;font-weight:950;color:#0649c4;text-shadow:0 2px 2px #fff}.edu-banner h1{font-size:clamp(25px,6vw,36px);margin:8px 0 4px;color:#071b43;line-height:1.1;font-weight:900}.edu-banner p{margin:0;font-size:13px;font-weight:700}.edu-filter{display:flex;gap:7px;margin:10px 0 18px}.edu-filter button{flex:1;min-width:0;border-radius:25px;border:1px solid #c1d6f0;padding:11px 5px;font-size:12px;font-weight:800;color:#183259;background:linear-gradient(#fff,#dce8f7);box-shadow:0 3px 7px #184d8717}.edu-filter button.active{background:linear-gradient(120deg,#1678ff,#0738bc);color:white;border-color:#0d55de}.edu-section{display:flex;align-items:center;gap:0;margin:20px 0 12px}.edu-section strong{background:linear-gradient(110deg,#082eaf,#126cff 65%,#9444ef);color:white;border-radius:30px;padding:9px 19px;font-size:20px;white-space:nowrap;box-shadow:0 3px 9px #194ba635}.edu-section:after{content:'';height:13px;flex:1;border-radius:0 20px 20px 0;background:linear-gradient(90deg,#ffc629,#b1ddff);margin-left:-5px}.edu-section.lang:after{background:linear-gradient(90deg,#a95dff,#a6ddff)}.edu-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.edu-card{border:1px solid #bdd8f5;background:linear-gradient(#fff,#f6faff);border-radius:20px;overflow:hidden;min-width:0;box-shadow:0 4px 9px #1b64a638;display:flex;flex-direction:column;align-items:stretch;padding:0 0 9px;color:#081d43;cursor:pointer}.edu-card:active{transform:scale(.98)}.edu-art{height:95px;display:flex;justify-content:center;align-items:center;font-size:62px;position:relative;overflow:hidden;background:linear-gradient(145deg,var(--art1),var(--art2))}.edu-art:after{content:'';position:absolute;bottom:-17px;left:-5%;width:110%;height:35px;background:linear-gradient(#ffffff44,#fff);filter:blur(5px)}.edu-card-name{font-size:clamp(14px,3.5vw,19px);font-weight:900;line-height:1.12;min-height:34px;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px 4px 2px}.edu-state{display:inline-flex;align-items:center;justify-content:center;gap:5px;align-self:center;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:800;background:#d6f8e3;color:#146d36;white-space:nowrap;max-width:calc(100% - 8px)}.edu-state.off{background:#e8eef8;color:#45536b;font-size:10px}.edu-card.off .edu-art{filter:saturate(.77)}.edu-empty{text-align:center;padding:20px;color:#47618b}.edu-catalog .edu-back{position:absolute;left:14px;top:18px;background:#0c52d8;color:white;border-radius:50%;width:40px;height:40px;display:grid;place-items:center;border:1px solid #fff;font-size:24px;z-index:3}@media(min-width:680px){.edu-cards{grid-template-columns:repeat(4,minmax(0,1fr))}.edu-art{height:125px}.edu-catalog{max-width:1120px;margin:auto}.edu-filter button{font-size:15px}}@media(min-width:1000px){.edu-cards.fans{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.edu-catalog{padding:0 12px 100px;background:linear-gradient(180deg,#e5f5ff 0%,#f6fbff 48%,#e9f4ff 100%);min-height:100vh;color:#0a214d}.edu-catalog .edu-banner{margin:0 -12px 14px;padding:23px 16px 25px;position:relative;overflow:hidden;background:radial-gradient(circle at 8% 20%,#35b8ff 0%,transparent 30%),linear-gradient(120deg,#e1f8ff,#9cdaff 52%,#e9f7ff);border-radius:0 0 30px 30px}.edu-banner:before{content:'';position:absolute;font-size:110px;left:-34px;top:10px;opacity:.55}.edu-banner:after{content:'';position:absolute;font-size:115px;right:-25px;top:-20px;opacity:.48}.edu-banner-inner{position:relative;z-index:1;text-align:center}.edu-banner .edu-logo{font-size:25px;font-weight:950;color:#0649c4;text-shadow:0 2px 2px #fff}.edu-banner h1{font-size:clamp(25px,6vw,36px);margin:8px 0 4px;color:#071b43;line-height:1.1;font-weight:900}.edu-banner p{margin:0;font-size:13px;font-weight:700}.edu-filter{display:flex;gap:7px;margin:10px 0 18px}.edu-filter button{flex:1;min-width:0;border-radius:25px;border:1px solid #c1d6f0;padding:11px 5px;font-size:12px;font-weight:800;color:#183259;background:linear-gradient(#fff,#dce8f7);box-shadow:0 3px 7px #184d8717}.edu-filter button.active{background:linear-gradient(120deg,#1678ff,#0738bc);color:white;border-color:#0d55de}.edu-section{display:flex;align-items:center;gap:0;margin:20px 0 12px}.edu-section strong{background:linear-gradient(110deg,#082eaf,#126cff 65%,#9444ef);color:white;border-radius:30px;padding:9px 19px;font-size:20px;white-space:nowrap;box-shadow:0 3px 9px #194ba635}.edu-section:after{content:'';height:13px;flex:1;border-radius:0 20px 20px 0;background:linear-gradient(90deg,#ffc629,#b1ddff);margin-left:-5px}.edu-section.lang:after{background:linear-gradient(90deg,#a95dff,#a6ddff)}.edu-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.edu-card{border:1px solid #bdd8f5;background:linear-gradient(#fff,#f6faff);border-radius:20px;overflow:hidden;min-width:0;box-shadow:0 4px 9px #1b64a638;display:flex;flex-direction:column;align-items:stretch;padding:0 0 9px;color:#081d43;cursor:pointer}.edu-card:active{transform:scale(.98)}.edu-art{height:95px;display:flex;justify-content:center;align-items:center;font-size:62px;position:relative;overflow:hidden;background:linear-gradient(145deg,var(--art1),var(--art2))}.edu-art:after{content:'';position:absolute;bottom:-17px;left:-5%;width:110%;height:35px;background:linear-gradient(#ffffff44,#fff);filter:blur(5px)}.edu-card-name{font-size:clamp(14px,3.5vw,19px);font-weight:900;line-height:1.12;min-height:34px;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px 4px 2px}.edu-state{display:inline-flex;align-items:center;justify-content:center;gap:5px;align-self:center;padding:4px 9px;border-radius:20px;font-size:11px;font-weight:800;background:#d6f8e3;color:#146d36;white-space:nowrap;max-width:calc(100% - 8px)}.edu-state.off{background:#e8eef8;color:#45536b;font-size:10px}.edu-card.off .edu-art{filter:saturate(.77)}.edu-empty{text-align:center;padding:20px;color:#47618b}.edu-catalog .edu-back{position:absolute;left:14px;top:18px;background:#0c52d8;color:white;border-radius:50%;width:40px;height:40px;display:grid;place-items:center;border:1px solid #fff;font-size:24px;z-index:3}@media(min-width:680px){.edu-cards{grid-template-columns:repeat(4,minmax(0,1fr))}.edu-art{height:125px}.edu-catalog{max-width:1120px;margin:auto}.edu-filter button{font-size:15px}}@media(min-width:1000px){.edu-cards.fans{grid-template-columns:repeat(5,minmax(0,1fr))}}
+</style>
+<style id="edu-choice-v4-style">
+.edu-catalog{padding-bottom:130px!important}
+.edu-card.edu-selected{border:3px solid #0758ed!important;box-shadow:0 0 0 3px #8fc1ff,0 9px 20px #1256bc55!important;transform:translateY(-2px)}
+.edu-card.edu-selected .edu-state{background:#0759e9!important;color:#fff!important;font-size:12px!important}
+.edu-choice-footer{position:sticky;bottom:0;z-index:30;margin:22px -12px -100px;padding:13px 16px calc(15px + env(safe-area-inset-bottom));background:#fff;box-shadow:0 -7px 25px #18477e30;border-top:1px solid #c7dbf4;display:flex;flex-direction:column;gap:10px}
+.edu-choice-label{text-align:center;font-size:15px;color:#25446b;font-weight:650}
+.edu-choice-label strong{color:#074bc6}
+#edu-confirm-choice{border:0;border-radius:16px;background:linear-gradient(100deg,#0b75ff,#0739c7);color:#fff;font-size:17px;font-weight:850;padding:15px 12px;box-shadow:0 5px 12px #0758cc40;cursor:pointer}
+#edu-confirm-choice:disabled{background:#a9b7cb;box-shadow:none;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -686,9 +696,10 @@ function finish(){clearInterval(timerId);let ok=0,bad=0,skip=0,wrong=[],tp={};Q.
 // A fan or language is chosen only after registration; selection belongs to the signed-in account.
 function eduChoiceKey(){return 'eduone_choice_'+(verified?.id||'guest')}
 function eduReadChoice(){try{return JSON.parse(localStorage.getItem(eduChoiceKey())||'null')||verified?.user_metadata?.eduone_subject_choice||null}catch(e){return verified?.user_metadata?.eduone_subject_choice||null}}
-function eduHasChoice(){const c=eduReadChoice();return !!(c&&c.id&&['fan','til'].includes(c.type))}
+function eduHasChoice(){if(new URLSearchParams(location.search).get('test_fan_tanlash')==='1')return false;const c=eduReadChoice();return !!(c&&c.id&&['fan','til'].includes(c.type))}
 function eduSaveChoice(id,type){
  try{localStorage.setItem(eduChoiceKey(),JSON.stringify({id,type}))}catch(e){}
+ if(new URLSearchParams(location.search).has('test_fan_tanlash'))history.replaceState(null,'',location.pathname);
  // Store a second copy in Supabase auth metadata so choice can follow the account to another device.
  if(client&&verified?.id)client.auth.updateUser({data:{eduone_subject_choice:{id,type}}}).catch(e=>console.warn('Choice sync:',e));
 }
@@ -699,12 +710,15 @@ const eduFanTiles=[
 ];
 const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','🇹🇷','🕌',1],['ru','Rus tili','🇷🇺','🏰',1],['ko','Koreys tili','🇰🇷','🏯',1],['de','Nemis tili','🇩🇪','🏛️',0],['fr','Fransuz tili','🇫🇷','🗼',0],['ar','Arab tili','🇸🇦','🕌',0]];
 let eduStatusFilter='all';
+let eduPendingChoice=null;
+function eduChoiceLabel(c){if(!c)return '';const a=c.type==='fan'?eduFanTiles:eduLangTiles;return a.find(x=>x[0]===c.id)?.[1]||'';}
+function eduOpenPicker(){eduPendingChoice=eduReadChoice();eduStatusFilter='all';cur='edu-pick';render();}
 V['edu-pick']=()=>{
  const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
- const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${x[2]}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</span></button>`;
- const langCard=x=>`<button class="edu-card ${x[4]?'':'off'}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:45px">${x[3]}</span><span style="font-size:43px">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</span></button>`;
- return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo">📘 EduOne</div><h1>🎓 Fanlar va chet tillari</h1><p>EduOne’da mavjud bo‘lgan fanlar ro‘yxati</p></div></header><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-section"><strong>📚 Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>🌐 Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
+ const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${x[2]}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
+ const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:45px">${x[3]}</span><span style="font-size:43px">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo">EduOne</div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-build">EduOne • Fan tanlash v3</div><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div><div class="edu-choice-footer"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div></div>`;
 };
 
 function render(){
@@ -714,7 +728,7 @@ function render(){
  if(cur==='admin'&&!adminState.allowed)cur='profil';
  if(cur==='test'&&!T)startTest();
  app.innerHTML=V[cur]();
- if(cur==='profil'&&S.user){const sw=document.createElement('button');sw.className='btn';sw.style.cssText='display:block;width:calc(100% - 32px);margin:16px auto';sw.textContent='Fan yoki tilni o‘zgartirish';sw.onclick=()=>{cur='edu-pick';render()};app.appendChild(sw)}
+ if(cur==='profil'&&S.user){const sw=document.createElement('button');sw.className='btn';sw.style.cssText='display:block;width:calc(100% - 32px);margin:16px auto';sw.textContent='Mening fanim: '+(eduChoiceLabel(eduReadChoice())||'Tanlanmagan')+' · O‘zgartirish';sw.onclick=eduOpenPicker;app.appendChild(sw)}
  window.scrollTo(0,0);
  tabbar(['home','fanlar','tillar','ai','profil'].includes(cur));
  bind();
@@ -757,21 +771,32 @@ function bind(){
    }
    S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='edu-pick';render();toast("Xush kelibsiz, "+first()+"!")}}
  if(cur==='edu-pick'){
-  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>toast('Davom etish uchun fan yoki tilni tanlang'));
+  if(!eduPendingChoice)eduPendingChoice=eduReadChoice();
+  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>{
+   if(eduHasChoice()){stack=[];cur='home';render()}else toast('Davom etish uchun fan yoki tilni tanlang');
+  });
   app.querySelectorAll('[data-prem-filter]').forEach(b=>b.onclick=()=>{eduStatusFilter=b.dataset.premFilter;render()});
   app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
-   const id=b.dataset.premFan, tile=eduFanTiles.find(x=>x[0]===id);
+   const id=b.dataset.premFan,tile=eduFanTiles.find(x=>x[0]===id);
    if(!tile?.[5]){toast('Bu fan hozircha mavjud emas');return}
-   eduSaveChoice(id,'fan');
-   const sub=eduVisibleSubjects().find(x=>x.id===id);
-   if(sub)eduCatalog.selected=sub.id;
-   stack=[];cur='home';render();
+   eduPendingChoice={id,type:'fan'};render();
   });
   app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
-   const id=b.dataset.premLang, tile=eduLangTiles.find(x=>x[0]===id);
+   const id=b.dataset.premLang,tile=eduLangTiles.find(x=>x[0]===id);
    if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return}
-   eduSaveChoice(id,'til');stack=[];cur='home';render();
+   eduPendingChoice={id,type:'til'};render();
   });
+  const confirm=app.querySelector('#edu-confirm-choice');
+  if(confirm)confirm.onclick=()=>{
+   if(!eduPendingChoice){toast('Avval fan yoki tilni tanlang');return}
+   const {id,type}=eduPendingChoice;
+   eduSaveChoice(id,type);
+   if(type==='fan'){
+    const sub=eduVisibleSubjects().find(x=>x.id===id);
+    if(sub)eduCatalog.selected=sub.id;
+   }
+   stack=[];cur='home';render();
+  };
  }
 
  if(cur==='test'){app.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{T.ans[T.i]=+b.dataset.a;render()});app.querySelectorAll('[data-qn]').forEach(b=>b.onclick=()=>{T.i=+b.dataset.qn;render()});
