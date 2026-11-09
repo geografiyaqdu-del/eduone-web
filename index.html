@@ -1247,6 +1247,14 @@ async function adminCheck(user){
 const adminDate=v=>v?new Date(v).toLocaleDateString('uz-UZ'): '—';
 const adminSafe=v=>esc(v==null?'':v);
 const adminName=(type,id)=>adminState.rows[type]?.find(x=>x.id===id)?.title||id||'—';
+const adminLanguageFlag=(row)=>{
+ const raw=String(row.flag||'').trim();
+ if(raw && /[\u{1F1E6}-\u{1F1FF}]/u.test(raw))return raw;
+ const key=String(row.slug||row.title||'').toLowerCase();
+ const flags=[[/ingliz|english|english-language/, '🇬🇧'],[/turk|turkish/, '🇹🇷'],[/rus|russian/, '🇷🇺'],[/koreys|korean/, '🇰🇷'],[/nemis|german/, '🇩🇪'],[/fransuz|french/, '🇫🇷'],[/arab|arabic/, '🇸🇦']];
+ return flags.find(([pattern])=>pattern.test(key))?.[1]||'🌐';
+};
+
 const adminFields=(table,row={})=>adminDefs[table].fields.map(([key,label,type,required])=>{
  let v=row[key]??'';
  if(type==='checkbox')return `<label style="display:flex;align-items:center;gap:9px"><input style="width:18px;height:18px" name="${key}" type="checkbox" ${v?'checked':''}>${label}</label>`;
@@ -1290,7 +1298,7 @@ function adminView(){
  `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div><input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0"><button class="btn" data-ad-new>+ Yangi qo‘shish</button></div>
  ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
  ${tab==='questions'?`<div class="card ad-form"><b>📥 JSON testlarni ommaviy yuklash</b><p class="sm muted">Faylni tanlang, savollarni tekshiring va Supabase bazasiga saqlang.</p><label>JSON fayl<input type="file" id="ad-import-file" accept=".json,application/json"></label><div id="ad-import-preview">${adminState.importData?adminImportPreview():''}</div></div>`:''}
- <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
+ <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
  <p class="sm muted" style="text-align:center">EduOne Admin panel · Secure by Supabase RLS</p></div>`;
 }
 V.admin=()=>adminView();
