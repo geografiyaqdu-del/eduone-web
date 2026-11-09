@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta name="eduone-build" content="V14-premium-intro-2026-11-07">
+<meta name="eduone-build" content="V15-subject-profile-2026-11-07">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>EduOne — Brend V11</title>
@@ -820,19 +820,6 @@ V.home=()=>{const avg=Math.round(SUBJ.reduce((a,s)=>a+s.p,0)/SUBJ.length);return
  <div class="row sp"><div><h2 style="font-size:20px">Salom, ${esc(first())}! 👋</h2><p class="muted sm" style="margin:4px 0 0">Bugun yangi bilimlar bilan o'sish vaqti!</p></div>
  <div class="card row" style="padding:10px 14px;gap:6px;color:var(--warn)">${ic('flame')}<div><b class="num" style="font-size:18px;color:var(--ink)">12</b><div class="sm muted">kunlik seriya</div></div></div></div>
  <div class="hero"><div class="sm" style="opacity:.85">Bugungi reja</div><h3 style="font-size:20px;margin:4px 0 12px">Hozircha dars va testlar joylanmagan</h3>${bar(0,'#4ADE80')}<button class="pill" style="background:rgba(255,255,255,.2);color:#fff;margin-top:14px;padding:8px 14px;position:relative;z-index:1" data-go="test-catalog">Testni boshlash ${ic('arrow',14)}</button></div>
- <div class="card edu-my-subject">
-  <div class="row sp" style="align-items:center;gap:12px">
-   <div style="min-width:0;flex:1">
-    <div class="sm muted" style="font-weight:650;margin-bottom:5px">Sizning tanlangan faningiz</div>
-    <div class="row" style="gap:9px;align-items:center">
-     <span class="edu-my-icon">${ic('book',25)}</span>
-     <b style="font-size:19px;line-height:1.3">${esc(eduChoiceLabel(eduReadChoice())||'Fan tanlanmagan')}</b>
-    </div>
-   </div>
-   <button class="edu-change-btn" id="edu-change-home" type="button">O‘zgartirish</button>
-  </div>
-  <p class="sm muted" style="margin:12px 0 0">Video darslar, testlar va kutubxona tanlagan faningiz bo‘yicha ochiladi.</p>
- </div>
  <div class="grid4">${[['play','Video darslar','#3B6FF6','fan'],['test','Testlar','#22A75B','test'],['bot','AI Ustoz','#7B4DE8','ai'],['book','Kutubxona','#F59E0B','fan']].map(([i,n,c,g])=>`<button class="stat" ${g==='ai'?'data-tab="ai"':`data-go="${g}"`}><span class="tile" style="background:${c};width:38px;height:38px">${ic(i,19)}</span><span style="color:var(--ink);font-weight:700">${n}</span></button>`).join('')}</div>
  <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Umumiy progress</h3><div class="row" style="gap:16px"><div class="ring" style="--p:${avg};width:84px;height:84px"><div style="width:64px;height:64px"><b style="font-size:18px">${avg}%</b></div></div>
  <div class="grid3" style="flex:1;gap:6px;text-align:center"><div><b class="num" style="font-size:18px">0</b><div class="sm muted">Darslar</div></div><div><b class="num" style="font-size:18px">${S.tests}</b><div class="sm muted">Testlar</div></div><div><b class="num" style="font-size:18px">${S.xp}</b><div class="sm muted">Ball</div></div></div></div></div>
@@ -914,8 +901,19 @@ V.profil=()=>{const u=S.user||{};const dark=document.documentElement.getAttribut
  <div class="grid4">${[['book','0','Darslar'],['test',S.tests,'Testlar'],['star',(S.last?Math.round(S.last.ok/S.last.n*100):0)+'%',"O'rtacha"],['clock','0','Soat']].map(([i,v,n])=>`<div class="stat"><span style="color:var(--brand)">${ic(i,20)}</span><b>${v}</b><span>${n}</span></div>`).join('')}</div>
  <div class="card row" style="gap:16px"><div class="ring" style="--p:${S.xp%100};width:90px;height:90px;background:conic-gradient(var(--violet) calc(var(--p)*1%),var(--line) 0)"><div style="width:70px;height:70px"><div><b style="font-size:20px">Lv.${lvl}</b></div></div></div><div><b>O'quvchi darajasi</b><p class="sm muted" style="margin:4px 0 0">Keyingi daraja uchun <b style="color:var(--ink)">${100-S.xp%100} XP</b> kerak. Har bir to'g'ri javob +10 XP.</p></div></div>
  <div class="card"><div class="row sp"><b>Faoliyat grafigi</b><span class="sm muted">Oxirgi 7 kun, soat</span></div><div class="bars">${[1.2,1.5,2.1,2.8,1.9,2.3,1.6].map((h,k)=>`<div><span>${h}</span><i style="height:${h/3*100}%"></i><span>${['Du','Se','Ch','Pa','Ju','Sh','Ya'][k]}</span></div>`).join('')}</div></div>
- <div class="sec"><h3>Fanlar bo'yicha progress</h3></div>
- <div class="card list" style="gap:14px">${SUBJ.slice(0,5).map(s=>`<div class="row"><span class="tile" style="background:${s.c};width:34px;height:34px">${ic(s.i,18)}</span><div style="flex:1"><div class="row sp"><b class="sm">${s.n}</b><b class="sm num">${s.p}%</b></div>${bar(s.p,s.c)}</div></div>`).join('')}</div>
+ <div class="card edu-my-subject">
+  <div class="row sp" style="align-items:center;gap:12px">
+   <div style="min-width:0;flex:1">
+    <div class="sm muted" style="font-weight:650;margin-bottom:5px">Sizning tanlangan faningiz</div>
+    <div class="row" style="gap:9px;align-items:center">
+     <span class="edu-my-icon">${ic('book',25)}</span>
+     <b style="font-size:19px;line-height:1.3">${esc(eduChoiceLabel(eduReadChoice())||'Fan tanlanmagan')}</b>
+    </div>
+   </div>
+   <button class="edu-change-btn" id="edu-change-profile" type="button">O‘zgartirish</button>
+  </div>
+  <p class="sm muted" style="margin:12px 0 0">Video darslar, testlar va kutubxona tanlagan faningiz bo‘yicha ochiladi.</p>
+ </div>
  ${adminState.allowed?`<button class="ad-hero" style="width:100%;border:0;text-align:left;margin:10px 0;cursor:pointer" data-go="admin"><span style="font-size:12px;letter-spacing:2px;opacity:.8">EDUONE • ADMIN</span><h2>⚙️ Boshqaruv paneli</h2><span>Fanlar, darslar, kitoblar, testlar va obunalar · 📈 Statistika markazi →</span></button>`:''}
  <div class="sec"><h3>Sozlamalar</h3></div>
  <div class="card list" style="gap:4px;padding:8px 16px">
@@ -990,8 +988,8 @@ function render(){
  if(cur==='admin'&&!adminState.allowed)cur='profil';
  if(cur==='test'&&!T)startTest();
  app.innerHTML=V[cur]();
- if(cur==='home'){setTimeout(()=>{const b=document.getElementById('edu-change-home');if(b)b.onclick=eduOpenPicker},0)}
- if(cur==='profil'&&S.user){const sw=document.createElement('button');sw.className='btn';sw.style.cssText='display:block;width:calc(100% - 32px);margin:16px auto';sw.textContent='Mening fanim: '+(eduChoiceLabel(eduReadChoice())||'Tanlanmagan')+' · O‘zgartirish';sw.onclick=eduOpenPicker;app.appendChild(sw)}
+ if(cur==='profil'){setTimeout(()=>{const b=document.getElementById('edu-change-profile');if(b)b.onclick=eduOpenPicker},0)}
+
  window.scrollTo(0,0);
  tabbar(['home','fanlar','tillar','ai','profil'].includes(cur));
  bind();
