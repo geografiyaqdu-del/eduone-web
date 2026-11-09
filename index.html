@@ -1222,14 +1222,12 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&verified)
 
 /* EduOne Admin panel: privileges are checked in Supabase, never in client metadata. */
 const adminState={allowed:false,tab:'dashboard',rows:{},loading:false,editing:null,search:'',importData:null,importBusy:false,stats:null,statsError:''};
-const adminLanguageNames=['ingliz','english','turk','turkish','rus','russian','koreys','korean','nemis','german','fransuz','french','arab','arabic'];
-const adminIsLanguage=r=>adminLanguageNames.some(n=>String(r.title||'').toLowerCase().includes(n)||String(r.slug||'').toLowerCase().includes(n));
 const adminSubjectRows=()=>adminState.rows.subjects||[];
-const adminRowsFor=tab=>tab==='languages'?adminSubjectRows().filter(adminIsLanguage):tab==='subjects'?adminSubjectRows().filter(r=>!adminIsLanguage(r)):adminState.rows[tab]||[];
-const adminRealTable=tab=>tab==='languages'?'subjects':tab;
+const adminRowsFor=tab=>adminState.rows[tab]||[];
+const adminRealTable=tab=>tab;
 const adminDefs={
  subjects:{title:'Fanlar',icon:'📚',fields:[['title','Fan nomi','text',true],['slug','Qisqa kod (masalan geografiya)','text',true],['description','Tavsif','textarea'],['sort_order','Tartib raqami','number'],['is_published','Nashr qilingan','checkbox']]},
- languages:{title:'Chet tillari',icon:'🌐',fields:[['title','Til nomi','text',true],['slug','Qisqa kod (masalan ingliz-tili)','text',true],['description','Tavsif','textarea'],['sort_order','Tartib raqami','number'],['is_published','Nashr qilingan','checkbox']]},
+ languages:{title:'Chet tillari',icon:'🌐',fields:[['title','Til nomi','text',true],['slug','Qisqa kod (masalan ingliz-tili)','text',true],['flag','Bayroq belgisi (emoji)','text'],['is_available','Mavjud','checkbox']]},
  lessons:{title:'Video darslar',icon:'🎬',fields:[['title','Dars nomi','text',true],['subject_id','Fan','subject'],['description','Dars tavsifi','textarea'],['video_url','Video havolasi (HTTPS)','url'],['sort_order','Tartib raqami','number'],['is_published','Nashr qilingan','checkbox']]},
  books:{title:'PDF kutubxona',icon:'📖',fields:[['title','Kitob nomi','text',true],['subject_id','Fan','subject'],['description','Kitob tavsifi','textarea'],['file_path','PDF fayl yo‘li','text'],['is_published','Nashr qilingan','checkbox']]},
  quizzes:{title:'Test to‘plamlari',icon:'📝',fields:[['title','Test nomi','text',true],['subject_id','Fan','subject'],['description','Tavsif','textarea'],['time_limit','Vaqt (daqiqa)','number'],['is_published','Nashr qilingan','checkbox']]},
@@ -1299,8 +1297,8 @@ V.admin=()=>adminView();
 async function adminLoad(){
  if(!adminState.allowed||!client)return;
  adminState.loading=true;
- try{await Promise.all(Object.keys(adminDefs).filter(t=>t!=='languages').map(async table=>{
-  const {data,error}=await client.from('edu_'+table).select('*').order('created_at',{ascending:false}).limit(300);
+ try{await Promise.all(Object.keys(adminDefs).map(async table=>{
+  const {data,error}=await client.from('edu_'+table).select('*').limit(300);
   if(error)throw new Error(table+': '+error.message);
   adminState.rows[table]=data||[];
  }));
