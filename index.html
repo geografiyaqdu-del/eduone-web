@@ -452,8 +452,8 @@ const app=$('#app');
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
 function go(name,push=true){if(push&&cur)stack.push(cur);cur=name;render()}
 function back(){cur=stack.pop()||'home';render()}
-const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Fanlar'],['tillar','globe','Chet tillari'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
-function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Fanlar':'Предметы','Chet tillari':'Языки','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Fanlar':'Subjects','Chet tillari':'Languages','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Fanlar':'Pánler','Chet tillari':'Shet tilleri','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
+const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tillari'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
+function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Mening fanim':'Мой предмет','Chet tillari':'Языки','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Mening fanim':'My subject','Chet tillari':'Languages','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Mening fanim':'Meniń pánim','Chet tillari':'Shet tilleri','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
 document.addEventListener('click',e=>{if(e.target.closest('[data-google-login]')){e.preventDefault();signInGoogle();return}if(e.target.closest('[data-theme-toggle]')){e.preventDefault();toggleTheme();return}const b=e.target.closest('[data-tab]');if(b){stack=[];cur=b.dataset.tab;render()}const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);if(e.target.closest('[data-back]'))back()});
 // Profile images: remote storage is preferred; a local preview is retained for offline testing.
 function avatarLocalKey(){return 'edu1_avatar_'+(verified?.id||'guest')}
@@ -830,10 +830,7 @@ V.home=()=>{const avg=Math.round(SUBJ.reduce((a,s)=>a+s.p,0)/SUBJ.length);return
  <div class="card"><h3 style="font-size:15px;margin-bottom:12px">Umumiy progress</h3><div class="row" style="gap:16px"><div class="ring" style="--p:${avg};width:84px;height:84px"><div style="width:64px;height:64px"><b style="font-size:18px">${avg}%</b></div></div>
  <div class="grid3" style="flex:1;gap:6px;text-align:center"><div><b class="num" style="font-size:18px">0</b><div class="sm muted">Darslar</div></div><div><b class="num" style="font-size:18px">${S.tests}</b><div class="sm muted">Testlar</div></div><div><b class="num" style="font-size:18px">${S.xp}</b><div class="sm muted">Ball</div></div></div></div></div>
  </div>`};
-V.fanlar=()=>{const list=eduVisibleSubjects();return `<div class="scr fade">
- <div class="top"><div style="width:40px"></div><h2>Fanlar</h2><div style="width:40px"></div></div>
- <div class="hero"><div class="sm" style="opacity:.85">O'qishni davom ettiring</div><h3 style="font-size:20px;margin:4px 0">${esc(eduChoiceLabel(eduReadChoice())||'Fan tanlanmagan')}</h3><div class="sm" style="opacity:.85;margin-bottom:10px">Progress: ${eduVisibleSubjects().find(x=>x.n===eduChoiceLabel(eduReadChoice()))?.p||0}%</div>${bar(eduVisibleSubjects().find(x=>x.n===eduChoiceLabel(eduReadChoice()))?.p||0,'#4ADE80')}</div>
- <div class="list" id="sl">${list.map(s=>`<button class="li" data-sub="${s.id}" data-name="${esc(s.n.toLowerCase())}"><span class="tile" style="background:${s.c}">${ic(s.i)}</span><div class="grow"><div class="row sp"><b>${esc(s.n)}</b>${s.isNew?'<span class="pill" style="background:var(--okbg);color:var(--ok)">Yangi</span>':''}</div><div class="row sp sm muted"><span>${s.d} dars</span><span class="num">${s.p}%</span></div>${bar(s.p,s.c)}</div>${ic('next',18)}</button>`).join('')}</div></div>`};
+V.fanlar=()=>{const chosen=eduChoiceLabel(eduReadChoice());const chosenSubject=eduVisibleSubjects().find(x=>x.n===chosen)||eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(chosenSubject)eduCatalog.selected=chosenSubject.id;return eduSubjectDetail(true);};
 V.fan=()=>`<div class="scr fade">${topbar('Geografiya',`<button class="ib" data-toast="Saqlanganlarga qo'shildi" aria-label="Saqlash">${ic('mark')}</button>`)}
  <div class="card row" style="background:var(--soft);box-shadow:none"><span style="color:var(--brand)">${ic('globe',64)}</span><div><h3 style="font-size:20px">Geografiya</h3><p class="muted sm" style="margin:4px 0 8px">Yer, tabiat, aholi va xo'jalik haqidagi fan.</p><span class="pill" style="background:var(--card);color:var(--brand)">7–11 sinf</span></div></div>
  <div class="card"><div class="row sp"><b>O'qish jarayoningiz</b><span class="sm muted">7-sinf</span></div><p class="sm muted" style="margin:8px 0 4px">I bob. Yer va uning tuzilishi ›</p><b>Hozircha darslar mavjud emas</b><div class="row sp sm muted" style="margin:10px 0 6px"><span>Tamomlangan mavzular: 0 / 0</span><span>0%</span></div>${bar(0)}</div>
@@ -1142,15 +1139,15 @@ function eduVisibleSubjects(){
 function eduSubjectId(s){return s?.remote?.id||null}
 /* EduOne Mening fanim — 25 premium yo'nalish kartasi */
 const eduMySubjectGroups=[
- {title:'Sinflar bo‘yicha darslar',icon:'📚',items:[['5-sinf','📘'],['6-sinf','📗'],['7-sinf','📙'],['8-sinf','📕'],['9-sinf','📒']]},
- {title:'Maxsus tayyorgarlik',icon:'🎯',items:[['Milliy sertifikat','🏅'],['Attestatsiya','🎓'],['DTM / UZBMB','📝'],['Olimpiada','🏆'],['Mavzulashgan testlar','🧩'],['Masala va mashqlar','🧮'],['Video darslar','🎬'],['Elektron kitoblar','📖']]},
- {title:'Qo‘shimcha',icon:'✨',items:[['Xaritalar','🗺️'],['Atlaslar','🌐'],['Geografik atamalar','📚'],['Geografik rekordlar','🏔️'],['Iqlim','🌤️'],['Materiklar va okeanlar','🌊'],['Tabiat zonalari','🌿'],['Geografik kashfiyotlar','🧭'],['Foydali qazilmalar','💎'],['Davlatlar','🏳️'],['Jonli statistika','📊'],['Tavsiya','💡']]}
+ {title:'Sinflar bo‘yicha darslar',icon:'📚',items:[['7-sinf','📘'],['8-sinf','📗'],['9-sinf','📙'],['10-sinf','📕'],['11-sinf','📒']]},
+ {title:'Maxsus tayyorgarlik',icon:'🎯',items:[['Masala va mashqlar','🧮'],['Elektron kitoblar','📖'],['Attestatsiya','🎓'],['Milliy sertifikat','🏅'],['BMBA (DTM) testlar','📝'],['Fan olimpiadasi','🏆'],['Atlas','🌐'],['Xarita','🗺️']]},
+ {title:'Qo‘shimcha',icon:'✨',items:[['Shpargalkalar','📑'],['Atamalar','📚'],['Ko‘rgazmalar','🖼️'],['OTM kirish ballari','🎯'],['O‘qituvchi hujjatlari','📋'],['Geografik mobil o‘yinlar','🎮'],['Buyuk geograflar','🧭'],['Foydali saytlar','🔗'],['Foydali qazilmalar','💎'],['Davlatlar','🌍'],['Jonli statistika','📊'],['Tavsiya','💡']]}
 ];
 let eduMySubjectSection=null;
-function eduSubjectDetail(){
- const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr">${topbar('Fan')}<p class="card">Fan topilmadi.</p></div>`;
+function eduSubjectDetail(inTab=false){
+ const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr"><div class="top"><h2>Mening fanim</h2></div><p class="card">Tanlangan fan topilmadi.</p></div>`;
  const count=eduCatalog.lessons.filter(x=>x.subject_id===eduSubjectId(s)).length;
- return `<div class="scr fade edu-my-subject">${topbar('Mening fanim')}
+ return `<div class="scr fade edu-my-subject">${inTab?'<div class="top"><div style="width:40px"></div><h2>Mening fanim</h2><div style="width:40px"></div></div>':topbar('Mening fanim')}
  <div class="edu-my-hero"><div class="edu-my-globe">${s.i==='globe'?'🌍':'📚'}</div><div><div class="edu-my-kicker">EDUONE • MENING FANIM</div><h2>${esc(s.n)}</h2><p>${esc(s.remote?.description||'Bilim sari yangi qadam!')}</p><span class="edu-my-count">${count} ta video dars</span></div></div>
  ${eduMySubjectGroups.map((g,gi)=>`<section class="edu-my-group"><div class="edu-my-heading"><span>${g.icon}</span><h3>${g.title}</h3><small>${g.items.length} ta</small></div><div class="edu-my-grid">${g.items.map(([title,emoji],ii)=>`<button type="button" class="edu-my-tile" data-my-group="${gi}" data-my-item="${ii}"><span class="edu-my-emoji">${emoji}</span><span class="edu-my-name">${title}</span><span class="edu-my-chevron">›</span></button>`).join('')}</div></section>`).join('')}
  </div>`;
