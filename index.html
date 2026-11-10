@@ -356,6 +356,9 @@ body:has(.edu-intro){margin:0;}
 @media(max-height:740px){.splash.edu-intro{padding-top:8px}.edu-intro-content{padding-top:2px}.edu-intro-art{width:min(100%,270px)}.edu-intro-wordmark{font-size:44px;margin-bottom:10px}.edu-intro-tag{font-size:20px;margin-bottom:8px}.edu-intro-description{font-size:12px;line-height:1.4}.edu-intro-actions{margin-top:25px}}
 @media(prefers-reduced-motion:reduce){.edu-intro-start:active{transform:none}}
 </style>
+<style id="eduone-my-subject-premium-v20">
+.edu-my-subject{padding-bottom:38px}.edu-my-hero{display:flex;align-items:center;gap:17px;padding:23px 19px;margin:12px 0 25px;border-radius:24px;background:linear-gradient(120deg,#125ed7 0%,#6545d8 100%);color:#fff;box-shadow:0 10px 26px #2656b72c}.edu-my-globe{flex:0 0 72px;width:72px;height:72px;border-radius:22px;display:grid;place-items:center;font-size:42px;background:#ffffff2c;box-shadow:inset 0 0 0 1px #ffffff44}.edu-my-kicker{font-size:10px;font-weight:800;letter-spacing:1.5px;opacity:.82}.edu-my-hero h2{font-size:26px;line-height:1.2;margin:6px 0}.edu-my-hero p{font-size:12px;margin:0 0 8px;opacity:.9}.edu-my-count{display:inline-block;padding:5px 9px;border-radius:30px;background:#ffffff30;font-size:11px;font-weight:700}.edu-my-group{margin:0 0 26px}.edu-my-heading{display:flex;align-items:center;gap:9px;margin-bottom:12px}.edu-my-heading>span{font-size:22px}.edu-my-heading h3{font-size:17px;margin:0;font-weight:850;color:#15285c;flex:1}.edu-my-heading small{font-size:11px;font-weight:800;color:#5571a5;background:#eaf1ff;padding:5px 9px;border-radius:30px}.edu-my-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.edu-my-tile{min-width:0;min-height:100px;border:1px solid #e4e9ff;background:linear-gradient(145deg,#fff,#f5f8ff);border-radius:18px;box-shadow:0 5px 16px #183e8b12;padding:14px 12px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;position:relative;cursor:pointer;color:#1b3167;transition:transform .15s,box-shadow .15s}.edu-my-tile:active{transform:scale(.98)}.edu-my-emoji{width:41px;height:41px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(135deg,#e5f2ff,#e9e2ff);font-size:24px;margin-bottom:10px}.edu-my-name{font-size:13px;font-weight:800;line-height:1.3;padding-right:7px}.edu-my-chevron{position:absolute;right:12px;bottom:11px;font-size:23px;color:#7b8bd4}.edu-my-group:nth-of-type(3) .edu-my-emoji{background:linear-gradient(135deg,#e8fff3,#e7edff)}.edu-my-group:nth-of-type(4) .edu-my-emoji{background:linear-gradient(135deg,#fff3df,#eae8ff)}@media(max-width:350px){.edu-my-grid{gap:9px}.edu-my-tile{padding:11px 9px}.edu-my-name{font-size:12px}.edu-my-hero{padding:17px 13px;gap:12px}.edu-my-globe{width:59px;height:59px;flex-basis:59px}}
+</style>
 </head>
 <body>
 
@@ -1000,6 +1003,7 @@ function bind(){
   if(['signup','reset'].includes(cur))bindEmail();
  app.querySelectorAll('[data-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.toast));
  app.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{const sub=eduVisibleSubjects().find(s=>s.id===b.dataset.sub);if(sub){eduCatalog.selected=sub.id;go('edu-subject')}});
+ app.querySelectorAll('[data-my-group]').forEach(b=>b.onclick=()=>{eduMySubjectSection={group:Number(b.dataset.myGroup),item:Number(b.dataset.myItem)};go('edu-my-section')});
  app.querySelectorAll('[data-edu-open]').forEach(b=>b.onclick=()=>{eduCatalog.item=b.dataset.eduId;go('edu-'+b.dataset.eduOpen)});
  if(cur==='tilni'){app.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{S.lang=b.dataset.l;store.set('lang',S.lang);render()});$('#lgo').onclick=()=>S.user?back():go('email')}
  if(cur==='reg'){const d=S.draft;const sync=()=>{d.phone=d.phone||'';d.reg=$('#f-reg').value;d.tuman=$('#f-tum').value;d.name=$('#f-name').value;d.age=$('#f-age').value};
@@ -1136,12 +1140,36 @@ function eduVisibleSubjects(){
  return built.concat(eduCatalog.subjects.filter(r=>!slugs.has(r.slug)).map(r=>({id:'db:'+r.id,n:r.title,d:eduCatalog.lessons.filter(l=>l.subject_id===r.id).length,p:0,c:'#6556E8',i:'book',cat:'all',remote:r})));
 }
 function eduSubjectId(s){return s?.remote?.id||null}
+/* EduOne Mening fanim — 25 premium yo'nalish kartasi */
+const eduMySubjectGroups=[
+ {title:'Sinflar bo‘yicha darslar',icon:'📚',items:[['5-sinf','📘'],['6-sinf','📗'],['7-sinf','📙'],['8-sinf','📕'],['9-sinf','📒']]},
+ {title:'Maxsus tayyorgarlik',icon:'🎯',items:[['Milliy sertifikat','🏅'],['Attestatsiya','🎓'],['DTM / UZBMB','📝'],['Olimpiada','🏆'],['Mavzulashgan testlar','🧩'],['Masala va mashqlar','🧮'],['Video darslar','🎬'],['Elektron kitoblar','📖']]},
+ {title:'Qo‘shimcha',icon:'✨',items:[['Xaritalar','🗺️'],['Atlaslar','🌐'],['Geografik atamalar','📚'],['Geografik rekordlar','🏔️'],['Iqlim','🌤️'],['Materiklar va okeanlar','🌊'],['Tabiat zonalari','🌿'],['Geografik kashfiyotlar','🧭'],['Foydali qazilmalar','💎'],['Davlatlar','🏳️'],['Jonli statistika','📊'],['Tavsiya','💡']]}
+];
+let eduMySubjectSection=null;
 function eduSubjectDetail(){
  const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr">${topbar('Fan')}<p class="card">Fan topilmadi.</p></div>`;
- const id=eduSubjectId(s),lessons=eduCatalog.lessons.filter(x=>x.subject_id===id),books=eduCatalog.books.filter(x=>x.subject_id===id),quizzes=eduCatalog.quizzes.filter(x=>x.subject_id===id);
- const list=(arr,kind,ico)=>arr.map(x=>`<button class="li" data-edu-open="${kind}" data-edu-id="${esc(x.id)}"><span class="tile" style="background:#6556E8">${ic(ico)}</span><div class="grow"><b>${esc(x.title)}</b><div class="sm muted">${esc(x.description||'')}</div></div>${ic('next',18)}</button>`).join('');
- return `<div class="scr fade">${topbar(esc(s.n))}<div class="hero"><h2>${esc(s.n)}</h2><p>${esc(s.remote?.description||'Video darslar, elektron kitoblar va testlar')}</p></div><div class="sec"><h3>🎬 Video darslar</h3></div><div class="list">${list(lessons,'lesson','play')||'<div class="card muted">Hozircha dars yo‘q</div>'}</div><div class="sec"><h3>📖 Elektron kitoblar</h3></div><div class="list">${list(books,'book','book')||'<div class="card muted">Hozircha kitob yo‘q</div>'}</div><div class="sec"><h3>📝 Testlar</h3></div><div class="list"><button class="li" data-go="edu-test-categories"><span class="tile" style="background:#6556E8">${ic('test')}</span><div class="grow"><b>Testlar katalogi</b><span class="sm muted">Milliy sertifikat, attestatsiya, DTM/UZBMB va mavzulashgan testlar</span></div>${ic('next',18)}</button></div></div>`;
+ const count=eduCatalog.lessons.filter(x=>x.subject_id===eduSubjectId(s)).length;
+ return `<div class="scr fade edu-my-subject">${topbar('Mening fanim')}
+ <div class="edu-my-hero"><div class="edu-my-globe">${s.i==='globe'?'🌍':'📚'}</div><div><div class="edu-my-kicker">EDUONE • MENING FANIM</div><h2>${esc(s.n)}</h2><p>${esc(s.remote?.description||'Bilim sari yangi qadam!')}</p><span class="edu-my-count">${count} ta video dars</span></div></div>
+ ${eduMySubjectGroups.map((g,gi)=>`<section class="edu-my-group"><div class="edu-my-heading"><span>${g.icon}</span><h3>${g.title}</h3><small>${g.items.length} ta</small></div><div class="edu-my-grid">${g.items.map(([title,emoji],ii)=>`<button type="button" class="edu-my-tile" data-my-group="${gi}" data-my-item="${ii}"><span class="edu-my-emoji">${emoji}</span><span class="edu-my-name">${title}</span><span class="edu-my-chevron">›</span></button>`).join('')}</div></section>`).join('')}
+ </div>`;
 }
+function eduMySubjectSectionView(){
+ const g=eduMySubjectGroups[eduMySubjectSection?.group],item=g?.items[eduMySubjectSection?.item];
+ if(!item)return `<div class="scr fade">${topbar('Mening fanim')}</div>`;
+ const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected),id=eduSubjectId(s),title=item[0];
+ const allLessons=eduCatalog.lessons.filter(x=>x.subject_id===id),allBooks=eduCatalog.books.filter(x=>x.subject_id===id);
+ const isBooks=title==='Elektron kitoblar',isVideo=title==='Video darslar';
+ const isTest=/sertifikat|attestatsiya|DTM|UZBMB|testlar|Olimpiada/i.test(title);
+ const source=isBooks?allBooks:allLessons;
+ const filtered=/^[5-9]-sinf$/.test(title)?source.filter(x=>((x.title||'')+' '+(x.description||'')).toLowerCase().includes(title.toLowerCase())):source;
+ const arr=isBooks||isVideo||/^[5-9]-sinf$/.test(title)?filtered:[];
+ const list=arr.map(x=>`<button class="li" data-edu-open="${isBooks?'book':'lesson'}" data-edu-id="${esc(x.id)}"><span class="tile" style="background:#6556E8">${ic(isBooks?'book':'play')}</span><div class="grow"><b>${esc(x.title)}</b><div class="sm muted">${esc(x.description||'')}</div></div>${ic('next',18)}</button>`).join('');
+ return `<div class="scr fade edu-my-subject">${topbar(title)}<div class="edu-my-hero"><div class="edu-my-globe">${item[1]}</div><div><div class="edu-my-kicker">${esc(s?.n||'EduOne')}</div><h2>${title}</h2><p>${isTest?'Testlar katalogini oching':isBooks?'Elektron kitoblar':isVideo?'Video darslar':'Materiallar va mashg‘ulotlar'}</p></div></div>${isTest?`<button class="btn" data-go="edu-test-categories">📝 Testlar katalogini ochish</button>`:`<div class="list">${list||'<div class="card muted">Bu bo‘limga materiallar tez orada joylanadi.</div>'}</div>`}</div>`;
+}
+V['edu-my-section']=eduMySubjectSectionView;
+
 const eduTestCategories=[
  {id:'milliy',title:'🏅 Milliy sertifikat',desc:'Milliy sertifikat variantlari'},
  {id:'attest',title:'🎓 O‘qituvchilar attestatsiyasi',desc:'Attestatsiya testlari'},
