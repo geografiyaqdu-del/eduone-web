@@ -1181,8 +1181,8 @@ function eduSubjectDetail(inTab=false){
  const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr"><div class="top"><h2>Mening fanim</h2></div><p class="card">Tanlangan fan topilmadi.</p></div>`;
  const count=eduCatalog.lessons.filter(x=>x.subject_id===eduSubjectId(s)).length;
  return `<div class="scr fade edu-my-subject">${inTab?'<div class="top"><div style="width:40px"></div><h2>Mening fanim</h2><div style="width:40px"></div></div>':topbar('Mening fanim')}
- <div class="edu-my-hero"><div class="edu-my-globe">${s.i==='globe'?'🌍':'📚'}</div><div><div class="edu-my-kicker">EDUONE • MENING FANIM</div><h2>${esc(s.n)}</h2><p>${esc(s.remote?.description||'Bilim sari yangi qadam!')}</p><span class="edu-my-count">${count} ta video dars</span></div></div>
- ${eduMySubjectGroups.map((g,gi)=>`<section class="edu-my-group"><div class="edu-my-heading"><span>${g.icon}</span><h3>${g.title}</h3><small>${g.items.length} ta</small></div><div class="edu-my-grid">${g.items.map(([title,emoji],ii)=>`<button type="button" class="edu-my-tile" data-my-group="${gi}" data-my-item="${ii}"><span class="edu-my-emoji">${emoji}</span><span class="edu-my-name">${title}</span><span class="edu-my-chevron">›</span></button>`).join('')}</div></section>`).join('')}
+ <div class="edu-my-hero"><div class="edu-my-globe">${s.i==='globe'?'🌍':'📚'}</div><div><h2>${esc(s.n)}</h2><span class="edu-my-count">${count} ta video dars</span></div></div>
+ ${eduMySubjectGroups.map((g,gi)=>`<section class="edu-my-group"><div class="edu-my-heading"><span>${g.icon}</span><h3>${g.title}</h3></div><div class="edu-my-grid">${g.items.map(([title,emoji],ii)=>`<button type="button" class="edu-my-tile" data-my-group="${gi}" data-my-item="${ii}"><span class="edu-my-emoji">${emoji}</span><span class="edu-my-name">${title}</span><span class="edu-my-chevron">›</span></button>`).join('')}</div></section>`).join('')}
  </div>`;
 }
 function eduMySubjectSectionView(){
