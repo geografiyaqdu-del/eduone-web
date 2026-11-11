@@ -1043,7 +1043,7 @@ function bind(){
  app.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{const sub=eduVisibleSubjects().find(s=>s.id===b.dataset.sub);if(sub){eduCatalog.selected=sub.id;go('edu-subject')}});
  app.querySelectorAll('[data-my-group]').forEach(b=>b.onclick=()=>{eduMySubjectSection={group:Number(b.dataset.myGroup),item:Number(b.dataset.myItem)};go('edu-my-section')});
  app.querySelectorAll('[data-edu-open]').forEach(b=>b.onclick=()=>{eduCatalog.item=b.dataset.eduId;go('edu-'+b.dataset.eduOpen)});
- if(cur==='tilni'){app.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{S.lang=b.dataset.l;store.set('lang',S.lang);render()});$('#lgo').onclick=()=>S.user?back():go('email')}
+ if(cur==='tilni'){app.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{S.lang=b.dataset.l;eduCloudI18nEpoch++;store.set('lang',S.lang);render()});$('#lgo').onclick=()=>S.user?back():go('email')}
  if(cur==='reg'){const d=S.draft;const sync=()=>{d.phone=d.phone||'';d.reg=$('#f-reg').value;d.tuman=$('#f-tum').value;d.name=$('#f-name').value;d.age=$('#f-age').value};
   $('#f-reg').onchange=()=>{sync();d.tuman='';render()};
   app.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{sync();d.role=b.dataset.role;render()});app.querySelectorAll('[data-gen]').forEach(b=>b.onclick=()=>{sync();d.gen=b.dataset.gen;render()});
@@ -1207,18 +1207,93 @@ function eduTranslateRoot(root){
   }
  }
 }
+
+/* EduOne cloud translation extension.
+   Uses the authenticated Supabase Edge Function; the DeepL key stays server-side.
+   Existing dictionaries remain the instant/offline fallback. */
+const eduCloudI18nCache = new Map();
+const eduCloudI18nPending = new Map();
+let eduCloudI18nEpoch = 0;
+function eduCloudI18nKey(lang, source){return lang+'\u0000'+source;}
+function eduCloudI18nRead(lang,source){
+ const key=eduCloudI18nKey(lang,source);
+ if(eduCloudI18nCache.has(key))return eduCloudI18nCache.get(key);
+ try {
+  const saved=localStorage.getItem('eduone_translation_'+lang+'_'+source);
+  if(saved){eduCloudI18nCache.set(key,saved);return saved;}
+ }catch(_){}
+ return null;
+}
+function eduCloudI18nSave(lang,source,result){
+ eduCloudI18nCache.set(eduCloudI18nKey(lang,source),result);
+ try {if(source.length<160)localStorage.setItem('eduone_translation_'+lang+'_'+source,result);}catch(_){}
+}
+function eduCloudI18nEligible(node){
+ const el=node?.parentElement;
+ if(!el || el.closest('script,style,textarea,code,pre,input,select,option,[contenteditable],[data-i18n-ignore],.edu-auth-panel'))return false;
+ if(el.closest('[data-user-content],[data-question],[data-answer]'))return false;
+ return true;
+}
+async function eduCloudI18nFetch(source,lang){
+ if(!client || !verified)return null;
+ const session=await client.auth.getSession();
+ const token=session?.data?.session?.access_token;
+ if(!token)return null;
+ const response=await fetch(AUTH_URL+'/functions/v1/smooth-action',{
+  method:'POST',
+  headers:{'Content-Type':'application/json','apikey':AUTH_PUBLIC_KEY,'Authorization':'Bearer '+token},
+  body:JSON.stringify({text:source,target_lang:lang.toUpperCase()})
+ });
+ if(!response.ok)return null;
+ const data=await response.json();
+ const result=data.translation ?? data.translated_text ?? data.translatedText ?? data.text ?? data.result;
+ return typeof result==='string' && result.trim() ? result : null;
+}
+function eduCloudI18nSchedule(root){
+ const lang=S.lang;
+ if(!['en','ru'].includes(lang)||!verified||!client||!root)return;
+ const epoch=eduCloudI18nEpoch;
+ const nodes=[];
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){
+  if(!eduCloudI18nEligible(node))continue;
+  const raw=node.nodeValue;
+  const source=raw.trim();
+  if(source.length<3||source.length>220||!/[A-Za-zÀ-ž]/.test(source))continue;
+  // Do not send existing dictionary translations or user-specific content to DeepL.
+  if(eduTranslateText(source,lang)!==source)continue;
+  if(/[{}<>]|@|https?:\/\/|^\d/.test(source))continue;
+  const cached=eduCloudI18nRead(lang,source);
+  if(cached){node.nodeValue=raw.replace(source,cached);continue;}
+  const key=eduCloudI18nKey(lang,source);
+  if(!eduCloudI18nPending.has(key)){
+   eduCloudI18nPending.set(key,eduCloudI18nFetch(source,lang).then(result=>{
+    if(result)eduCloudI18nSave(lang,source,result);
+    return result;
+   }).catch(()=>null).finally(()=>eduCloudI18nPending.delete(key)));
+  }
+  eduCloudI18nPending.get(key).then(result=>{
+   if(result && epoch===eduCloudI18nEpoch && S.lang===lang &&
+      node.isConnected && node.nodeValue===raw)node.nodeValue=raw.replace(source,result);
+  });
+ }
+}
+
 function applyEduLanguage(){
  const lang=(typeof S!=='undefined'&&S.lang)||'uz';
  document.documentElement.lang=lang==='kk'?'kaa':lang;
  eduTranslateRoot(document.getElementById('app'));
  eduTranslateRoot(document.getElementById('tabs'));
+ eduCloudI18nSchedule(document.getElementById('app'));
+ eduCloudI18nSchedule(document.getElementById('tabs'));
 }
 // Child views and image crop dialogs are added after the initial render.
 const eduI18nObserver=new MutationObserver(changes=>{
  if(S.lang==='uz')return;
  for(const change of changes){
   for(const node of change.addedNodes){
-   if(node.nodeType===Node.ELEMENT_NODE||node.nodeType===Node.TEXT_NODE)eduTranslateRoot(node);
+   if(node.nodeType===Node.ELEMENT_NODE||node.nodeType===Node.TEXT_NODE){eduTranslateRoot(node);if(node.nodeType===Node.ELEMENT_NODE)eduCloudI18nSchedule(node);}
   }
  }
 });
