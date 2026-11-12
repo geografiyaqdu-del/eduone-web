@@ -2,6 +2,7 @@
 <html lang="uz">
 <head>
 <meta name="eduone-build-profile-ranking" content="V19">
+<meta name="eduone-auto-translation" content="V22">
 <meta name="eduone-build-admin-navigation" content="V18">
 <meta name="eduone-build-subject-banner" content="V17">
 <meta name="eduone-build" content="V16-admin-statistics-dedup-2026-11-09">
@@ -1231,7 +1232,7 @@ function eduCloudI18nSave(lang,source,result){
 function eduCloudI18nEligible(node){
  const el=node?.parentElement;
  if(!el || el.closest('script,style,textarea,code,pre,input,select,option,[contenteditable],[data-i18n-ignore],.edu-auth-panel'))return false;
- if(el.closest('[data-user-content],[data-question],[data-answer]'))return false;
+ if(el.closest('.edu-admin,[data-i18n-private],.edu-auth-panel'))return false;
  return true;
 }
 async function eduCloudI18nFetch(source,lang){
@@ -1244,14 +1245,14 @@ async function eduCloudI18nFetch(source,lang){
   headers:{'Content-Type':'application/json','apikey':AUTH_PUBLIC_KEY,'Authorization':'Bearer '+token},
   body:JSON.stringify({text:source,target_lang:lang.toUpperCase()})
  });
- if(!response.ok)return null;
+ if(!response.ok){console.warn('EduOne tarjima xizmati:',response.status);return null;}
  const data=await response.json();
  const result=data.translation ?? data.translated_text ?? data.translatedText ?? data.text ?? data.result;
  return typeof result==='string' && result.trim() ? result : null;
 }
 function eduCloudI18nSchedule(root){
  const lang=S.lang;
- if(!['en','ru'].includes(lang)||!verified||!client||!root)return;
+ if(!['en','ru','kk'].includes(lang)||!verified||!client||!root)return;
  const epoch=eduCloudI18nEpoch;
  const nodes=[];
  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
@@ -1260,10 +1261,10 @@ function eduCloudI18nSchedule(root){
   if(!eduCloudI18nEligible(node))continue;
   const raw=node.nodeValue;
   const source=raw.trim();
-  if(source.length<3||source.length>220||!/[A-Za-zÀ-ž]/.test(source))continue;
+  if(source.length<2||source.length>1800||!/[A-Za-zÀ-žА-Яа-яЁёӘәҒғҚқҢңӨөҰұҮүҺһІі]/.test(source))continue;
   // Do not send existing dictionary translations or user-specific content to DeepL.
   if(eduTranslateText(source,lang)!==source)continue;
-  if(/[{}<>]|@|https?:\/\/|^\d/.test(source))continue;
+  if(/[{}<>]|@|https?:\/\//.test(source)||/^\d+[.)]?\s*$/.test(source))continue;
   const cached=eduCloudI18nRead(lang,source);
   if(cached){node.nodeValue=raw.replace(source,cached);continue;}
   const key=eduCloudI18nKey(lang,source);
@@ -1293,7 +1294,7 @@ const eduI18nObserver=new MutationObserver(changes=>{
  if(S.lang==='uz')return;
  for(const change of changes){
   for(const node of change.addedNodes){
-   if(node.nodeType===Node.ELEMENT_NODE||node.nodeType===Node.TEXT_NODE){eduTranslateRoot(node);if(node.nodeType===Node.ELEMENT_NODE)eduCloudI18nSchedule(node);}
+   if(node.nodeType===Node.ELEMENT_NODE||node.nodeType===Node.TEXT_NODE){eduTranslateRoot(node);eduCloudI18nSchedule(node.nodeType===Node.TEXT_NODE?node.parentElement:node);}
   }
  }
 });
@@ -1431,7 +1432,7 @@ function eduQuizView(x){
  const i=Math.min(Math.max(eduQuizState.current,0),count-1);const q=eduQuizState.questions[i];
  return `<div class="card"><p><b>${count} ta savol</b> · Belgilangan: ${Object.keys(eduQuizState.answers).length}</p>
  <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:16px 0">${eduQuizState.questions.map((v,j)=>`<button type="button" data-edu-jump="${j}" style="min-height:46px;border-radius:12px;font-weight:800;border:2px solid ${j===i?'#6556E8':'#e2e4f0'};background:${j===i?'#e8e5ff':eduQuizState.answers[v.id]?'#dcfce7':'#f7f8fc'};color:#222">${j+1}</button>`).join('')}</div>
- <div style="border-top:1px solid #ddd;padding:16px 0"><h3>${i+1}. ${esc(q.question)}</h3>${['A','B','C','D'].map(k=>`<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:12px;cursor:pointer"><input type="radio" name="edu-q-${i}" data-edu-answer="${esc(q.id)}" value="${k}" ${eduQuizState.answers[q.id]===k?'checked':''}><span><b>${k})</b> ${esc(q['option_'+k.toLowerCase()])}</span></label>`).join('')}</div>
+ <div style="border-top:1px solid #ddd;padding:16px 0"><h3><span data-i18n-ignore>${i+1}.</span> <span data-edu-question-content>${esc(q.question)}</span></h3>${['A','B','C','D'].map(k=>`<label style="display:flex;align-items:flex-start;gap:10px;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:12px;cursor:pointer"><input type="radio" name="edu-q-${i}" data-edu-answer="${esc(q.id)}" value="${k}" ${eduQuizState.answers[q.id]===k?'checked':''}><span><b data-i18n-ignore>${k})</b> <span data-edu-question-content>${esc(q['option_'+k.toLowerCase()])}</span></span></label>`).join('')}</div>
  <div style="display:flex;gap:10px;margin-bottom:14px"><button type="button" class="btn out" style="flex:1" data-edu-jump="${i-1}" ${i===0?'disabled':''}>← Oldingi</button><button type="button" class="btn" style="flex:1" data-edu-jump="${i+1}" ${i===count-1?'disabled':''}>Keyingi →</button></div>
  <button class="btn" id="edu-quiz-finish" ${eduQuizState.busy?'disabled':''}>${eduQuizState.busy?'Tekshirilmoqda...':'Testni yakunlash'}</button></div>`;
 }
