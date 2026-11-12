@@ -435,10 +435,21 @@ body:has(.edu-intro){margin:0;}
 .edu-art{position:relative;overflow:hidden}.edu-art:has(>.edu-catalog-image)>span{display:none}.edu-art>.edu-catalog-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;box-sizing:border-box;background:linear-gradient(145deg,#effaff,#d8eeff)}
 .edu-language-icon{display:inline-flex;align-items:center;justify-content:center;font-size:32px;width:48px;height:48px;flex-shrink:0}.edu-language-icon img{width:100%;height:100%;object-fit:contain;border-radius:10px}
 .admin-list-image{width:40px;height:40px;object-fit:cover;border-radius:10px;vertical-align:middle;margin-right:8px}.admin-preview{width:110px;height:110px;object-fit:contain;border-radius:16px;background:#eef6ff}.ad-image-preview{padding:8px}
+
+/* V33 catalog image editor */
+#edu-catalog-editor{position:fixed;inset:0;z-index:100050;background:rgba(10,24,55,.78);display:flex;align-items:center;justify-content:center;padding:14px;overflow-y:auto}
+.edu-cat-dialog{background:#fff;color:#193257;border-radius:24px;width:min(100%,430px);padding:20px;box-shadow:0 22px 70px #0006}
+.edu-cat-dialog h3{font-size:22px;margin:0 0 5px;text-align:center}.edu-cat-dialog p{font-size:13px;color:#60718a;text-align:center;margin:0 0 13px}
+#edu-cat-canvas{display:block;width:min(100%,310px);aspect-ratio:1;margin:auto;border-radius:15px;touch-action:none;background:#edf4ff;box-shadow:inset 0 0 0 1px #dbe5f4}
+.edu-cat-dialog label{display:flex;justify-content:space-between;margin-top:14px;font-weight:700;font-size:14px}
+#edu-cat-zoom{width:100%;accent-color:#2463eb;margin:12px 0}.edu-cat-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.edu-cat-actions button{border:0;border-radius:13px;padding:13px 8px;font-weight:800;font-size:15px;cursor:pointer}.edu-cat-cancel{background:#eaf0f9;color:#234}.edu-cat-accept{background:#2463eb;color:#fff}
+.edu-cat-confirmed{display:flex;align-items:center;gap:10px;background:#ecfdf4;border:1px solid #b8ebce;padding:10px;border-radius:12px;margin:9px 0;color:#136b43;font-size:13px;font-weight:700}
 </style></head>
 <body>
 
-<div class="app" id="app"><main style="min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif"><section style="background:white;color:#17345b;border-radius:24px;padding:24px;max-width:420px;text-align:center"><h2>EduOne yuklanmoqda…</h2><p>Agar sahifa ochilmasa, pastdagi tugmani bosing.</p><button onclick="location.reload()" style="padding:14px 24px;border:0;border-radius:14px;background:#2463eb;color:white">Qayta yuklash</button></section></main></div>
+<div class="app" id="app"></div>
+
 <nav class="tabs" id="tabs" hidden><div class="in" id="tabsIn"></div></nav>
 
 <script>
@@ -1637,7 +1648,7 @@ function adminView(){
  ${tab!=='dashboard'?'<button class="ad-mini" data-ad-tab="dashboard" style="margin:0 0 14px 0">← Boshqaruvga qaytish</button>':''}
  ${tab==='statistics'?adminStatisticsView():tab==='dashboard'?`<div class="ad-kpis">${Object.entries(adminDefs).map(([k,d])=>`<button class="ad-kpi" data-ad-tab="${k}" style="text-align:left"><small>${d.icon} ${d.title}</small><b>${adminRowsFor(k).length}</b><small>Ma’lumotlar bazasi</small></button>`).join('')}</div><div class="card" style="margin:18px 0;padding:22px;border:2px solid #a5b4fc;background:linear-gradient(135deg,#ffffff,#eef2ff);box-shadow:0 8px 26px rgba(27,42,120,.13)"><div style="font-size:25px;font-weight:900;color:#1e2a55;margin-bottom:9px">📈 Statistika markazi</div><p style="color:#56617a;margin:0 0 16px">👥 Foydalanuvchilar soni · 📍 Hududlar · 🎂 Yosh · 👤 Jins · 🎓 Toifalar</p><button type="button" class="btn" data-ad-tab="statistics" style="width:100%;min-height:54px;font-size:17px;font-weight:800">Statistika markazini ochish →</button></div><div class="card"><h3>Tezkor boshqaruv</h3><p class="sm muted">Fan yarating, unga video darslar, PDF kitoblar va testlarni bog‘lang. Obunalarni foydalanuvchi UUID orqali boshqaring.</p><div class="ad-actions"><button class="btn" data-ad-tab="subjects">+ Fan qo‘shish</button><button class="ad-mini" data-ad-refresh>↻ Yangilash</button></div></div><div class="ad-note">🔒 Barcha yozish/o‘chirish amallari Supabase RLS orqali faqat administratorlarga ruxsat etiladi. Panel faqat haqiqiy kirgan admin uchun ochiladi.</div>`:
  `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div><input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0"><button class="btn" data-ad-new>+ Yangi qo‘shish</button></div>
- ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label>${adminState.editing.row?.image_path?`<div class="ad-image-preview">${eduImageMarkup(adminState.editing.row.image_path,'', 'admin-preview')}</div>`:''}<p class="sm muted">Rasm Supabase Storage orqali barcha qurilmalarda ko‘rinadi. Rasmni almashtirish uchun yangi fayl tanlang.</p>`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
+ ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label><div id="ad-image-confirmation" class="sm muted">Rasmni tanlang, qirqing va tasdiqlang. Keyin «Saqlash»ni bosing.</div>${adminState.editing.row?.image_path?`<div class="ad-image-preview">${eduImageMarkup(adminState.editing.row.image_path,'', 'admin-preview')}</div>`:''}<p class="sm muted">Rasm Supabase Storage orqali barcha qurilmalarda ko‘rinadi. Rasmni almashtirish uchun yangi fayl tanlang, tahrirlang va tasdiqlang.</p>`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
  ${tab==='questions'?`<div class="card ad-form"><b>📥 JSON testlarni ommaviy yuklash</b><p class="sm muted">Faylni tanlang, savollarni tekshiring va Supabase bazasiga saqlang.</p><label>JSON fayl<input type="file" id="ad-import-file" accept=".json,application/json"></label><div id="ad-import-preview">${adminState.importData?adminImportPreview():''}</div></div>`:''}
  <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${['subjects','languages'].includes(tab)&&r.image_path?eduImageMarkup(r.image_path,'','admin-list-image'):tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
  <p class="sm muted" style="text-align:center">EduOne Admin panel · Secure by Supabase RLS</p></div>`;
@@ -1688,25 +1699,59 @@ async function adminImportSave(){
  adminState.importData=null;toast(rows.length+' ta savol saqlandi');await adminLoad();await eduRefreshCatalog(true);
  }catch(e){toast('Import xatosi: '+e.message);if(created)console.warn('Bo‘sh to‘plam ID:',created)}finally{adminState.importBusy=false;}
 }
+
+/* V33 — edit catalog images locally; never upload before confirmation and form save. */
+let eduCatalogApproved=null;
+let eduCatalogPending=false;
+function eduCatalogClear(){eduCatalogApproved=null;eduCatalogPending=false;document.getElementById('edu-catalog-editor')?.remove();}
+function eduCatalogEditor(file){
+ eduCatalogApproved=null;eduCatalogPending=true;
+ const info=document.getElementById('ad-image-confirmation');if(info)info.textContent='Rasm hali tasdiqlanmagan.';
+ if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>5*1024*1024){eduCatalogPending=false;toast('PNG, JPG yoki WebP (5 MB gacha) tanlang');return;}
+ const previous=document.getElementById('edu-catalog-editor');if(previous)previous.remove();
+ const url=URL.createObjectURL(file),img=new Image();
+ img.onload=()=>{
+  const modal=document.createElement('div');modal.id='edu-catalog-editor';
+  modal.innerHTML='<section class="edu-cat-dialog" role="dialog" aria-modal="true" aria-label="Rasmni tahrirlash"><h3>✂️ Rasmni tahrirlash</h3><p>Rasmni barmoq bilan suring. Kattalashtirish yoki kichraytirish uchun pastdagi slayderdan foydalaning.</p><canvas id="edu-cat-canvas" width="600" height="600"></canvas><label for="edu-cat-zoom"><span>Rasm o‘lchami</span><span id="edu-cat-zoom-value">100%</span></label><input type="range" id="edu-cat-zoom" min="100" max="300" value="100" step="5"><p>Rasm 1:1 kvadrat formatida saqlanadi. Doira shaklidagi belgilar ichida ham mos ko‘rinadi.</p><div class="edu-cat-actions"><button type="button" class="edu-cat-cancel" id="edu-cat-cancel">Bekor qilish</button><button type="button" class="edu-cat-accept" id="edu-cat-accept">✓ Tasdiqlash</button></div></section>';
+  document.body.appendChild(modal);
+  const canvas=modal.querySelector('canvas'),ctx=canvas.getContext('2d'),zoom=modal.querySelector('#edu-cat-zoom');
+  const base=Math.max(600/img.width,600/img.height);let scale=1,dx=0,dy=0,drag=null;
+  const bounds=()=>{const w=img.width*base*scale,h=img.height*base*scale;dx=Math.max((600-w)/2,Math.min((w-600)/2,dx));dy=Math.max((600-h)/2,Math.min((h-600)/2,dy));};
+  const draw=()=>{bounds();const w=img.width*base*scale,h=img.height*base*scale;ctx.clearRect(0,0,600,600);ctx.fillStyle='#fff';ctx.fillRect(0,0,600,600);ctx.drawImage(img,(600-w)/2+dx,(600-h)/2+dy,w,h);};
+  zoom.oninput=()=>{scale=Number(zoom.value)/100;modal.querySelector('#edu-cat-zoom-value').textContent=zoom.value+'%';draw();};
+  canvas.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);};
+  canvas.onpointermove=e=>{if(!drag)return;const r=canvas.getBoundingClientRect();dx+=(e.clientX-drag.x)*600/r.width;dy+=(e.clientY-drag.y)*600/r.height;drag={x:e.clientX,y:e.clientY};draw();};
+  canvas.onpointerup=canvas.onpointercancel=()=>{drag=null;};
+  modal.querySelector('#edu-cat-cancel').onclick=()=>{modal.remove();eduCatalogPending=false;eduCatalogApproved=null;const input=document.getElementById('ad-image');if(input)input.value='';if(info)info.textContent='Rasm tanlanmadi. Eski rasm o‘zgarishsiz qoladi.';URL.revokeObjectURL(url);};
+  modal.querySelector('#edu-cat-accept').onclick=()=>{
+   canvas.toBlob(blob=>{if(!blob){toast('Rasmni qayta tanlang');return;}eduCatalogApproved=new File([blob],'eduone-catalog.webp',{type:'image/webp'});eduCatalogPending=false;modal.remove();if(info){info.innerHTML='<div class="edu-cat-confirmed">✓ Rasm tasdiqlandi. Saqlash tugmasini bosing — shundan keyin barcha sahifalarda yangilanadi.</div><img alt="Tasdiqlangan rasm" style="width:110px;height:110px;object-fit:contain;border-radius:14px" src="'+URL.createObjectURL(blob)+'">';}URL.revokeObjectURL(url);},'image/webp',.9);
+  };
+  draw();
+ };
+ img.onerror=()=>{eduCatalogPending=false;URL.revokeObjectURL(url);toast('Rasmni ochib bo‘lmadi');};img.src=url;
+}
 function adminBind(){
+ const imageInput=document.getElementById('ad-image');if(imageInput)imageInput.onchange=()=>{if(imageInput.files?.[0])eduCatalogEditor(imageInput.files[0]);};
  const imp=document.getElementById('ad-import-file');if(imp)imp.onchange=async()=>{try{const f=imp.files?.[0];if(!f)return;if(f.size>2*1024*1024)throw Error('JSON 2 MB dan katta');adminState.importData=adminValidateImport(JSON.parse(await f.text()));document.getElementById('ad-import-preview').innerHTML=adminImportPreview();document.getElementById('ad-import-save').onclick=adminImportSave;toast(adminState.importData.questions.length+' ta savol tayyor');}catch(e){adminState.importData=null;document.getElementById('ad-import-preview').textContent=e.message;toast(e.message)}};
  const save=document.getElementById('ad-import-save');if(save)save.onclick=adminImportSave;
 
- app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{adminState.tab=b.dataset.adTab;adminState.search='';adminState.editing=null;render();if(adminState.tab==='statistics')adminLoadStatistics()});
+ app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{adminState.tab=b.dataset.adTab;adminState.search='';adminState.editing=null;eduCatalogClear();render();if(adminState.tab==='statistics')adminLoadStatistics()});
  app.querySelectorAll('[data-ad-refresh]').forEach(b=>b.onclick=()=>adminState.tab==='statistics'?adminLoadStatistics():adminLoad());
  const search=$('#ad-search');if(search)search.oninput=e=>{adminState.search=e.target.value;const cursor=search.selectionStart;render();$('#ad-search')?.focus();$('#ad-search')?.setSelectionRange(cursor,cursor)};
- const newBtn=app.querySelector('[data-ad-new]');if(newBtn)newBtn.onclick=()=>{adminState.editing={table:adminState.tab,row:{},id:null};render()};
+ const newBtn=app.querySelector('[data-ad-new]');if(newBtn)newBtn.onclick=()=>{eduCatalogClear();adminState.editing={table:adminState.tab,row:{},id:null};render()};
  const cancel=app.querySelector('[data-ad-cancel]');if(cancel)cancel.onclick=()=>{adminState.editing=null;render()};
- app.querySelectorAll('[data-ad-edit]').forEach(b=>b.onclick=()=>{const row=adminRowsFor(adminState.tab).find(x=>x.id===b.dataset.adEdit);if(row){adminState.editing={table:adminState.tab,id:row.id,row};render()}});
+ app.querySelectorAll('[data-ad-edit]').forEach(b=>b.onclick=()=>{const row=adminRowsFor(adminState.tab).find(x=>x.id===b.dataset.adEdit);if(row){eduCatalogClear();adminState.editing={table:adminState.tab,id:row.id,row};render()}});
  app.querySelectorAll('[data-ad-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('Ushbu yozuvni butunlay o‘chirasizmi?'))return;const table=adminState.tab;const {error}=await client.from('edu_'+adminRealTable(table)).delete().eq('id',b.dataset.adDelete);if(error)toast(error.message);else{toast('O‘chirildi');adminLoad();eduRefreshCatalog(true)}});
  const form=$('#ad-form');if(form)form.onsubmit=async e=>{
   e.preventDefault();const button=form.querySelector('[type=submit]');button.disabled=true;
   const table=adminState.tab,edit=adminState.editing,fd=new FormData(form),row={};
   for(const [key,label,type] of adminDefs[table].fields){let v=type==='checkbox'?form.elements[key].checked:fd.get(key);if(type==='number')v=v===''?0:Number(v);if(type==='subject_optional'&&v==='')v=null;if(type==='datetime-local')v=v?new Date(v).toISOString():null;row[key]=v}
   try{
+   if(['subjects','languages'].includes(table)&&eduCatalogPending)throw Error('Avval rasmni tasdiqlang yoki bekor qiling.');
+   if(['subjects','languages'].includes(table)&&$('#ad-image')?.files?.length&&!eduCatalogApproved)throw Error('Rasmni qirqib, «Tasdiqlash» tugmasini bosing.');
    if(table==='books'&&$('#ad-pdf')?.files?.length){const file=$('#ad-pdf').files[0];if(file.type!=='application/pdf'||file.size>25*1024*1024)throw Error('PDF 25 MB dan oshmasligi kerak.');const path=verified.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const result=await client.storage.from('eduone-books').upload(path,file,{contentType:'application/pdf'});if(result.error)throw result.error;row.file_path=path}
-   if(['subjects','languages'].includes(table)&&$('#ad-image')?.files?.length){
-    const file=$('#ad-image').files[0];
+   if(['subjects','languages'].includes(table)&&eduCatalogApproved){
+    const file=eduCatalogApproved;
     const allowed={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
     if(!allowed[file.type]||file.size>5*1024*1024)throw Error('PNG, JPG yoki WebP rasm tanlang (5 MB gacha).');
     if(!verified?.id)throw Error('Rasm yuklash uchun hisobga kiring.');
@@ -1717,7 +1762,7 @@ function adminBind(){
     row.image_path=path;
    }
    const query=edit.id?client.from('edu_'+adminRealTable(table)).update(row).eq('id',edit.id):client.from('edu_'+adminRealTable(table)).insert(row);
-   const {error}=await query;if(error)throw error;adminState.editing=null;toast('Muvaffaqiyatli saqlandi');await adminLoad();await eduRefreshCatalog(true);
+   const {error}=await query;if(error)throw error;adminState.editing=null;eduCatalogClear();toast('Muvaffaqiyatli saqlandi');await adminLoad();await eduRefreshCatalog(true);
   }catch(err){toast('Xatolik: '+err.message)}finally{button.disabled=false}
  };
 }
