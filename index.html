@@ -535,11 +535,25 @@ let stack=[], cur=null, T=null, timerId=null, filter='all';
 const $=s=>document.querySelector(s);
 const app=$('#app');
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=eduTranslateText(String(t),S.lang);document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
-function go(name,push=true){if(push&&cur)stack.push(cur);cur=name;render()}
-function back(){cur=stack.pop()||'home';render()}
+// V35: browser history and per-view scroll restoration.
+let eduNavSeq=0, eduRestoring=false;
+const eduScrollPositions=new Map();
+const eduNavKey=()=>cur==='admin'?'admin:'+((typeof adminState!=='undefined'&&adminState.tab)||'dashboard'):String(cur||'home');
+function eduSaveScroll(){if(cur)eduScrollPositions.set(eduNavKey(),window.scrollY||document.documentElement.scrollTop||0)}
+function eduRestoreScroll(key){const y=eduScrollPositions.get(key)||0;requestAnimationFrame(()=>{window.scrollTo(0,y);requestAnimationFrame(()=>window.scrollTo(0,y));setTimeout(()=>{if(eduNavKey()===key)window.scrollTo(0,y)},220)})}
+function eduHistoryPush(){try{history.pushState({eduone:true,seq:++eduNavSeq},'',location.href)}catch(e){console.warn('History:',e)}}
+function go(name,push=true){eduSaveScroll();if(push&&cur){stack.push({page:cur,tab:cur==='admin'?adminState.tab:null,key:eduNavKey()});eduHistoryPush()}cur=name;render()}
+function back(){
+ if(document.getElementById('edu-catalog-editor')){document.getElementById('edu-cat-cancel')?.click();return}
+ if(cur==='admin'&&adminState.tab!=='dashboard'&&!stack.length){eduSaveScroll();adminState.tab='dashboard';adminState.editing=null;render();eduRestoreScroll('admin:dashboard');return}
+ if(stack.length){const entry=stack.pop();eduSaveScroll();cur=typeof entry==='string'?entry:entry.page;if(cur==='admin'&&entry.tab)adminState.tab=entry.tab;render();eduRestoreScroll(typeof entry==='string'?cur:entry.key);return}
+ if(cur!=='home'&&verified){eduSaveScroll();cur='home';render();return}
+ if(verified&&confirm('EduOne’dan chiqmoqchimisiz?')){history.back()}
+}
+window.addEventListener('popstate',()=>{if(eduRestoring)return;back();});
 const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tillari'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
 function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').setAttribute('data-i18n-ignore','');$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Mening fanim':'Мой предмет','Chet tillari':'Языки','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Mening fanim':'My subject','Chet tillari':'Languages','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Mening fanim':'Meniń pánim','Chet tillari':'Shet tilleri','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
-document.addEventListener('click',e=>{if(e.target.closest('[data-google-login]')){e.preventDefault();signInGoogle();return}if(e.target.closest('[data-theme-toggle]')){e.preventDefault();toggleTheme();return}const b=e.target.closest('[data-tab]');if(b){stack=[];cur=b.dataset.tab;render()}const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);if(e.target.closest('[data-back]'))back()});
+document.addEventListener('click',e=>{if(e.target.closest('[data-google-login]')){e.preventDefault();signInGoogle();return}if(e.target.closest('[data-theme-toggle]')){e.preventDefault();toggleTheme();return}const b=e.target.closest('[data-tab]');if(b){go(b.dataset.tab)}const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);if(e.target.closest('[data-back]')){if(stack.length&&history.state?.eduone)history.back();else back()}});
 // Profile images: remote storage is preferred; a local preview is retained for offline testing.
 function avatarLocalKey(){return 'edu1_avatar_'+(verified?.id||'guest')}
 function avatarSrc(){
@@ -1652,11 +1666,11 @@ async function adminLoadStatistics(){
 
 function adminView(){
  const tab=adminState.tab,def=adminDefs[tab],rows=adminRowsFor(tab);
- return `<div class="scr fade">${topbar('Admin panel')}<div class="ad-hero"><div style="font-size:12px;letter-spacing:2px;font-weight:800;opacity:.85">EDUONE • CONTROL CENTER</div><h2>Ta’lim platformasi<br>boshqaruvi</h2><div class="sm" style="opacity:.85">Administrator • <span data-i18n-ignore>${adminSafe(S.user?.name||'EduOne')}</span></div></div>
+ return `<div class="scr fade">${topbar('Admin panel')}${tab==='dashboard'?`<div class="ad-hero"><div style="font-size:12px;letter-spacing:2px;font-weight:800;opacity:.85">EDUONE • CONTROL CENTER</div><h2>Ta’lim platformasi<br>boshqaruvi</h2><div class="sm" style="opacity:.85">Administrator • <span data-i18n-ignore>${adminSafe(S.user?.name||'EduOne')}</span></div></div>`:''}
  ${tab!=='dashboard'?'<button class="ad-mini" data-ad-tab="dashboard" style="margin:0 0 14px 0">← Boshqaruvga qaytish</button>':''}
  ${tab==='statistics'?adminStatisticsView():tab==='dashboard'?`<div class="ad-kpis">${Object.entries(adminDefs).map(([k,d])=>`<button class="ad-kpi" data-ad-tab="${k}" style="text-align:left"><small>${d.icon} ${d.title}</small><b>${adminRowsFor(k).length}</b><small>Ma’lumotlar bazasi</small></button>`).join('')}</div><div class="card" style="margin:18px 0;padding:22px;border:2px solid #a5b4fc;background:linear-gradient(135deg,#ffffff,#eef2ff);box-shadow:0 8px 26px rgba(27,42,120,.13)"><div style="font-size:25px;font-weight:900;color:#1e2a55;margin-bottom:9px">📈 Statistika markazi</div><p style="color:#56617a;margin:0 0 16px">👥 Foydalanuvchilar soni · 📍 Hududlar · 🎂 Yosh · 👤 Jins · 🎓 Toifalar</p><button type="button" class="btn" data-ad-tab="statistics" style="width:100%;min-height:54px;font-size:17px;font-weight:800">Statistika markazini ochish →</button></div><div class="card"><h3>Tezkor boshqaruv</h3><p class="sm muted">Fan yarating, unga video darslar, PDF kitoblar va testlarni bog‘lang. Obunalarni foydalanuvchi UUID orqali boshqaring.</p><div class="ad-actions"><button class="btn" data-ad-tab="subjects">+ Fan qo‘shish</button><button class="ad-mini" data-ad-refresh>↻ Yangilash</button></div></div><div class="ad-note">🔒 Barcha yozish/o‘chirish amallari Supabase RLS orqali faqat administratorlarga ruxsat etiladi. Panel faqat haqiqiy kirgan admin uchun ochiladi.</div>`:
  `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div><input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0"><button class="btn" data-ad-new>+ Yangi qo‘shish</button></div>
- ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label><div id="ad-image-confirmation" class="sm muted" aria-live="polite"></div>${adminState.editing.row?.image_path?`<div class="ad-image-preview">${eduImageMarkup(adminState.editing.row.image_path,'', 'admin-preview')}</div>`:''}`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
+ ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label><div id="ad-image-confirmation" class="sm muted" aria-live="polite"></div><div id="ad-image-current" class="ad-image-preview" ${adminState.editing.row?.image_path?'':'hidden'}>${adminState.editing.row?.image_path?eduImageMarkup(adminState.editing.row.image_path,'','admin-preview'):''}</div><button type="button" class="ad-mini ad-danger" id="ad-image-remove" ${adminState.editing.row?.image_path?'':'hidden'}>🗑 Rasmni olib tashlash</button>`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
  ${tab==='questions'?`<div class="card ad-form"><b>📥 JSON testlarni ommaviy yuklash</b><p class="sm muted">Faylni tanlang, savollarni tekshiring va Supabase bazasiga saqlang.</p><label>JSON fayl<input type="file" id="ad-import-file" accept=".json,application/json"></label><div id="ad-import-preview">${adminState.importData?adminImportPreview():''}</div></div>`:''}
  <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${['subjects','languages'].includes(tab)&&r.image_path?eduImageMarkup(r.image_path,'','admin-list-image'):tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
  <p class="sm muted" style="text-align:center">EduOne Admin panel · Secure by Supabase RLS</p></div>`;
@@ -1711,16 +1725,18 @@ async function adminImportSave(){
 /* V33 — edit catalog images locally; never upload before confirmation and form save. */
 let eduCatalogApproved=null;
 let eduCatalogPending=false;
-function eduCatalogClear(){eduCatalogApproved=null;eduCatalogPending=false;document.getElementById('edu-catalog-editor')?.remove();}
+let eduCatalogRemove=false;
+let eduCatalogPreviewUrl=null;
+function eduCatalogClear(){eduCatalogApproved=null;eduCatalogPending=false;eduCatalogRemove=false;if(eduCatalogPreviewUrl){URL.revokeObjectURL(eduCatalogPreviewUrl);eduCatalogPreviewUrl=null;}document.getElementById('edu-catalog-editor')?.remove();}
 function eduCatalogEditor(file){
- eduCatalogApproved=null;eduCatalogPending=true;
+ eduCatalogApproved=null;eduCatalogRemove=false;eduCatalogPending=true;
  const info=document.getElementById('ad-image-confirmation');if(info)info.textContent='';
  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>5*1024*1024){eduCatalogPending=false;toast('PNG, JPG yoki WebP (5 MB gacha) tanlang');return;}
  const previous=document.getElementById('edu-catalog-editor');if(previous)previous.remove();
  const url=URL.createObjectURL(file),img=new Image();
  img.onload=()=>{
   const modal=document.createElement('div');modal.id='edu-catalog-editor';
-  modal.innerHTML=`<section class="edu-cat-dialog" role="dialog" aria-modal="true" aria-label="Rasmni tahrirlash"><h3>Rasmni tahrirlash</h3><div class="edu-cat-shapes"><button type="button" data-shape="square" class="selected">▢ Kvadrat</button><button type="button" data-shape="circle">◯ Doira</button></div><canvas id="edu-cat-canvas" width="600" height="600" aria-label="Rasmni surib joylashtiring"></canvas><label for="edu-cat-zoom"><span>O‘lcham</span><span id="edu-cat-zoom-value">100%</span></label><input type="range" id="edu-cat-zoom" min="100" max="350" value="100" step="5"><div class="edu-cat-tools"><button type="button" data-tool="minus">− Kichraytirish</button><button type="button" data-tool="plus">+ Kattalashtirish</button><button type="button" data-tool="left">↶ 90°</button><button type="button" data-tool="right">↷ 90°</button><button type="button" data-tool="flip">⇄ Akslantirish</button><button type="button" data-tool="reset">⟲ Tiklash</button></div><div class="edu-cat-actions"><button type="button" class="edu-cat-cancel" id="edu-cat-cancel">Bekor qilish</button><button type="button" class="edu-cat-accept" id="edu-cat-accept">✓ Tasdiqlash</button></div></section>`;
+  modal.innerHTML=`<section class="edu-cat-dialog" role="dialog" aria-modal="true" aria-label="Rasmni tahrirlash"><h3>Rasmni tahrirlash</h3><div class="edu-cat-shapes"><button type="button" data-shape="square" class="selected">▢ Kvadrat</button><button type="button" data-shape="circle">◯ Doira</button></div><canvas id="edu-cat-canvas" width="600" height="600" aria-label="Rasmni surib joylashtiring"></canvas><label for="edu-cat-zoom"><span>O‘lcham</span><span id="edu-cat-zoom-value">100%</span></label><input type="range" id="edu-cat-zoom" min="100" max="350" value="100" step="5"><div class="edu-cat-tools"><button type="button" data-tool="left">↶ 90°</button><button type="button" data-tool="right">↷ 90°</button><button type="button" data-tool="flip">⇄ Akslantirish</button><button type="button" data-tool="reset">⟲ Tiklash</button></div><div class="edu-cat-actions"><button type="button" class="edu-cat-cancel" id="edu-cat-cancel">Bekor qilish</button><button type="button" class="edu-cat-accept" id="edu-cat-accept">✓ Tasdiqlash</button></div></section>`;
   document.body.appendChild(modal);
   const canvas=modal.querySelector('canvas'),ctx=canvas.getContext('2d'),zoom=modal.querySelector('#edu-cat-zoom');
   let scale=1,dx=0,dy=0,drag=null,angle=0,flip=false,shape='square';
@@ -1732,7 +1748,7 @@ function eduCatalogEditor(file){
   const setZoom=v=>{zoom.value=Math.max(100,Math.min(350,v));scale=Number(zoom.value)/100;modal.querySelector('#edu-cat-zoom-value').textContent=zoom.value+'%';draw();};
   zoom.oninput=()=>setZoom(Number(zoom.value));
   modal.querySelectorAll('[data-shape]').forEach(btn=>btn.onclick=()=>{shape=btn.dataset.shape;modal.querySelectorAll('[data-shape]').forEach(b=>b.classList.toggle('selected',b===btn));draw();});
-  modal.querySelectorAll('[data-tool]').forEach(btn=>btn.onclick=()=>{switch(btn.dataset.tool){case 'minus':setZoom(Number(zoom.value)-10);return;case 'plus':setZoom(Number(zoom.value)+10);return;case 'left':angle=(angle+270)%360;dx=dy=0;break;case 'right':angle=(angle+90)%360;dx=dy=0;break;case 'flip':flip=!flip;break;case 'reset':angle=0;flip=false;dx=dy=0;setZoom(100);return;}draw();});
+  modal.querySelectorAll('[data-tool]').forEach(btn=>btn.onclick=()=>{switch(btn.dataset.tool){case 'left':angle=(angle+270)%360;dx=dy=0;break;case 'right':angle=(angle+90)%360;dx=dy=0;break;case 'flip':flip=!flip;break;case 'reset':angle=0;flip=false;dx=dy=0;setZoom(100);return;}draw();});
   canvas.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);};
   canvas.onpointermove=e=>{if(!drag)return;const r=canvas.getBoundingClientRect();dx+=(e.clientX-drag.x)*size/r.width;dy+=(e.clientY-drag.y)*size/r.height;drag={x:e.clientX,y:e.clientY};draw();};
   canvas.onpointerup=canvas.onpointercancel=()=>{drag=null;};
@@ -1745,7 +1761,7 @@ function eduCatalogEditor(file){
    else{oc.fillStyle='#fff';oc.fillRect(0,0,size,size);}
    oc.save();oc.translate(size/2+dx,size/2+dy);oc.rotate(angle*Math.PI/180);oc.scale(flip?-1:1,1);oc.drawImage(img,-img.width*base/2,-img.height*base/2,img.width*base,img.height*base);oc.restore();
    const mime=shape==='circle'?'image/png':'image/webp';
-   out.toBlob(blob=>{if(!blob){toast('Rasmni qayta tanlang');return;}eduCatalogApproved=new File([blob],shape==='circle'?'eduone-catalog.png':'eduone-catalog.webp',{type:mime});eduCatalogPending=false;modal.remove();if(info){info.innerHTML='<div class="edu-cat-confirmed">✓ Rasm tasdiqlandi</div><img alt="Tasdiqlangan rasm" style="width:110px;height:110px;object-fit:contain;border-radius:14px" src="'+URL.createObjectURL(blob)+'">';}URL.revokeObjectURL(url);},mime,.9);
+   out.toBlob(blob=>{if(!blob){toast('Rasmni qayta tanlang');return;}eduCatalogApproved=new File([blob],shape==='circle'?'eduone-catalog.png':'eduone-catalog.webp',{type:mime});eduCatalogPending=false;modal.remove();if(info){if(eduCatalogPreviewUrl)URL.revokeObjectURL(eduCatalogPreviewUrl);eduCatalogPreviewUrl=URL.createObjectURL(blob);info.innerHTML='<div class="edu-cat-confirmed">✓ Rasm tasdiqlandi</div>';const preview=document.getElementById('ad-image-current');if(preview){preview.innerHTML='<img alt="Yangi rasm" class="admin-preview" src="'+eduCatalogPreviewUrl+'">';preview.hidden=false;}const removeBtn=document.getElementById('ad-image-remove');if(removeBtn)removeBtn.hidden=false;}URL.revokeObjectURL(url);},mime,.9);
   };
   draw();
  };
@@ -1753,10 +1769,11 @@ function eduCatalogEditor(file){
 }
 function adminBind(){
  const imageInput=document.getElementById('ad-image');if(imageInput)imageInput.onchange=()=>{if(imageInput.files?.[0])eduCatalogEditor(imageInput.files[0]);};
+ const removeImage=document.getElementById('ad-image-remove');if(removeImage)removeImage.onclick=()=>{if(!confirm('Rasmni olib tashlaysizmi? O‘zgarish «Saqlash» bosilganda amalga oshadi.'))return;eduCatalogApproved=null;eduCatalogPending=false;eduCatalogRemove=true;if(imageInput)imageInput.value='';const preview=document.getElementById('ad-image-current');if(preview){preview.innerHTML='';preview.hidden=true;}const info=document.getElementById('ad-image-confirmation');if(info)info.textContent='Rasm olib tashlash uchun tayyor';removeImage.hidden=true;};
  const imp=document.getElementById('ad-import-file');if(imp)imp.onchange=async()=>{try{const f=imp.files?.[0];if(!f)return;if(f.size>2*1024*1024)throw Error('JSON 2 MB dan katta');adminState.importData=adminValidateImport(JSON.parse(await f.text()));document.getElementById('ad-import-preview').innerHTML=adminImportPreview();document.getElementById('ad-import-save').onclick=adminImportSave;toast(adminState.importData.questions.length+' ta savol tayyor');}catch(e){adminState.importData=null;document.getElementById('ad-import-preview').textContent=e.message;toast(e.message)}};
  const save=document.getElementById('ad-import-save');if(save)save.onclick=adminImportSave;
 
- app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{adminState.tab=b.dataset.adTab;adminState.search='';adminState.editing=null;eduCatalogClear();render();if(adminState.tab==='statistics')adminLoadStatistics()});
+ app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{eduSaveScroll();stack.push({page:'admin',tab:adminState.tab,key:eduNavKey()});eduHistoryPush();adminState.tab=b.dataset.adTab;adminState.search='';adminState.editing=null;eduCatalogClear();render();if(adminState.tab==='statistics')adminLoadStatistics()});
  app.querySelectorAll('[data-ad-refresh]').forEach(b=>b.onclick=()=>adminState.tab==='statistics'?adminLoadStatistics():adminLoad());
  const search=$('#ad-search');if(search)search.oninput=e=>{adminState.search=e.target.value;const cursor=search.selectionStart;render();$('#ad-search')?.focus();$('#ad-search')?.setSelectionRange(cursor,cursor)};
  const newBtn=app.querySelector('[data-ad-new]');if(newBtn)newBtn.onclick=()=>{eduCatalogClear();adminState.editing={table:adminState.tab,row:{},id:null};render()};
@@ -1769,8 +1786,9 @@ function adminBind(){
   for(const [key,label,type] of adminDefs[table].fields){let v=type==='checkbox'?form.elements[key].checked:fd.get(key);if(type==='number')v=v===''?0:Number(v);if(type==='subject_optional'&&v==='')v=null;if(type==='datetime-local')v=v?new Date(v).toISOString():null;row[key]=v}
   try{
    if(['subjects','languages'].includes(table)&&eduCatalogPending)throw Error('Avval rasmni tasdiqlang yoki bekor qiling.');
-   if(['subjects','languages'].includes(table)&&$('#ad-image')?.files?.length&&!eduCatalogApproved)throw Error('Rasmni qirqib, «Tasdiqlash» tugmasini bosing.');
+   if(['subjects','languages'].includes(table)&&!eduCatalogRemove&&$('#ad-image')?.files?.length&&!eduCatalogApproved)throw Error('Rasmni qirqib, «Tasdiqlash» tugmasini bosing.');
    if(table==='books'&&$('#ad-pdf')?.files?.length){const file=$('#ad-pdf').files[0];if(file.type!=='application/pdf'||file.size>25*1024*1024)throw Error('PDF 25 MB dan oshmasligi kerak.');const path=verified.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const result=await client.storage.from('eduone-books').upload(path,file,{contentType:'application/pdf'});if(result.error)throw result.error;row.file_path=path}
+   if(['subjects','languages'].includes(table)&&eduCatalogRemove)row.image_path=null;
    if(['subjects','languages'].includes(table)&&eduCatalogApproved){
     const file=eduCatalogApproved;
     const allowed={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
@@ -1791,7 +1809,7 @@ const adminOriginalGo=go;
 go=function(name,push=true){if(name==='admin'){if(!adminState.allowed){toast('Administrator huquqi yo‘q');return}adminState.tab='dashboard';adminLoad()}return adminOriginalGo(name,push)};
 
 // V32: boot recovery; never leave users on a blank gradient.
-try { initialize().catch(function(err){
+try { if(!history.state?.eduone)history.replaceState({eduone:true,seq:0},'',location.href); initialize().catch(function(err){
  console.error('EduOne initialization failed',err);
  const root=document.getElementById('app');
  if(root)root.innerHTML='<main style="min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif"><section style="background:white;color:#17345b;border-radius:24px;padding:26px;max-width:430px;text-align:center"><h2>EduOne ochilmadi</h2><p>Ilovani ishga tushirishda muammo yuz berdi. Qayta urinib ko‘ring.</p><button onclick="location.reload()" style="padding:14px 24px;border:0;border-radius:14px;background:#2463eb;color:white;font-weight:bold">Qayta yuklash</button></section></main>';
