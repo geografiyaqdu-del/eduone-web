@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta name="eduone-catalog-images" content="V29-admin-storage-image-upload">
+<meta name="eduone-catalog-images" content="V30-admin-storage-image-upload-stability">
 <meta name="eduone-build-profile-ranking" content="V19">
 <meta name="eduone-auto-translation" content="V25-real-json-quiz-design">
 <meta name="eduone-build-admin-navigation" content="V18">
@@ -1047,16 +1047,23 @@ const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','
 let eduStatusFilter='all';
 let eduPendingChoice=null;
 function eduImageMarkup(path,fallback='',cls='edu-catalog-image'){
- if(!path||!client?.storage)return fallback;
- const url=client.storage.from('eduone-catalog-images').getPublicUrl(String(path)).data?.publicUrl;
- if(!url)return fallback;
- return `<img class="${cls}" src="${esc(url)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+ try {
+  if(!path || typeof client==='undefined' || !client || !client.storage) return fallback;
+  const storage=client.storage.from('eduone-catalog-images');
+  const response=storage.getPublicUrl(String(path));
+  const url=response && response.data && response.data.publicUrl;
+  if(!url || !/^https:\/\//i.test(url))return fallback;
+  return `<img class="${cls}" src="${esc(url)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+ }catch(e){console.warn('EduOne catalog image:',e);return fallback;}
 }
 function eduCatalogImageFor(type,id,fallback=''){
- if(!String(id).startsWith('db:'))return fallback;
- const list=type==='subjects'?eduCatalog.subjects:eduCatalog.languages;
- const record=list.find(x=>String(x.id)===String(id).slice(3));
- return record?.image_path?eduImageMarkup(record.image_path,fallback):fallback;
+ try {
+  if(!String(id).startsWith('db:') || typeof eduCatalog==='undefined')return fallback;
+  const list=type==='subjects'?eduCatalog.subjects:eduCatalog.languages;
+  if(!Array.isArray(list))return fallback;
+  const record=list.find(x=>String(x.id)===String(id).slice(3));
+  return record && record.image_path?eduImageMarkup(record.image_path,fallback):fallback;
+ }catch(e){console.warn('EduOne catalog image:',e);return fallback;}
 }
 function eduDynamicFanTiles(){
  if(!eduCatalog.ready)return eduFanTiles;
@@ -1703,7 +1710,8 @@ function adminBind(){
     const allowed={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
     if(!allowed[file.type]||file.size>5*1024*1024)throw Error('PNG, JPG yoki WebP rasm tanlang (5 MB gacha).');
     if(!verified?.id)throw Error('Rasm yuklash uchun hisobga kiring.');
-    const path=table+'/'+crypto.randomUUID()+'.'+allowed[file.type];
+    const randomId=(typeof crypto!=='undefined' && typeof crypto.randomUUID==='function')?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(36).slice(2));
+    const path=table+'/'+randomId+'.'+allowed[file.type];
     const uploaded=await client.storage.from('eduone-catalog-images').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
     if(uploaded.error)throw Error('Rasm yuklanmadi: '+uploaded.error.message);
     row.image_path=path;
