@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta name="eduone-catalog-images" content="V30-admin-storage-image-upload-stability">
+<meta name="eduone-catalog-images" content="V31-boot-recovery-admin-image-input">
 <meta name="eduone-build-profile-ranking" content="V19">
 <meta name="eduone-auto-translation" content="V25-real-json-quiz-design">
 <meta name="eduone-build-admin-navigation" content="V18">
@@ -438,7 +438,7 @@ body:has(.edu-intro){margin:0;}
 </style></head>
 <body>
 
-<div class="app" id="app"></div>
+<div class="app" id="app"><main style="min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif"><section style="background:white;color:#17345b;border-radius:24px;padding:24px;max-width:420px;text-align:center"><h2>EduOne yuklanmoqda…</h2><p>Agar sahifa ochilmasa, pastdagi tugmani bosing.</p><button onclick="location.reload()" style="padding:14px 24px;border:0;border-radius:14px;background:#2463eb;color:white">Qayta yuklash</button></section></main></div>
 <nav class="tabs" id="tabs" hidden><div class="in" id="tabsIn"></div></nav>
 
 <script>
@@ -1724,7 +1724,12 @@ function adminBind(){
 const adminOriginalGo=go;
 go=function(name,push=true){if(name==='admin'){if(!adminState.allowed){toast('Administrator huquqi yo‘q');return}adminState.tab='dashboard';adminLoad()}return adminOriginalGo(name,push)};
 
-initialize();
+// V31: boot recovery; never leave users on a blank gradient.
+try { initialize().catch(function(err){
+ console.error('EduOne initialization failed',err);
+ const root=document.getElementById('app');
+ if(root)root.innerHTML='<main style="min-height:100dvh;display:grid;place-items:center;padding:24px;font-family:Arial,sans-serif"><section style="background:white;color:#17345b;border-radius:24px;padding:26px;max-width:430px;text-align:center"><h2>EduOne ochilmadi</h2><p>Ilovani ishga tushirishda muammo yuz berdi. Qayta urinib ko‘ring.</p><button onclick="location.reload()" style="padding:14px 24px;border:0;border-radius:14px;background:#2463eb;color:white;font-weight:bold">Qayta yuklash</button></section></main>';
+}); } catch(err) { console.error('EduOne boot error',err); }
 </script>
 <script id="eduone-v14-build-verification">
 (function(){
