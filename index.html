@@ -927,14 +927,12 @@ V.ai=()=>`<div class="scr fade"><div class="top"><div style="width:40px"></div><
  <div class="chips">${['Vulqonlar qanday hosil bo\'ladi?','Litosfera nima?','Masshtabni tushuntir','Menga test tavsiya qil','Bugungi reja'].map(t=>`<button class="chip" data-ask="${t}">${t}</button>`).join('')}</div>
  <form class="ask" id="af"><input class="inp" id="ai-in" placeholder="Savolingizni yozing..." autocomplete="off"><button class="send" aria-label="Yuborish">${ic('send')}</button></form></div>`;
 const EDU_WEEKDAY_INITIALS={uz:['D','S','Ch','P','J','Sh','Y'],en:['M','T','W','T','F','S','S'],ru:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],kk:['Du','Se','Shá','Pi','Ju','Sh','Je']};
-V.tillar=()=>`<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>Chet tillari</h2><span class="ib" style="color:var(--warn)">${ic('trophy')}</span></div>
+V.tillar=()=>{
+ const languages=eduDynamicLangTiles();
+ return `<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>Chet tillari</h2><span class="ib" style="color:var(--warn)">${ic('trophy')}</span></div>
  <div class="hero"><h3 style="font-size:20px;position:relative;z-index:1">Chet tillarini o'rganing</h3><p class="sm" style="opacity:.9;margin:6px 0 0">Yangi tillar – yangi imkoniyatlar!</p></div>
- <div class="sec"><h3>Mening tillarim</h3></div>
- <div class="card"><div class="row">${flag('en')}<div style="flex:1"><div class="row" style="gap:8px"><b style="font-size:16px">Ingliz tili</b><span class="pill" style="background:var(--soft);color:var(--brand)">Asosiy</span></div><div class="sm muted">A2 · Elementary</div></div></div><p class="sm muted" style="margin:12px 0 6px">Joriy mavzu: 7. At the restaurant</p><div class="row">${'<div style="flex:1">'+bar(45)+'</div>'}<b class="num sm">45%</b></div></div>
- <div class="card" style="background:var(--okbg);box-shadow:none"><div class="row sp"><b>Bugungi vazifa</b><span class="pill" style="background:var(--card);color:var(--ok)">Ingliz tili · A2</span></div><p class="sm" style="margin:8px 0 12px">Mavzu: 7. At the restaurant — videoni tomosha qiling va testni yeching.</p><button class="btn" style="background:var(--ok);height:46px" data-toast="Dars tez orada qo'shiladi">Davom etish ${ic('next',18)}</button></div>
- <div class="card"><div class="row sp"><b>${ic('flame',18)} Seriya: 0 kun</b></div><div class="row sp" style="margin-top:12px">${(EDU_WEEKDAY_INITIALS[S.lang]||EDU_WEEKDAY_INITIALS.uz).map((d,k)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span class="sm muted">${d}</span><span style="width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:${false?'var(--ok)':'var(--soft)'};color:${false?'#fff':'var(--brand)'}">${false?ic('check',14):'<b class="sm">0</b>'}</span></div>`).join('')}</div></div>
- <div class="sec"><h3>Boshqa tillar</h3></div>
- <div class="list">${LANGS.slice(1).map(l=>`<button class="li" data-toast="${l.n} kursi tez orada">${flag(l.k)}<div class="grow"><b>${l.n}</b><span class="sm muted">${l.lv} · ${l.lt}</span>${bar(l.p,'var(--ok)')}</div><span class="sm muted num">${l.p}%</span>${ic('next',18)}</button>`).join('')}</div></div>`;
+ <div class="sec"><h3>Til kurslari</h3></div><div class="list">${languages.map(l=>`<button class="li" data-foreign-lang="${esc(l[0])}"><span style="font-size:32px">${l[2]}</span><div class="grow"><b>${esc(l[1])}</b><div class="sm muted">${l[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</div></div>${ic('next',18)}</button>`).join('')||'<div class="card">Hozircha tillar qo‘shilmagan.</div>'}</div></div>`;
+};
 
 function eduProfileLabel(key){
  const lang=(typeof S!=='undefined'&&S.lang)||'uz';
@@ -1019,14 +1017,28 @@ const eduFanTiles=[
 const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','🇹🇷','🕌',1],['ru','Rus tili','🇷🇺','🏰',1],['ko','Koreys tili','🇰🇷','🏯',1],['de','Nemis tili','🇩🇪','🏛️',0],['fr','Fransuz tili','🇫🇷','🗼',0],['ar','Arab tili','🇸🇦','🕌',0]];
 let eduStatusFilter='all';
 let eduPendingChoice=null;
-function eduChoiceLabel(c){if(!c)return '';const a=c.type==='fan'?eduFanTiles:eduLangTiles;return a.find(x=>x[0]===c.id)?.[1]||'';}
+function eduDynamicFanTiles(){
+ if(!eduCatalog.ready)return eduFanTiles;
+ return eduCatalog.subjects.map(r=>{
+  const old=eduFanTiles.find(x=>x[1].toLowerCase()===String(r.title).toLowerCase()||x[0]===r.slug);
+  return ['db:'+r.id,r.title,old?.[2]||'📚',old?.[3]||'#1250c7',old?.[4]||'#9fd7ff',r.is_published?1:0];
+ });
+}
+function eduDynamicLangTiles(){
+ if(!eduCatalog.ready)return eduLangTiles;
+ return eduCatalog.languages.map(r=>{
+  const old=eduLangTiles.find(x=>x[1].toLowerCase()===String(r.title).toLowerCase()||x[0]===r.slug);
+  return ['db:'+r.id,r.title,adminLanguageFlag(r),old?.[3]||'🌐',r.is_available?1:0];
+ });
+}
+function eduChoiceLabel(c){if(!c)return '';const a=c.type==='fan'?eduDynamicFanTiles():eduDynamicLangTiles();return a.find(x=>x[0]===c.id)?.[1]||'';}
 function eduOpenPicker(){eduPendingChoice=eduReadChoice();eduStatusFilter='all';cur='edu-pick';render();}
 V['edu-pick']=()=>{
  const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
  const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${eduIllustration(x[0])}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
  const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:58px;filter:drop-shadow(0 5px 5px #164f9e66)">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
- return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-build">EduOne • Brend V12</div><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduFanTiles.filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduLangTiles.filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-build">EduOne • Brend V12</div><div class="edu-filter">${[['all','Barcha'],['yes','Mavjud'],['no','Hozircha mavjud emas']].map(([k,n])=>`<button data-prem-filter="${k}" class="${eduStatusFilter===k?'active':''}">${n}</button>`).join('')}</div><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
 };
 
 function render(){
@@ -1087,12 +1099,18 @@ function bind(){
   });
   app.querySelectorAll('[data-prem-filter]').forEach(b=>b.onclick=()=>{eduStatusFilter=b.dataset.premFilter;render()});
   app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
-   const id=b.dataset.premFan,tile=eduFanTiles.find(x=>x[0]===id);
+   const id=b.dataset.premFan,tile=eduDynamicFanTiles().find(x=>x[0]===id);
    if(!tile?.[5]){toast('Bu fan hozircha mavjud emas');return}
    eduPendingChoice={id,type:'fan'};const y=window.scrollY;render();window.scrollTo(0,y);
   });
-  app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
-   const id=b.dataset.premLang,tile=eduLangTiles.find(x=>x[0]===id);
+  app.querySelectorAll('[data-foreign-lang]').forEach(b=>b.onclick=()=>{
+  const tile=eduDynamicLangTiles().find(x=>x[0]===b.dataset.foreignLang);
+  if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return;}
+  eduPendingChoice={id:tile[0],type:'til'};
+  eduOpenPicker();eduPendingChoice={id:tile[0],type:'til'};render();
+ });
+ app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
+   const id=b.dataset.premLang,tile=eduDynamicLangTiles().find(x=>x[0]===id);
    if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return}
    eduPendingChoice={id,type:'til'};const y=window.scrollY;render();window.scrollTo(0,y);
   });
@@ -1358,21 +1376,25 @@ const eduNativeConfirm=window.confirm.bind(window);
 window.confirm=(message)=>eduNativeConfirm(eduTranslateText(String(message),S.lang));
 
 /* EduOne public catalog: published records are loaded from Supabase. */
-const eduCatalog={subjects:[],lessons:[],books:[],quizzes:[],announcements:[],selected:null,ready:false,error:''};
+const eduCatalog={subjects:[],lessons:[],books:[],quizzes:[],announcements:[],languages:[],selected:null,ready:false,error:''};
 const eduCatalogTypes=['subjects','lessons','books','quizzes','announcements'];
 async function eduRefreshCatalog(silent=false){
  if(!client||!verified)return;
  try{
   const results=await Promise.all(eduCatalogTypes.map(t=>client.from('edu_'+t).select('*').eq('is_published',true).limit(500)));
   for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;eduCatalog[eduCatalogTypes[i]]=results[i].data||[];}
+  // Chet tillari ham administrator boshqaradigan yagona jadvaldan olinadi.
+  const languageResult=await client.from('edu_languages').select('*').limit(500);
+  if(languageResult.error)throw languageResult.error;
+  eduCatalog.languages=languageResult.data||[];
   eduCatalog.ready=true;eduCatalog.error='';
-  if(['fanlar','home','edu-subject','edu-test-categories','edu-test-list','edu-lesson','edu-book','edu-quiz'].includes(cur))render();
+  if(['fanlar','home','edu-subject','edu-test-categories','edu-test-list','edu-lesson','edu-book','edu-quiz','tillar','edu-pick'].includes(cur))render();
  }catch(e){eduCatalog.error=e.message;if(!silent)toast('Kontent yuklanmadi: '+e.message);}
 }
 function eduVisibleSubjects(){
- const built=SUBJ.map(x=>({...x,remote:eduCatalog.subjects.find(r=>r.slug===({'mat':'matematika','fiz':'fizika','kim':'kimyo','geo':'geografiya','tar':'tarix','inf':'informatika','ona':'ona-tili','bio':'biologiya'}[x.id]))}));
- const slugs=new Set(built.map(x=>x.remote?.slug).filter(Boolean));
- return built.concat(eduCatalog.subjects.filter(r=>!slugs.has(r.slug)).map(r=>({id:'db:'+r.id,n:r.title,d:eduCatalog.lessons.filter(l=>l.subject_id===r.id).length,p:0,c:'#6556E8',i:'book',cat:'all',remote:r})));
+ // Baza yuklangach fanlar faqat admin boshqaradigan ro'yxatdan olinadi.
+ if(eduCatalog.ready)return eduCatalog.subjects.map(r=>({id:'db:'+r.id,n:r.title,d:eduCatalog.lessons.filter(l=>l.subject_id===r.id).length,p:0,c:'#6556E8',i:'book',cat:'all',remote:r}));
+ return SUBJ.map(x=>({...x}));
 }
 function eduSubjectId(s){return s?.remote?.id||null}
 /* EduOne Mening fanim — 25 premium yo'nalish kartasi */
