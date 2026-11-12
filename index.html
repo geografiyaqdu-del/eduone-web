@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
+<meta name="eduone-catalog-images" content="V29-admin-storage-image-upload">
 <meta name="eduone-build-profile-ranking" content="V19">
 <meta name="eduone-auto-translation" content="V25-real-json-quiz-design">
 <meta name="eduone-build-admin-navigation" content="V18">
@@ -430,7 +431,11 @@ body:has(.edu-intro){margin:0;}
 .edu-catalog .edu-state{font-size:12px!important;border-radius:20px!important}
 @media(max-width:380px){.edu-catalog{padding-left:12px!important;padding-right:12px!important}.edu-catalog .edu-banner{margin-left:-12px!important;margin-right:-12px!important}.edu-catalog .edu-card-name{font-size:14px!important}}
 </style>
-</head>
+<style id="eduone-v29-catalog-images">
+.edu-art{position:relative;overflow:hidden}.edu-art:has(>.edu-catalog-image)>span{display:none}.edu-art>.edu-catalog-image{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;box-sizing:border-box;background:linear-gradient(145deg,#effaff,#d8eeff)}
+.edu-language-icon{display:inline-flex;align-items:center;justify-content:center;font-size:32px;width:48px;height:48px;flex-shrink:0}.edu-language-icon img{width:100%;height:100%;object-fit:contain;border-radius:10px}
+.admin-list-image{width:40px;height:40px;object-fit:cover;border-radius:10px;vertical-align:middle;margin-right:8px}.admin-preview{width:110px;height:110px;object-fit:contain;border-radius:16px;background:#eef6ff}.ad-image-preview{padding:8px}
+</style></head>
 <body>
 
 <div class="app" id="app"></div>
@@ -952,9 +957,12 @@ V.tillar=()=>{
  const languages=eduDynamicLangTiles();
  return `<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>Chet tillari</h2><span class="ib" style="color:var(--warn)">${ic('trophy')}</span></div>
  <div class="hero"><h3 style="font-size:20px;position:relative;z-index:1">Chet tillarini o'rganing</h3><p class="sm" style="opacity:.9;margin:6px 0 0">Yangi tillar – yangi imkoniyatlar!</p></div>
- <div class="sec"><h3>Til kurslari</h3></div><div class="list">${languages.map(l=>`<button class="li" data-foreign-lang="${esc(l[0])}"><span style="font-size:32px">${l[2]}</span><div class="grow"><b>${esc(l[1])}</b><div class="sm muted">${l[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</div></div>${ic('next',18)}</button>`).join('')||'<div class="card">Hozircha tillar qo‘shilmagan.</div>'}</div></div>`;
+ <div class="sec"><h3>${eduProfileLabel("Til kurslari")}</h3></div><div class="list">${languages.map(l=>`<button class="li" data-foreign-lang="${esc(l[0])}"><span class="edu-language-icon">${eduCatalogImageFor('languages',l[0],l[2])}</span><div class="grow"><b>${esc(l[1])}</b><div class="sm muted">${l[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</div></div>${ic('next',18)}</button>`).join('')||'<div class="card">Hozircha tillar qo‘shilmagan.</div>'}</div></div>`;
 };
 
+Object.assign(EN_UI,{"Til kurslari":"Language Courses","Fan tanlanmagan":"No subject selected","O‘qishni boshlash uchun fan tanlang":"Choose a subject to start learning","Fan tanlash":"Choose a Subject"});
+Object.assign(RU_UI,{"Til kurslari":"Языковые курсы","Fan tanlanmagan":"Предмет не выбран","O‘qishni boshlash uchun fan tanlang":"Выберите предмет, чтобы начать обучение","Fan tanlash":"Выбрать предмет"});
+Object.assign(KK_UI,{"Til kurslari":"Til kursları","Fan tanlanmagan":"Pán tańlanbaǵan","O‘qishni boshlash uchun fan tanlang":"Oqıwdı baslaw ushın pán tańlań","Fan tanlash":"Pán tańlaw"});
 function eduProfileLabel(key){
  const lang=(typeof S!=='undefined'&&S.lang)||'uz';
  if(lang==='uz')return key;
@@ -1038,6 +1046,18 @@ const eduFanTiles=[
 const eduLangTiles=[['en','Ingliz tili','🇬🇧','🏰',1],['tr','Turk tili','🇹🇷','🕌',1],['ru','Rus tili','🇷🇺','🏰',1],['ko','Koreys tili','🇰🇷','🏯',1],['de','Nemis tili','🇩🇪','🏛️',0],['fr','Fransuz tili','🇫🇷','🗼',0],['ar','Arab tili','🇸🇦','🕌',0]];
 let eduStatusFilter='all';
 let eduPendingChoice=null;
+function eduImageMarkup(path,fallback='',cls='edu-catalog-image'){
+ if(!path||!client?.storage)return fallback;
+ const url=client.storage.from('eduone-catalog-images').getPublicUrl(String(path)).data?.publicUrl;
+ if(!url)return fallback;
+ return `<img class="${cls}" src="${esc(url)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+}
+function eduCatalogImageFor(type,id,fallback=''){
+ if(!String(id).startsWith('db:'))return fallback;
+ const list=type==='subjects'?eduCatalog.subjects:eduCatalog.languages;
+ const record=list.find(x=>String(x.id)===String(id).slice(3));
+ return record?.image_path?eduImageMarkup(record.image_path,fallback):fallback;
+}
 function eduDynamicFanTiles(){
  if(!eduCatalog.ready)return eduFanTiles;
  return eduCatalog.subjects.map(r=>{
@@ -1058,8 +1078,8 @@ V['edu-pick']=()=>{
  eduStatusFilter='all';
  const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
- const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${eduIllustration(x[0])}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
- const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:58px;filter:drop-shadow(0 5px 5px #164f9e66)">${x[2]}</span></div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
+ const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${eduCatalogImageFor('subjects',x[0],eduIllustration(x[0]))}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
+ const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff"><span style="font-size:58px;filter:drop-shadow(0 5px 5px #164f9e66)">${x[2]}</span>${eduCatalogImageFor('languages',x[0])}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
  return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`Tanlangan ${eduPendingChoice.type==='fan'?'fan':'til'}: <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
 };
 
@@ -1070,6 +1090,7 @@ function render(){
  if(cur==='admin'&&!adminState.allowed)cur='profil';
  if(cur==='test'&&!T)startTest();
  app.innerHTML=V[cur]();
+ if(cur==='fanlar'){setTimeout(()=>{const b=document.getElementById('edu-select-subject-now');if(b)b.onclick=eduOpenPicker},0)}
  if(cur==='profil'){setTimeout(()=>{const b=document.getElementById('edu-change-profile');if(b)b.onclick=eduOpenPicker},0)}
 
  window.scrollTo(0,0);
@@ -1427,7 +1448,7 @@ const eduMySubjectGroups=[
 ];
 let eduMySubjectSection=null;
 function eduSubjectDetail(inTab=false){
- const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr"><div class="top"><h2>Mening fanim</h2></div><p class="card">Tanlangan fan topilmadi.</p></div>`;
+ const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr fade"><div class="top"><h2>Mening fanim</h2></div><div class="card" style="text-align:center;padding:28px 18px"><div style="font-size:42px;margin-bottom:12px">📚</div><h3>${eduProfileLabel("Fan tanlanmagan")}</h3><p class="muted" style="margin:12px 0 20px">${eduProfileLabel("O‘qishni boshlash uchun fan tanlang")}</p><button type="button" class="btn" id="edu-select-subject-now">${eduProfileLabel("Fan tanlash")}</button></div></div>`;
  const count=eduCatalog.lessons.filter(x=>x.subject_id===eduSubjectId(s)).length;
  return `<div class="scr fade edu-my-subject">${inTab?'<div class="top"><div style="width:40px"></div><h2>Mening fanim</h2><div style="width:40px"></div></div>':topbar('Mening fanim')}
  <div class="edu-my-hero"><div class="edu-my-globe">${s.i==='globe'?'🌍':'📚'}</div><div><h2>${esc(s.n)}</h2><span class="edu-my-count">${count} ta video dars</span></div></div>
@@ -1609,9 +1630,9 @@ function adminView(){
  ${tab!=='dashboard'?'<button class="ad-mini" data-ad-tab="dashboard" style="margin:0 0 14px 0">← Boshqaruvga qaytish</button>':''}
  ${tab==='statistics'?adminStatisticsView():tab==='dashboard'?`<div class="ad-kpis">${Object.entries(adminDefs).map(([k,d])=>`<button class="ad-kpi" data-ad-tab="${k}" style="text-align:left"><small>${d.icon} ${d.title}</small><b>${adminRowsFor(k).length}</b><small>Ma’lumotlar bazasi</small></button>`).join('')}</div><div class="card" style="margin:18px 0;padding:22px;border:2px solid #a5b4fc;background:linear-gradient(135deg,#ffffff,#eef2ff);box-shadow:0 8px 26px rgba(27,42,120,.13)"><div style="font-size:25px;font-weight:900;color:#1e2a55;margin-bottom:9px">📈 Statistika markazi</div><p style="color:#56617a;margin:0 0 16px">👥 Foydalanuvchilar soni · 📍 Hududlar · 🎂 Yosh · 👤 Jins · 🎓 Toifalar</p><button type="button" class="btn" data-ad-tab="statistics" style="width:100%;min-height:54px;font-size:17px;font-weight:800">Statistika markazini ochish →</button></div><div class="card"><h3>Tezkor boshqaruv</h3><p class="sm muted">Fan yarating, unga video darslar, PDF kitoblar va testlarni bog‘lang. Obunalarni foydalanuvchi UUID orqali boshqaring.</p><div class="ad-actions"><button class="btn" data-ad-tab="subjects">+ Fan qo‘shish</button><button class="ad-mini" data-ad-refresh>↻ Yangilash</button></div></div><div class="ad-note">🔒 Barcha yozish/o‘chirish amallari Supabase RLS orqali faqat administratorlarga ruxsat etiladi. Panel faqat haqiqiy kirgan admin uchun ochiladi.</div>`:
  `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div><input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0"><button class="btn" data-ad-new>+ Yangi qo‘shish</button></div>
- ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
+ ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label>${adminState.editing.row?.image_path?`<div class="ad-image-preview">${eduImageMarkup(adminState.editing.row.image_path,'', 'admin-preview')}</div>`:''}<p class="sm muted">Rasm Supabase Storage orqali barcha qurilmalarda ko‘rinadi. Rasmni almashtirish uchun yangi fayl tanlang.</p>`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
  ${tab==='questions'?`<div class="card ad-form"><b>📥 JSON testlarni ommaviy yuklash</b><p class="sm muted">Faylni tanlang, savollarni tekshiring va Supabase bazasiga saqlang.</p><label>JSON fayl<input type="file" id="ad-import-file" accept=".json,application/json"></label><div id="ad-import-preview">${adminState.importData?adminImportPreview():''}</div></div>`:''}
- <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
+ <div class="card" id="ad-list">${rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${['subjects','languages'].includes(tab)&&r.image_path?eduImageMarkup(r.image_path,'','admin-list-image'):tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
  <p class="sm muted" style="text-align:center">EduOne Admin panel · Secure by Supabase RLS</p></div>`;
 }
 V.admin=()=>adminView();
@@ -1677,6 +1698,16 @@ function adminBind(){
   for(const [key,label,type] of adminDefs[table].fields){let v=type==='checkbox'?form.elements[key].checked:fd.get(key);if(type==='number')v=v===''?0:Number(v);if(type==='subject_optional'&&v==='')v=null;if(type==='datetime-local')v=v?new Date(v).toISOString():null;row[key]=v}
   try{
    if(table==='books'&&$('#ad-pdf')?.files?.length){const file=$('#ad-pdf').files[0];if(file.type!=='application/pdf'||file.size>25*1024*1024)throw Error('PDF 25 MB dan oshmasligi kerak.');const path=verified.id+'/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');const result=await client.storage.from('eduone-books').upload(path,file,{contentType:'application/pdf'});if(result.error)throw result.error;row.file_path=path}
+   if(['subjects','languages'].includes(table)&&$('#ad-image')?.files?.length){
+    const file=$('#ad-image').files[0];
+    const allowed={'image/png':'png','image/jpeg':'jpg','image/webp':'webp'};
+    if(!allowed[file.type]||file.size>5*1024*1024)throw Error('PNG, JPG yoki WebP rasm tanlang (5 MB gacha).');
+    if(!verified?.id)throw Error('Rasm yuklash uchun hisobga kiring.');
+    const path=table+'/'+crypto.randomUUID()+'.'+allowed[file.type];
+    const uploaded=await client.storage.from('eduone-catalog-images').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false});
+    if(uploaded.error)throw Error('Rasm yuklanmadi: '+uploaded.error.message);
+    row.image_path=path;
+   }
    const query=edit.id?client.from('edu_'+adminRealTable(table)).update(row).eq('id',edit.id):client.from('edu_'+adminRealTable(table)).insert(row);
    const {error}=await query;if(error)throw error;adminState.editing=null;toast('Muvaffaqiyatli saqlandi');await adminLoad();await eduRefreshCatalog(true);
   }catch(err){toast('Xatolik: '+err.message)}finally{button.disabled=false}
