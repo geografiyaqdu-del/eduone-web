@@ -1300,6 +1300,39 @@ const eduI18nObserver=new MutationObserver(changes=>{
 eduI18nObserver.observe(document.body,{subtree:true,childList:true});
 
 
+/* EduOne translation diagnostics: available only with ?eduone_translation_test=1.
+   Uses the existing signed-in session; never displays or stores auth tokens. */
+(function eduTranslationDiagnosticSetup(){
+ if(new URLSearchParams(location.search).get('eduone_translation_test')!=='1')return;
+ function mount(){
+  if(document.getElementById('eduone-translation-diagnostic'))return;
+  const panel=document.createElement('div');
+  panel.id='eduone-translation-diagnostic';
+  panel.style.cssText='position:fixed;bottom:12px;left:12px;right:12px;max-width:440px;margin:auto;z-index:2147483647;background:white;color:#17234c;border:2px solid #0750d8;border-radius:16px;padding:14px;box-shadow:0 8px 32px #102b6555;font:14px system-ui';
+  const heading=document.createElement('strong');heading.textContent='EduOne — tarjimani sinash';
+  const result=document.createElement('div');result.style.cssText='margin-top:10px;white-space:pre-wrap;overflow-wrap:anywhere';
+  const btn=document.createElement('button');btn.type='button';btn.textContent='Inglizcha tarjimani tekshirish';btn.style.cssText='display:block;margin-top:10px;padding:12px;border:0;border-radius:10px;background:#0750d8;color:white;font-weight:700;width:100%';
+  const close=document.createElement('button');close.type='button';close.textContent='Yopish';close.style.cssText='margin-top:8px;padding:7px;background:transparent;border:0;color:#0750d8';close.onclick=()=>panel.remove();
+  btn.onclick=async()=>{
+   btn.disabled=true;result.textContent='Tekshirilmoqda…';
+   try{
+    if(!client || !verified){result.textContent='Profilga kirish hali tasdiqlanmagan. Saytga kiring va qayta urinib ko‘ring.';return;}
+    const {data,error}=await client.auth.getSession();
+    if(error||!data?.session?.access_token){result.textContent='Sessiya topilmadi. Profilga qayta kiring.';return;}
+    const response=await fetch(AUTH_URL+'/functions/v1/smooth-action',{
+     method:'POST',headers:{'Content-Type':'application/json','apikey':AUTH_PUBLIC_KEY,'Authorization':'Bearer '+data.session.access_token},
+     body:JSON.stringify({text:'Salom dunyo',target_lang:'EN'})
+    });
+    const payload=await response.json().catch(()=>({error:'Server JSON javob qaytarmadi'}));
+    result.textContent='HTTP: '+response.status+'\n'+(response.ok?'Tarjima: '+(payload.translation||'Javobda tarjima yo‘q')+'\nKesh: '+(payload.cached?'ha':'yo‘q'):'Xatolik: '+(payload.error||'Noma’lum')+(payload.status?' (DeepL HTTP '+payload.status+')':''));
+   }catch(e){result.textContent='Tarmoq xatosi: '+(e?.message||String(e));}
+   finally{btn.disabled=false;}
+  };
+  panel.append(heading,btn,result,close);document.body.appendChild(panel);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+})();
+
 // Keep native confirmation messages in the selected interface language.
 const eduNativeConfirm=window.confirm.bind(window);
 window.confirm=(message)=>eduNativeConfirm(eduTranslateText(String(message),S.lang));
