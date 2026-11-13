@@ -1758,9 +1758,9 @@ async function eduRefreshCatalog(silent=false){
  if(!client||!verified||eduCatalogRefreshing)return;
  eduCatalogRefreshing=true;
  try{
-  const results=await Promise.all(eduCatalogTypes.map(t=>client.from('edu_'+t).select('*').eq('is_published',true).is('deleted_at',null).limit(500)));
+  const results=await Promise.all(eduCatalogTypes.map(t=>{let q=client.from('edu_'+t).select('*').eq('is_published',true);if(t==='subjects')q=q.is('deleted_at',null);return q.limit(500)}));
   const next={};
-  for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;next[eduCatalogTypes[i]]=results[i].data||[];}
+  for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;next[eduCatalogTypes[i]]=eduCatalogTypes[i]==='subjects'?(results[i].data||[]).filter(r=>!r.deleted_at):(results[i].data||[]);}
   const languageResult=await client.from('edu_languages').select('*').is('deleted_at',null).limit(500);
   if(languageResult.error)throw languageResult.error;
   next.languages=languageResult.data||[];
@@ -1772,13 +1772,13 @@ async function eduRefreshCatalog(silent=false){
    render();
    requestAnimationFrame(()=>window.scrollTo(0,scrollY));
   }
- }catch(e){eduCatalog.error=e.message;if(!silent)toast('Kontent yuklanmadi: '+e.message);}
+ }catch(e){eduCatalog.error=e.message;console.warn('Katalog yuklanmadi:',e);if(!eduCatalog.ready){eduCatalog.subjects=[];eduCatalog.languages=[];}if(!silent)toast('Kontent yuklanmadi: '+e.message);}
  finally{eduCatalogRefreshing=false;}
 }
 function eduVisibleSubjects(){
  // Baza yuklangach fanlar faqat admin boshqaradigan ro'yxatdan olinadi.
- if(eduCatalog.ready)return eduCatalog.subjects.map(r=>({id:'db:'+r.id,n:r.title,d:eduCatalog.lessons.filter(l=>l.subject_id===r.id).length,p:0,c:'#6556E8',i:'book',cat:'all',remote:r}));
- return SUBJ.map(x=>({...x}));
+ if(eduCatalog.ready)return eduCatalog.subjects.filter(r=>!r.deleted_at).map(r=>({id:'db:'+r.id,n:r.title,d:eduCatalog.lessons.filter(l=>l.subject_id===r.id).length,p:0,c:'#6556E8',i:'book',cat:'all',remote:r}));
+ return verified?[]:SUBJ.map(x=>({...x}));
 }
 function eduSubjectId(s){return s?.remote?.id||null}
 /* EduOne Mening fanim — 25 premium yo'nalish kartasi */
