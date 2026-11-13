@@ -537,6 +537,30 @@ html,body,#app{max-width:100%;overflow-x:clip}
  .edu-catalog{width:100%!important;margin-left:0!important;margin-right:0!important}
 }
 </style>
+
+<style id="eduone-v46-brand-catalog-background">
+/* Full-page brand-blue background, including outside the app shell.
+   No negative viewport-width offsets that expose the old body color. */
+html:has(.edu-catalog),
+body:has(.edu-catalog),
+body:has(.edu-catalog) > #app {
+  background:#eaf5ff!important;
+  background-image:linear-gradient(165deg,#e6f3ff 0%,#f3f9ff 52%,#e7f3ff 100%)!important;
+}
+body:has(.edu-catalog) > #app{width:100%!important;max-width:480px!important;overflow-x:clip!important;}
+body:has(.edu-catalog) .edu-catalog {
+  width:100%!important;max-width:100%!important;
+  margin:0!important; padding:0 12px 44px!important;
+  background:transparent!important; overflow-x:clip!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner {
+  width:calc(100% + 24px)!important;
+  margin:0 -12px 20px!important;
+  border-radius:0 0 30px 30px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner-inner {padding-top:0!important;}
+body:has(.edu-catalog) .edu-catalog .edu-banner .edu-logo {display:none!important;}
+</style>
 </head>
 <body>
 
@@ -1214,7 +1238,7 @@ V['edu-pick']=()=>{
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
  const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${eduCatalogImageFor('subjects',x[0],eduIllustration(x[0]))}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
  const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff">${eduCatalogImageFor('languages',x[0],`<span style="font-size:58px;filter:drop-shadow(0 5px 5px #164f9e66)">${x[2]}</span>`)}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
- return `<div class="scr fade edu-catalog"><header class="edu-banner"><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`${eduPendingChoice.type==='fan'?'Tanlangan fan:':'Tanlangan til:'} <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><div class="edu-banner-inner"><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`${eduPendingChoice.type==='fan'?'Tanlangan fan:':'Tanlangan til:'} <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
 };
 
 function render(){
