@@ -561,6 +561,124 @@ body:has(.edu-catalog) .edu-catalog .edu-banner {
 body:has(.edu-catalog) .edu-catalog .edu-banner-inner {padding-top:0!important;}
 body:has(.edu-catalog) .edu-catalog .edu-banner .edu-logo {display:none!important;}
 </style>
+
+<style id="eduone-v47-premium-three-column-catalog">
+/* V47: subject and language cards in three columns on phones, with a cohesive
+   premium EduOne background. Catalog-only styles; other pages unchanged. */
+html:has(.edu-catalog),
+body:has(.edu-catalog),
+body:has(.edu-catalog) #app {
+  background:#071e51!important;
+  background-image:
+    radial-gradient(ellipse at 88% 12%,rgba(55,148,255,.36),transparent 42%),
+    radial-gradient(ellipse at 7% 68%,rgba(16,111,241,.27),transparent 46%),
+    linear-gradient(155deg,#071b48 0%,#103e90 52%,#081d4e 100%)!important;
+}
+body:has(.edu-catalog) .edu-catalog {
+  background:transparent!important;
+  color:#f4f8ff!important;
+  padding:0 12px 44px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner {
+  background:linear-gradient(115deg,#07349d 0%,#1268ed 54%,#50b7ff 100%)!important;
+  border-bottom:1px solid rgba(255,255,255,.32)!important;
+  box-shadow:0 16px 32px rgba(0,9,46,.35)!important;
+  padding:27px 15px 29px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner h1 {
+  font-size:clamp(24px,5.4vw,31px)!important;
+  text-shadow:0 2px 10px rgba(0,24,100,.35)!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner p {
+  font-size:clamp(12px,3.3vw,15px)!important;
+  max-width:390px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-choice-footer {
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(226,241,255,.98))!important;
+  border:1px solid rgba(150,210,255,.85)!important;
+  box-shadow:0 12px 28px rgba(0,8,45,.32)!important;
+  border-radius:23px!important;
+  padding:16px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-section {
+  margin:26px 0 14px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-section strong {
+  color:#fff!important;
+  background:linear-gradient(120deg,#0863e9,#208dfb)!important;
+  border:1px solid rgba(255,255,255,.24)!important;
+  box-shadow:0 5px 16px rgba(0,10,55,.25)!important;
+  font-size:17px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-section:after {
+  background:linear-gradient(90deg,rgba(141,209,255,.75),rgba(141,209,255,.06))!important;
+  height:2px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-cards,
+body:has(.edu-catalog) .edu-catalog .edu-cards.fans {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-card {
+  min-width:0!important;
+  border-radius:16px!important;
+  padding:5px 5px 9px!important;
+  border:1px solid rgba(172,215,255,.68)!important;
+  background:linear-gradient(160deg,#ffffff,#e8f3ff)!important;
+  box-shadow:0 7px 16px rgba(0,10,53,.28)!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-card.edu-selected {
+  border:2px solid #ffd76b!important;
+  box-shadow:0 0 0 2px rgba(255,213,94,.4),0 8px 19px rgba(0,10,53,.35)!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-art {
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:1/1!important;
+  border-radius:12px!important;
+  padding:0!important;
+  background:linear-gradient(135deg,#c9eaff,#86c7ff)!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-art:has(>.edu-catalog-image) {
+  padding:0!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-art>.edu-catalog-image {
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  padding:0!important;object-fit:cover!important;
+  border-radius:12px!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-art svg {
+  max-width:95%;max-height:95%;width:95%;height:95%;
+}
+body:has(.edu-catalog) .edu-catalog .edu-card-name {
+  font-size:clamp(10px,2.8vw,13px)!important;
+  line-height:1.17!important;
+  min-height:35px!important;
+  padding:6px 1px 3px!important;
+  overflow-wrap:anywhere!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-state {
+  font-size:clamp(9px,2.4vw,11px)!important;
+  padding:4px 5px!important;
+  white-space:normal!important;
+  text-align:center!important;
+  max-width:100%!important;
+  line-height:1.15!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-state.off {
+  font-size:9px!important;
+}
+@media(min-width:680px){
+ body:has(.edu-catalog) .edu-catalog .edu-cards,
+ body:has(.edu-catalog) .edu-catalog .edu-cards.fans {
+   grid-template-columns:repeat(4,minmax(0,1fr))!important;
+   gap:12px!important;
+ }
+}
+</style>
 </head>
 <body>
 
