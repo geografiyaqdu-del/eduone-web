@@ -502,6 +502,14 @@ html,body,#app{max-width:100%;overflow-x:clip}
 .edu-catalog .edu-art{border-radius:20px 20px 10px 10px}
 .edu-catalog .edu-choice-footer{box-sizing:border-box;width:calc(100% + 24px);border-radius:20px 20px 0 0}
 @media(max-width:420px){.edu-catalog{padding-left:10px;padding-right:10px}.edu-catalog .edu-banner{margin-left:0;margin-right:0}.edu-catalog .edu-choice-footer{width:calc(100% + 20px);margin-left:-10px;margin-right:-10px}.edu-catalog .edu-cards{gap:10px}}
+
+/* V44: catalog edge alignment and navigation polish. */
+#app:has(.edu-catalog){background:linear-gradient(180deg,#edf7ff,#f7fbff)!important;overflow-x:clip!important}
+.edu-catalog{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:0!important;padding:0 14px 40px!important;overflow-x:clip!important;border:0!important;border-radius:0!important}
+.edu-catalog .edu-banner{margin:0 -14px 20px!important;width:calc(100% + 28px)!important;box-sizing:border-box!important;border-radius:0 0 30px 30px!important;overflow:hidden!important}
+.edu-catalog .edu-back{display:none!important}
+.edu-catalog .edu-choice-footer{width:100%!important;margin:14px 0 22px!important;border-radius:20px!important}
+@media(max-width:420px){.edu-catalog{padding-left:12px!important;padding-right:12px!important}.edu-catalog .edu-banner{margin-left:-12px!important;margin-right:-12px!important;width:calc(100% + 24px)!important}.edu-catalog .edu-choice-footer{margin-left:0!important;margin-right:0!important;width:100%!important}}
 </style>
 </head>
 <body>
@@ -1173,14 +1181,14 @@ function eduDynamicLangTiles(){
  });
 }
 function eduChoiceLabel(c){if(!c)return '';const a=c.type==='fan'?eduDynamicFanTiles():eduDynamicLangTiles();return a.find(x=>x[0]===c.id)?.[1]||'';}
-function eduOpenPicker(){eduPendingChoice=eduReadChoice();eduStatusFilter='all';cur='edu-pick';render();}
+function eduOpenPicker(){eduPendingChoice=eduReadChoice();eduStatusFilter='all';if(cur!=='edu-pick')go('edu-pick');else render();}
 V['edu-pick']=()=>{
  eduStatusFilter='all';
  const show=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[5]===1:x[5]===0);
  const showL=x=>eduStatusFilter==='all'||(eduStatusFilter==='yes'?x[4]===1:x[4]===0);
  const fanCard=x=>`<button class="edu-card ${x[5]?'':'off'} ${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]}" data-prem-fan="${x[0]}"><div class="edu-art" style="--art1:${x[3]};--art2:${x[4]}">${eduCatalogImageFor('subjects',x[0],eduIllustration(x[0]))}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[5]?'':'off'}">${eduPendingChoice?.type==='fan'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[5]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
  const langCard=x=>`<button class="edu-card ${x[4]?'':'off'} ${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'edu-selected':''}" aria-pressed="${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]}" data-prem-lang="${x[0]}"><div class="edu-art" style="--art1:#1489ed;--art2:#c4efff">${eduCatalogImageFor('languages',x[0],`<span style="font-size:58px;filter:drop-shadow(0 5px 5px #164f9e66)">${x[2]}</span>`)}</div><div class="edu-card-name">${x[1]}</div><span class="edu-state ${x[4]?'':'off'}">${eduPendingChoice?.type==='til'&&eduPendingChoice.id===x[0]?'✓ Tanlandi':(x[4]?'✅ Mavjud':'◷ Hozircha mavjud emas')}</span></button>`;
- return `<div class="scr fade edu-catalog"><header class="edu-banner"><button class="edu-back" data-prem-back aria-label="Orqaga">‹</button><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`${eduPendingChoice.type==='fan'?'Tanlangan fan:':'Tanlangan til:'} <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
+ return `<div class="scr fade edu-catalog"><header class="edu-banner"><div class="edu-banner-inner"><div class="edu-logo edu-brand-standard eduone-wordmark" style="background:transparent!important" aria-label="EduOne"><span class="eduone-wordmark-edu" style="color:#07143E!important;-webkit-text-fill-color:#07143E!important">Edu</span><span class="eduone-wordmark-one" style="color:#0750D8!important;-webkit-text-fill-color:#0750D8!important">One</span></div><h1>Fanlar va chet tillari</h1><p>Fan yoki tilni belgilang, so‘ng «Davom etish» tugmasini bosing</p></div></header><div class="edu-choice-footer" role="group" aria-label="Fan tanlashni tasdiqlash"><div class="edu-choice-label">${eduPendingChoice?`${eduPendingChoice.type==='fan'?'Tanlangan fan:':'Tanlangan til:'} <strong>${eduChoiceLabel(eduPendingChoice)}</strong>`:'Hali fan yoki til tanlanmagan'}</div><button type="button" id="edu-confirm-choice" ${!eduPendingChoice?'disabled':''}>Davom etish →</button></div><div class="edu-section"><strong>Fanlar</strong></div><div class="edu-cards fans">${eduDynamicFanTiles().filter(show).map(fanCard).join('')||'<p class="edu-empty">Fan topilmadi</p>'}</div><div class="edu-section lang"><strong>Chet tillari</strong></div><div class="edu-cards">${eduDynamicLangTiles().filter(showL).map(langCard).join('')||'<p class="edu-empty">Til topilmadi</p>'}</div></div>`;
 };
 
 function render(){
@@ -1237,9 +1245,7 @@ function bind(){
    S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='edu-pick';render();toast("Xush kelibsiz, "+first()+"!")}}
  if(cur==='edu-pick'){
   if(!eduPendingChoice)eduPendingChoice=eduReadChoice();
-  app.querySelector('[data-prem-back]')?.addEventListener('click',()=>{
-   if(eduHasChoice()){stack=[];cur='home';render()}else toast('Davom etish uchun fan yoki tilni tanlang');
-  });
+
   app.querySelectorAll('[data-prem-filter]').forEach(b=>b.onclick=()=>{eduStatusFilter=b.dataset.premFilter;render()});
   app.querySelectorAll('[data-prem-fan]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premFan,tile=eduDynamicFanTiles().find(x=>x[0]===id);
@@ -1250,7 +1256,7 @@ function bind(){
   const tile=eduDynamicLangTiles().find(x=>x[0]===b.dataset.foreignLang);
   if(!tile?.[4]){toast('Bu til hozircha mavjud emas');return;}
   eduPendingChoice={id:tile[0],type:'til'};
-  eduOpenPicker();eduPendingChoice={id:tile[0],type:'til'};render();
+  if(cur!=='edu-pick')eduOpenPicker();eduPendingChoice={id:tile[0],type:'til'};render();
  });
  app.querySelectorAll('[data-prem-lang]').forEach(b=>b.onclick=()=>{
    const id=b.dataset.premLang,tile=eduDynamicLangTiles().find(x=>x[0]===id);
@@ -1266,7 +1272,8 @@ function bind(){
     const sub=eduVisibleSubjects().find(x=>x.id===id);
     if(sub)eduCatalog.selected=sub.id;
    }
-   stack=[];cur='home';render();
+   const prior=stack.length?stack[stack.length-1]:null;
+   if(prior&&prior.page==='profil'){back();}else{stack=[];cur='home';render();}
   };
  }
 
@@ -1677,8 +1684,8 @@ const adminSubjectRows=()=>adminState.rows.subjects||[];
 const adminRowsFor=tab=>adminState.rows[tab]||[];
 const adminRealTable=tab=>tab;
 const adminDefs={
- subjects:{title:'Fanlar',icon:'📚',fields:[['title','Fan nomi','text',true],['slug','Qisqa kod (masalan geografiya)','text',true],['description','Tavsif','textarea'],['sort_order','Tartib raqami','number'],['is_published','Nashr qilingan','checkbox']]},
- languages:{title:'Chet tillari',icon:'🌐',fields:[['title','Til nomi','text',true],['slug','Qisqa kod (masalan ingliz-tili)','text',true],['flag','Bayroq belgisi (emoji)','text'],['is_available','Mavjud','checkbox']]},
+ subjects:{title:'Fanlar',icon:'📚',fields:[['title','Fan nomi','text',true],['slug','Qisqa kod (masalan geografiya)','text',true],['description','Tavsif','textarea'],['is_published','Mavjud','checkbox']]},
+ languages:{title:'Chet tillari',icon:'🌐',fields:[['title','Til nomi','text',true],['slug','Qisqa kod (masalan ingliz-tili)','text',true],['is_available','Mavjud','checkbox']]},
  lessons:{title:'Video darslar',icon:'🎬',fields:[['title','Dars nomi','text',true],['subject_id','Fan','subject'],['description','Dars tavsifi','textarea'],['video_url','Video havolasi (HTTPS)','url'],['sort_order','Tartib raqami','number'],['is_published','Nashr qilingan','checkbox']]},
  books:{title:'PDF kutubxona',icon:'📖',fields:[['title','Kitob nomi','text',true],['subject_id','Fan','subject'],['description','Kitob tavsifi','textarea'],['file_path','PDF fayl yo‘li','text'],['is_published','Nashr qilingan','checkbox']]},
  quizzes:{title:'Test to‘plamlari',icon:'📝',fields:[['title','Test nomi','text',true],['subject_id','Fan','subject'],['description','Tavsif','textarea'],['time_limit','Vaqt (daqiqa)','number'],['is_published','Nashr qilingan','checkbox']]},
