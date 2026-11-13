@@ -723,6 +723,11 @@ body:has(.edu-catalog) .edu-catalog .edu-banner {
  body:has(.edu-catalog) .edu-catalog {max-width:1120px!important;margin:0 auto!important;}
 }
 </style>
+<style id="eduone-v49-trash">
+.edu-trash-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0}
+.edu-trash-label{display:flex;align-items:center;gap:7px;color:#ad274c;font-weight:700}
+.edu-trash-switch{width:100%;margin-top:10px!important;min-height:44px;background:#e9eeff!important;color:#1b397a!important}
+</style>
 </head>
 <body>
 
@@ -1753,10 +1758,10 @@ async function eduRefreshCatalog(silent=false){
  if(!client||!verified||eduCatalogRefreshing)return;
  eduCatalogRefreshing=true;
  try{
-  const results=await Promise.all(eduCatalogTypes.map(t=>client.from('edu_'+t).select('*').eq('is_published',true).limit(500)));
+  const results=await Promise.all(eduCatalogTypes.map(t=>client.from('edu_'+t).select('*').eq('is_published',true).is('deleted_at',null).limit(500)));
   const next={};
   for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;next[eduCatalogTypes[i]]=results[i].data||[];}
-  const languageResult=await client.from('edu_languages').select('*').limit(500);
+  const languageResult=await client.from('edu_languages').select('*').is('deleted_at',null).limit(500);
   if(languageResult.error)throw languageResult.error;
   next.languages=languageResult.data||[];
   const changed=!eduCatalog.ready||Object.keys(next).some(k=>JSON.stringify(eduCatalog[k])!==JSON.stringify(next[k]));
@@ -1891,7 +1896,7 @@ window.addEventListener('focus',()=>{if(verified)eduRefreshCatalog(true)});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&verified)eduRefreshCatalog(true)});
 
 /* EduOne Admin panel: privileges are checked in Supabase, never in client metadata. */
-const adminState={allowed:false,tab:'dashboard',rows:{},loading:false,editing:null,search:'',importData:null,importBusy:false,stats:null,statsError:''};
+const adminState={allowed:false,tab:'dashboard',rows:{},loading:false,editing:null,search:'',showTrash:false,importData:null,importBusy:false,stats:null,statsError:''};
 const adminSubjectRows=()=>adminState.rows.subjects||[];
 const adminRowsFor=tab=>adminState.rows[tab]||[];
 const adminRealTable=tab=>tab;
@@ -1927,7 +1932,11 @@ const adminLanguageFlag=(row)=>{
 
 const adminFields=(table,row={})=>adminDefs[table].fields.map(([key,label,type,required])=>{
  let v=row[key]??'';
- if(type==='checkbox')return `<label style="display:flex;align-items:center;gap:9px"><input style="width:18px;height:18px" name="${key}" type="checkbox" ${v?'checked':''}>${label}</label>`;
+ if(type==='checkbox'){
+  if((table==='subjects'&&key==='is_published')||(table==='languages'&&key==='is_available'))
+    return `<div class="edu-trash-row"><label style="display:flex;align-items:center;gap:9px"><input style="width:18px;height:18px" name="${key}" type="checkbox" ${v?'checked':''}>${label}</label><label class="edu-trash-label"><input style="width:18px;height:18px" name="edu_trash" type="checkbox" ${row.deleted_at?'checked':''}>🗑 Korzinka</label></div><div class="sm muted">Korzinka tanlansa, «Saqlash»dan keyin fan yoki til yashiriladi. Keyin qayta tiklash mumkin.</div>`;
+  return `<label style="display:flex;align-items:center;gap:9px"><input style="width:18px;height:18px" name="${key}" type="checkbox" ${v?'checked':''}>${label}</label>`;
+ }
  if(type==='subject'||type==='subject_optional'||type==='quiz'){
   const list=adminState.rows[type==='quiz'?'quizzes':'subjects']||[];
   return `<label>${label}<select name="${key}" ${type==='subject_optional'?'':'required'}><option value="">${type==='subject_optional'?'Barcha fanlar':'Tanlang'}</option>${list.map(x=>`<option value="${adminSafe(x.id)}" ${x.id===v?'selected':''}>${adminSafe(x.title)}</option>`).join('')}</select></label>`;
@@ -1961,14 +1970,14 @@ async function adminLoadStatistics(){
 }
 
 function adminView(){
- const tab=adminState.tab,def=adminDefs[tab],rows=adminRowsFor(tab);
+ const tab=adminState.tab,def=adminDefs[tab],allRows=adminRowsFor(tab),isCatalog=['subjects','languages'].includes(tab),rows=isCatalog?allRows.filter(r=>adminState.showTrash?!!r.deleted_at:!r.deleted_at):allRows;
  return `<div class="scr fade"><div class="top" style="justify-content:center"><h2>Admin panel</h2></div>
 
  ${tab==='statistics'?adminStatisticsView():tab==='dashboard'?`<div class="ad-kpis">${Object.entries(adminDefs).map(([k,d])=>`<button class="ad-kpi" data-ad-tab="${k}" style="text-align:left"><small>${d.icon} ${d.title}</small><b>${adminRowsFor(k).length}</b><small>Ma’lumotlar bazasi</small></button>`).join('')}</div><div class="card" style="margin:18px 0;padding:22px;border:2px solid #a5b4fc;background:linear-gradient(135deg,#ffffff,#eef2ff);box-shadow:0 8px 26px rgba(27,42,120,.13)"><div style="font-size:25px;font-weight:900;color:#1e2a55;margin-bottom:9px">📈 Statistika markazi</div><p style="color:#56617a;margin:0 0 16px">👥 Foydalanuvchilar soni · 📍 Hududlar · 🎂 Yosh · 👤 Jins · 🎓 Toifalar</p><button type="button" class="btn" data-ad-tab="statistics" style="width:100%;min-height:54px;font-size:17px;font-weight:800">Statistika markazini ochish →</button></div>`:
- `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div>${['subjects','languages'].includes(tab)?'':`<input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0">`}<button class="btn" data-ad-new>+ Yangi qo‘shish</button></div>
+ `<div class="card"><div class="row sp"><div><b style="font-size:19px">${def.icon} ${def.title}</b><div class="sm muted">${rows.length} ta yozuv</div></div><button class="ad-mini" data-ad-refresh>↻</button></div>${['subjects','languages'].includes(tab)?'':`<input class="ad-search" id="ad-search" placeholder="🔎 Qidirish..." value="${adminSafe(adminState.search)}" style="margin:12px 0">`}<button class="btn" data-ad-new>+ Yangi qo‘shish</button>${isCatalog?`<button type="button" class="ad-mini edu-trash-switch" data-ad-trash-toggle>${adminState.showTrash?'↩ Faol ro‘yxat':'🗑 Korzinka ('+allRows.filter(r=>r.deleted_at).length+')'}</button>`:''}</div>
  ${adminState.editing?.table===tab?`<form id="ad-form" class="card ad-form"><div class="row sp"><b>${adminState.editing.id?'Tahrirlash':'Yangi yozuv'}</b><button type="button" class="ad-mini" data-ad-cancel>✕</button></div>${adminFields(tab,adminState.editing.row)}${['subjects','languages'].includes(tab)?`<label>Fan yoki til rasmi (PNG, JPG, WebP; 5 MB gacha)<input id="ad-image" type="file" accept="image/png,image/jpeg,image/webp"></label><div id="ad-image-confirmation" class="sm muted" aria-live="polite"></div><div id="ad-image-current" class="ad-image-preview" ${adminState.editing.row?.image_path?'':'hidden'}>${adminState.editing.row?.image_path?eduImageMarkup(adminState.editing.row.image_path,'','admin-preview'):''}</div><button type="button" class="ad-mini ad-danger" id="ad-image-remove" ${adminState.editing.row?.image_path?'':'hidden'}>🗑 Rasmni olib tashlash</button>`:''}${tab==='books'?`<label>PDF yuklash (ixtiyoriy)<input id="ad-pdf" type="file" accept="application/pdf"></label>`:''}<button class="btn" type="submit">💾 Saqlash</button></form>`:''}
  ${tab==='questions'?`<div class="card ad-form"><b>📥 JSON testlarni ommaviy yuklash</b><p class="sm muted">Faylni tanlang, savollarni tekshiring va Supabase bazasiga saqlang.</p><label>JSON fayl<input type="file" id="ad-import-file" accept=".json,application/json"></label><div id="ad-import-preview">${adminState.importData?adminImportPreview():''}</div></div>`:''}
- <div class="card" id="ad-list">${( ['subjects','languages'].includes(tab) ? rows : rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())) ).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${['subjects','languages'].includes(tab)&&r.image_path?eduImageMarkup(r.image_path,'','admin-list-image'):tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button><button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button></div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
+ <div class="card" id="ad-list">${( ['subjects','languages'].includes(tab) ? rows : rows.filter(r=>JSON.stringify(r).toLowerCase().includes(adminState.search.toLowerCase())) ).map(r=>`<div class="ad-entry"><div class="ad-entry-main"><b>${['subjects','languages'].includes(tab)&&r.image_path?eduImageMarkup(r.image_path,'','admin-list-image'):tab==='languages'?`<span aria-hidden="true" style="font-size:24px;margin-right:8px;vertical-align:middle">${adminSafe(adminLanguageFlag(r))}</span>`:''}${adminSafe(r.title||r.question||r.user_id||'Yozuv')}</b><small>${adminSafe(r.description||r.body||r.explanation||'')}${r.subject_id?' · '+adminSafe(adminName('subjects',r.subject_id)):''}</small><small>${r.is_published===false?'⚪ Qoralama':r.is_published===true?'🟢 Nashrda':''} ${r.status?' · '+adminSafe(r.status):''} ${r.created_at?' · '+adminDate(r.created_at):''}</small></div><div class="ad-actions"><button class="ad-mini" data-ad-edit="${adminSafe(r.id)}">✎</button>${isCatalog?(r.deleted_at?`<button class="ad-mini" data-ad-restore="${adminSafe(r.id)}">↩ Tiklash</button>`:`<button class="ad-mini ad-danger" data-ad-trash="${adminSafe(r.id)}">🗑</button>`):`<button class="ad-mini ad-danger" data-ad-delete="${adminSafe(r.id)}">🗑</button>`}</div></div>`).join('')||'<div class="ad-empty">Hozircha yozuv yo‘q. Yangi qo‘shing.</div>'}</div>`}
  </div>`;
 }
 V.admin=()=>adminView();
@@ -2069,17 +2078,37 @@ function adminBind(){
  const imp=document.getElementById('ad-import-file');if(imp)imp.onchange=async()=>{try{const f=imp.files?.[0];if(!f)return;if(f.size>2*1024*1024)throw Error('JSON 2 MB dan katta');adminState.importData=adminValidateImport(JSON.parse(await f.text()));document.getElementById('ad-import-preview').innerHTML=adminImportPreview();document.getElementById('ad-import-save').onclick=adminImportSave;toast(adminState.importData.questions.length+' ta savol tayyor');}catch(e){adminState.importData=null;document.getElementById('ad-import-preview').textContent=e.message;toast(e.message)}};
  const save=document.getElementById('ad-import-save');if(save)save.onclick=adminImportSave;
 
- app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{eduSaveScroll();stack.push({page:'admin',tab:adminState.tab,key:eduNavKey()});eduHistoryPush();adminState.tab=b.dataset.adTab;adminState.search='';adminState.editing=null;eduCatalogClear();render();if(adminState.tab==='statistics')adminLoadStatistics()});
+ app.querySelectorAll('[data-ad-tab]').forEach(b=>b.onclick=()=>{eduSaveScroll();stack.push({page:'admin',tab:adminState.tab,key:eduNavKey()});eduHistoryPush();adminState.tab=b.dataset.adTab;adminState.search='';adminState.showTrash=false;adminState.editing=null;eduCatalogClear();render();if(adminState.tab==='statistics')adminLoadStatistics()});
  app.querySelectorAll('[data-ad-refresh]').forEach(b=>b.onclick=()=>adminState.tab==='statistics'?adminLoadStatistics():adminLoad());
  const search=$('#ad-search');if(search)search.oninput=e=>{adminState.search=e.target.value;const cursor=search.selectionStart;render();$('#ad-search')?.focus();$('#ad-search')?.setSelectionRange(cursor,cursor)};
+ const trashToggle=app.querySelector('[data-ad-trash-toggle]');if(trashToggle)trashToggle.onclick=()=>{adminState.showTrash=!adminState.showTrash;adminState.editing=null;render()};
+ app.querySelectorAll('[data-ad-trash]').forEach(b=>b.onclick=async()=>{
+  if(!confirm('Fan yoki til korzinkaga ko‘chirilsinmi? Uni keyin qayta tiklashingiz mumkin.'))return;
+  const table=adminState.tab;
+  const {data,error}=await client.from('edu_'+table).update({deleted_at:new Date().toISOString()}).eq('id',b.dataset.adTrash).select('id');
+  if(error){toast('Korzinkaga ko‘chirilmadi: '+error.message);return}
+  if(!data?.length){toast('O‘zgartirish tasdiqlanmadi. Administrator huquqini tekshiring.');return}
+  toast('Korzinkaga ko‘chirildi');await adminLoad();await eduRefreshCatalog(true);
+ });
+ app.querySelectorAll('[data-ad-restore]').forEach(b=>b.onclick=async()=>{
+  const table=adminState.tab;
+  const {data,error}=await client.from('edu_'+table).update({deleted_at:null}).eq('id',b.dataset.adRestore).select('id');
+  if(error){toast('Tiklashda xatolik: '+error.message);return}
+  if(!data?.length){toast('Tiklash tasdiqlanmadi. Administrator huquqini tekshiring.');return}
+  toast('Qayta tiklandi');await adminLoad();await eduRefreshCatalog(true);
+ });
  const newBtn=app.querySelector('[data-ad-new]');if(newBtn)newBtn.onclick=()=>{eduCatalogClear();adminState.editing={table:adminState.tab,row:{},id:null};render()};
  const cancel=app.querySelector('[data-ad-cancel]');if(cancel)cancel.onclick=()=>{adminState.editing=null;render()};
  app.querySelectorAll('[data-ad-edit]').forEach(b=>b.onclick=()=>{const row=adminRowsFor(adminState.tab).find(x=>x.id===b.dataset.adEdit);if(row){eduCatalogClear();adminState.editing={table:adminState.tab,id:row.id,row};render()}});
- app.querySelectorAll('[data-ad-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('Ushbu yozuvni butunlay o‘chirasizmi?'))return;const table=adminState.tab;const {error}=await client.from('edu_'+adminRealTable(table)).delete().eq('id',b.dataset.adDelete);if(error)toast(error.message);else{toast('O‘chirildi');adminLoad();eduRefreshCatalog(true)}});
+ app.querySelectorAll('[data-ad-delete]').forEach(b=>b.onclick=async()=>{if(['subjects','languages'].includes(adminState.tab)){toast('Fan va tillarni faqat korzinkaga ko‘chiring.');return}if(!confirm('Ushbu yozuvni butunlay o‘chirasizmi?'))return;const table=adminState.tab;const {error}=await client.from('edu_'+adminRealTable(table)).delete().eq('id',b.dataset.adDelete);if(error)toast(error.message);else{toast('O‘chirildi');adminLoad();eduRefreshCatalog(true)}});
  const form=$('#ad-form');if(form)form.onsubmit=async e=>{
   e.preventDefault();const button=form.querySelector('[type=submit]');button.disabled=true;
   const table=adminState.tab,edit=adminState.editing,fd=new FormData(form),row={};
   for(const [key,label,type] of adminDefs[table].fields){let v=type==='checkbox'?form.elements[key].checked:fd.get(key);if(type==='number')v=v===''?0:Number(v);if(type==='subject_optional'&&v==='')v=null;if(type==='datetime-local')v=v?new Date(v).toISOString():null;row[key]=v}
+  if(['subjects','languages'].includes(table)){
+   const toTrash=form.elements.edu_trash?.checked===true;
+   row.deleted_at=toTrash?(edit.row?.deleted_at||new Date().toISOString()):null;
+  }
   try{
    if(['subjects','languages'].includes(table)&&eduCatalogPending)throw Error('Avval rasmni tasdiqlang yoki bekor qiling.');
    if(['subjects','languages'].includes(table)&&!eduCatalogRemove&&$('#ad-image')?.files?.length&&!eduCatalogApproved)throw Error('Rasmni qirqib, «Tasdiqlash» tugmasini bosing.');
