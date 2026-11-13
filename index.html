@@ -679,6 +679,50 @@ body:has(.edu-catalog) .edu-catalog .edu-state.off {
  }
 }
 </style>
+
+<style id="eduone-v48-seamless-edges">
+/* V48: remove the rectangular outer shell/strips. The page and its
+   surrounding viewport use the exact same premium background. */
+html:has(.edu-catalog),
+body:has(.edu-catalog),
+body:has(.edu-catalog) #app,
+body:has(.edu-catalog) .edu-catalog {
+  background-color:#081f52!important;
+  background-image:
+    radial-gradient(ellipse at 88% 12%,rgba(55,148,255,.36),transparent 42%),
+    radial-gradient(ellipse at 7% 68%,rgba(16,111,241,.27),transparent 46%),
+    linear-gradient(155deg,#071b48 0%,#103e90 52%,#081d4e 100%)!important;
+  background-attachment:fixed!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+body:has(.edu-catalog) #app {
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  overflow-x:clip!important;
+}
+body:has(.edu-catalog) .edu-catalog {
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:12px 12px 44px!important;
+  overflow-x:clip!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-banner {
+  box-sizing:border-box!important;
+  width:100%!important;
+  margin:0 0 20px!important;
+  border-radius:26px!important;
+  overflow:hidden!important;
+}
+@media(min-width:680px) {
+ body:has(.edu-catalog) .edu-catalog {max-width:1120px!important;margin:0 auto!important;}
+}
+</style>
 </head>
 <body>
 
