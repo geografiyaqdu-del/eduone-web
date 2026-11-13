@@ -473,6 +473,25 @@ body:has(.edu-intro){margin:0;}
 .edu-cat-shapes{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 .edu-cat-shapes button{font-size:11px!important;padding:10px 3px!important}
 </style>
+
+<style id="eduone-v40-square-catalog-art">
+/* V40: consistent 1:1 premium subject and language artwork, without cropping. */
+.edu-catalog .edu-art{
+  width:100%!important;height:auto!important;min-height:0!important;
+  aspect-ratio:1 / 1!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;background:linear-gradient(145deg,#e8f5ff,#d4eaff)!important;
+}
+.edu-catalog .edu-art:has(>.edu-catalog-image){padding:8px!important;box-sizing:border-box!important}
+.edu-catalog .edu-art>.edu-catalog-image{
+  position:relative!important;inset:auto!important;display:block!important;
+  width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;object-position:center!important;padding:0!important;margin:0!important;
+  border-radius:15px!important;background:transparent!important;box-sizing:border-box!important;
+}
+.edu-catalog .edu-art:has(>.edu-catalog-image)::after{display:none!important}
+.edu-catalog .edu-card{overflow:hidden!important}
+@media(max-width:380px){.edu-catalog .edu-art:has(>.edu-catalog-image){padding:6px!important}}
+</style>
 </head>
 <body>
 
@@ -556,7 +575,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=eduTranslateText(String(t),S.lang);document.body.appendChild(d);setTimeout(()=>d.remove(),1800)}
 // V35: browser history and per-view scroll restoration.
-let eduNavSeq=0, eduRestoring=false;
+let eduNavSeq=0, eduRestoring=false, eduExiting=false;
 const eduScrollPositions=new Map();
 const eduNavKey=()=>cur==='admin'?'admin:'+((typeof adminState!=='undefined'&&adminState.tab)||'dashboard'):String(cur||'home');
 function eduSaveScroll(){if(cur)eduScrollPositions.set(eduNavKey(),window.scrollY||document.documentElement.scrollTop||0)}
@@ -568,9 +587,9 @@ function back(){
  if(cur==='admin'&&adminState.tab!=='dashboard'&&!stack.length){eduSaveScroll();adminState.tab='dashboard';adminState.editing=null;render();eduRestoreScroll('admin:dashboard');return}
  if(stack.length){const entry=stack.pop();eduSaveScroll();cur=typeof entry==='string'?entry:entry.page;if(cur==='admin'&&entry.tab)adminState.tab=entry.tab;render();eduRestoreScroll(typeof entry==='string'?cur:entry.key);return}
  if(cur!=='home'&&verified){eduSaveScroll();cur='home';render();return}
- if(verified&&confirm('EduOne’dan chiqmoqchimisiz?')){history.back()}
+ if(verified&&confirm('EduOne’dan chiqmoqchimisiz?')){eduExiting=true;stack=[];const steps=eduNavSeq+1;history.go(-steps);}
 }
-window.addEventListener('popstate',()=>{if(eduRestoring)return;back();});
+window.addEventListener('popstate',()=>{if(eduRestoring||eduExiting)return;back();});
 const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tillari'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
 function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').setAttribute('data-i18n-ignore','');$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Mening fanim':'Мой предмет','Chet tillari':'Языки','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Mening fanim':'My subject','Chet tillari':'Languages','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Mening fanim':'Meniń pánim','Chet tillari':'Shet tilleri','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
 document.addEventListener('click',e=>{if(e.target.closest('[data-google-login]')){e.preventDefault();signInGoogle();return}if(e.target.closest('[data-theme-toggle]')){e.preventDefault();toggleTheme();return}const b=e.target.closest('[data-tab]');if(b){go(b.dataset.tab)}const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);if(e.target.closest('[data-back]')){if(stack.length&&history.state?.eduone)history.back();else back()}});
@@ -1494,18 +1513,27 @@ window.confirm=(message)=>eduNativeConfirm(eduTranslateText(String(message),S.la
 /* EduOne public catalog: published records are loaded from Supabase. */
 const eduCatalog={subjects:[],lessons:[],books:[],quizzes:[],announcements:[],languages:[],selected:null,ready:false,error:''};
 const eduCatalogTypes=['subjects','lessons','books','quizzes','announcements'];
+let eduCatalogRefreshing=false;
 async function eduRefreshCatalog(silent=false){
- if(!client||!verified)return;
+ if(!client||!verified||eduCatalogRefreshing)return;
+ eduCatalogRefreshing=true;
  try{
   const results=await Promise.all(eduCatalogTypes.map(t=>client.from('edu_'+t).select('*').eq('is_published',true).limit(500)));
-  for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;eduCatalog[eduCatalogTypes[i]]=results[i].data||[];}
-  // Chet tillari ham administrator boshqaradigan yagona jadvaldan olinadi.
+  const next={};
+  for(let i=0;i<results.length;i++){if(results[i].error)throw results[i].error;next[eduCatalogTypes[i]]=results[i].data||[];}
   const languageResult=await client.from('edu_languages').select('*').limit(500);
   if(languageResult.error)throw languageResult.error;
-  eduCatalog.languages=languageResult.data||[];
+  next.languages=languageResult.data||[];
+  const changed=!eduCatalog.ready||Object.keys(next).some(k=>JSON.stringify(eduCatalog[k])!==JSON.stringify(next[k]));
+  for(const k of Object.keys(next))eduCatalog[k]=next[k];
   eduCatalog.ready=true;eduCatalog.error='';
-  if(['fanlar','home','edu-subject','edu-test-categories','edu-test-list','edu-lesson','edu-book','edu-quiz','tillar','edu-pick'].includes(cur))render();
+  if(changed&&['fanlar','home','edu-subject','edu-test-categories','edu-test-list','edu-lesson','edu-book','edu-quiz','tillar','edu-pick'].includes(cur)){
+   const scrollY=window.scrollY;
+   render();
+   requestAnimationFrame(()=>window.scrollTo(0,scrollY));
+  }
  }catch(e){eduCatalog.error=e.message;if(!silent)toast('Kontent yuklanmadi: '+e.message);}
+ finally{eduCatalogRefreshing=false;}
 }
 function eduVisibleSubjects(){
  // Baza yuklangach fanlar faqat admin boshqaradigan ro'yxatdan olinadi.
@@ -1624,7 +1652,7 @@ document.addEventListener('click',e=>{
 });
 V['edu-test-categories']=eduTestCategoriesView;V['edu-test-list']=eduTestListView;V['edu-subject']=eduSubjectDetail;V['edu-lesson']=eduItemDetail;V['edu-book']=eduItemDetail;V['edu-quiz']=eduItemDetail;
 window.addEventListener('focus',()=>{if(verified)eduRefreshCatalog(true)});
-setInterval(()=>{if(!document.hidden&&verified&&['home','fanlar','edu-subject'].includes(cur))eduRefreshCatalog(true)},30000);
+// V41: periodic full-page refresh removed to prevent visual flicker.
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&verified)eduRefreshCatalog(true)});
 
 /* EduOne Admin panel: privileges are checked in Supabase, never in client metadata. */
