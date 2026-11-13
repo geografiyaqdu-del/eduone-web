@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta name="eduone-v38-image-sync" content="subject-hero-and-profile">
+<meta name="eduone-v39-image-fit-crop" content="cover-rounded-crop">
 <meta name="eduone-catalog-images" content="V31-boot-recovery-admin-image-input">
 <meta name="eduone-build-profile-ranking" content="V19">
 <meta name="eduone-auto-translation" content="V25-real-json-quiz-design">
@@ -459,6 +459,19 @@ body:has(.edu-intro){margin:0;}
 .edu-my-globe .edu-synced-subject-image,.edu-my-icon .edu-synced-subject-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;border-radius:inherit}
 .edu-my-globe .edu-synced-subject-image{padding:4px;box-sizing:border-box}
 .edu-my-icon .edu-synced-subject-image{padding:2px;box-sizing:border-box}
+</style>
+<style id="eduone-v39-fullbleed-images">
+/* Fill each designated subject/language icon viewport, without interior padding. */
+.edu-my-globe .edu-synced-subject-image,.edu-my-icon .edu-synced-subject-image{
+ width:100%!important;height:100%!important;display:block!important;
+ object-fit:cover!important;object-position:center!important;padding:0!important;
+ margin:0!important;border-radius:inherit!important;box-sizing:border-box!important;
+}
+.edu-my-globe,.edu-my-icon{padding:0!important;overflow:hidden!important}
+.edu-art>.edu-catalog-image{object-fit:cover!important;padding:0!important;background:transparent!important}
+.edu-language-icon img{object-fit:cover!important}
+.edu-cat-shapes{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.edu-cat-shapes button{font-size:11px!important;padding:10px 3px!important}
 </style>
 </head>
 <body>
@@ -1756,15 +1769,15 @@ function eduCatalogEditor(file){
  const url=URL.createObjectURL(file),img=new Image();
  img.onload=()=>{
   const modal=document.createElement('div');modal.id='edu-catalog-editor';
-  modal.innerHTML=`<section class="edu-cat-dialog" role="dialog" aria-modal="true" aria-label="Rasmni tahrirlash"><h3>Rasmni tahrirlash</h3><div class="edu-cat-shapes"><button type="button" data-shape="square" class="selected">▢ Kvadrat</button><button type="button" data-shape="circle">◯ Doira</button></div><canvas id="edu-cat-canvas" width="600" height="600" aria-label="Rasmni surib joylashtiring"></canvas><label for="edu-cat-zoom"><span>O‘lcham</span><span id="edu-cat-zoom-value">100%</span></label><input type="range" id="edu-cat-zoom" min="100" max="350" value="100" step="5"><div class="edu-cat-tools"><button type="button" data-tool="left">↶ 90°</button><button type="button" data-tool="right">↷ 90°</button><button type="button" data-tool="flip">⇄ Akslantirish</button><button type="button" data-tool="reset">⟲ Tiklash</button></div><div class="edu-cat-actions"><button type="button" class="edu-cat-cancel" id="edu-cat-cancel">Bekor qilish</button><button type="button" class="edu-cat-accept" id="edu-cat-accept">✓ Tasdiqlash</button></div></section>`;
+  modal.innerHTML=`<section class="edu-cat-dialog" role="dialog" aria-modal="true" aria-label="Rasmni tahrirlash"><h3>Rasmni tahrirlash</h3><div class="edu-cat-shapes"><button type="button" data-shape="rounded" class="selected">▢ Yumaloq burchak</button><button type="button" data-shape="square">□ Kvadrat</button><button type="button" data-shape="circle">◯ Doira</button></div><canvas id="edu-cat-canvas" width="600" height="600" aria-label="Rasmni surib joylashtiring"></canvas><label for="edu-cat-zoom"><span>O‘lcham</span><span id="edu-cat-zoom-value">100%</span></label><input type="range" id="edu-cat-zoom" min="100" max="350" value="100" step="5"><div class="edu-cat-tools"><button type="button" data-tool="left">↶ 90°</button><button type="button" data-tool="right">↷ 90°</button><button type="button" data-tool="flip">⇄ Akslantirish</button><button type="button" data-tool="reset">⟲ Tiklash</button></div><div class="edu-cat-actions"><button type="button" class="edu-cat-cancel" id="edu-cat-cancel">Bekor qilish</button><button type="button" class="edu-cat-accept" id="edu-cat-accept">✓ Tasdiqlash</button></div></section>`;
   document.body.appendChild(modal);
   const canvas=modal.querySelector('canvas'),ctx=canvas.getContext('2d'),zoom=modal.querySelector('#edu-cat-zoom');
-  let scale=1,dx=0,dy=0,drag=null,angle=0,flip=false,shape='square';
+  let scale=1,dx=0,dy=0,drag=null,angle=0,flip=false,shape='rounded';
   const size=600;
   const rotatedSize=()=>angle%180===0?[img.width,img.height]:[img.height,img.width];
   const fit=()=>{const [w,h]=rotatedSize();return Math.max(size/w,size/h);};
   const bounds=()=>{const [rw,rh]=rotatedSize(),base=fit()*scale;const w=rw*base,h=rh*base;dx=Math.max((size-w)/2,Math.min((w-size)/2,dx));dy=Math.max((size-h)/2,Math.min((h-size)/2,dy));};
-  const draw=()=>{bounds();const base=fit()*scale;ctx.clearRect(0,0,size,size);ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.save();ctx.translate(size/2+dx,size/2+dy);ctx.rotate(angle*Math.PI/180);ctx.scale(flip?-1:1,1);ctx.drawImage(img,-img.width*base/2,-img.height*base/2,img.width*base,img.height*base);ctx.restore();if(shape==='circle'){ctx.save();ctx.fillStyle='rgba(11,24,46,.52)';ctx.beginPath();ctx.rect(0,0,size,size);ctx.arc(size/2,size/2,size/2-4,0,Math.PI*2,true);ctx.fill('evenodd');ctx.restore();}};
+  const draw=()=>{bounds();const base=fit()*scale;ctx.clearRect(0,0,size,size);ctx.fillStyle='#fff';ctx.fillRect(0,0,size,size);ctx.save();ctx.translate(size/2+dx,size/2+dy);ctx.rotate(angle*Math.PI/180);ctx.scale(flip?-1:1,1);ctx.drawImage(img,-img.width*base/2,-img.height*base/2,img.width*base,img.height*base);ctx.restore();if(shape==='circle'||shape==='rounded'){ctx.save();ctx.fillStyle='rgba(11,24,46,.52)';ctx.beginPath();ctx.rect(0,0,size,size);if(shape==='circle'){ctx.arc(size/2,size/2,size/2-4,0,Math.PI*2,true);}else{ctx.roundRect(4,4,size-8,size-8,90);}ctx.fill('evenodd');ctx.restore();}};
   const setZoom=v=>{zoom.value=Math.max(100,Math.min(350,v));scale=Number(zoom.value)/100;modal.querySelector('#edu-cat-zoom-value').textContent=zoom.value+'%';draw();};
   zoom.oninput=()=>setZoom(Number(zoom.value));
   modal.querySelectorAll('[data-shape]').forEach(btn=>btn.onclick=()=>{shape=btn.dataset.shape;modal.querySelectorAll('[data-shape]').forEach(b=>b.classList.toggle('selected',b===btn));draw();});
@@ -1777,11 +1790,11 @@ function eduCatalogEditor(file){
    // Export the exact crop. Circle images use transparent PNG corners.
    const out=document.createElement('canvas');out.width=out.height=size;const oc=out.getContext('2d');
    const base=fit()*scale;bounds();
-   if(shape==='circle'){oc.beginPath();oc.arc(size/2,size/2,size/2,0,Math.PI*2);oc.clip();}
+   if(shape==='circle'||shape==='rounded'){oc.beginPath();if(shape==='circle')oc.arc(size/2,size/2,size/2,0,Math.PI*2);else oc.roundRect(0,0,size,size,90);oc.clip();}
    else{oc.fillStyle='#fff';oc.fillRect(0,0,size,size);}
    oc.save();oc.translate(size/2+dx,size/2+dy);oc.rotate(angle*Math.PI/180);oc.scale(flip?-1:1,1);oc.drawImage(img,-img.width*base/2,-img.height*base/2,img.width*base,img.height*base);oc.restore();
-   const mime=shape==='circle'?'image/png':'image/webp';
-   out.toBlob(blob=>{if(!blob){toast('Rasmni qayta tanlang');return;}eduCatalogApproved=new File([blob],shape==='circle'?'eduone-catalog.png':'eduone-catalog.webp',{type:mime});eduCatalogPending=false;modal.remove();if(info){if(eduCatalogPreviewUrl)URL.revokeObjectURL(eduCatalogPreviewUrl);eduCatalogPreviewUrl=URL.createObjectURL(blob);info.innerHTML='<div class="edu-cat-confirmed">✓ Rasm tasdiqlandi</div>';const preview=document.getElementById('ad-image-current');if(preview){preview.innerHTML='<img alt="Yangi rasm" class="admin-preview" src="'+eduCatalogPreviewUrl+'">';preview.hidden=false;}const removeBtn=document.getElementById('ad-image-remove');if(removeBtn)removeBtn.hidden=false;}URL.revokeObjectURL(url);},mime,.9);
+   const mime=shape==='circle'||shape==='rounded'?'image/png':'image/webp';
+   out.toBlob(blob=>{if(!blob){toast('Rasmni qayta tanlang');return;}eduCatalogApproved=new File([blob],mime==='image/png'?'eduone-catalog.png':'eduone-catalog.webp',{type:mime});eduCatalogPending=false;modal.remove();if(info){if(eduCatalogPreviewUrl)URL.revokeObjectURL(eduCatalogPreviewUrl);eduCatalogPreviewUrl=URL.createObjectURL(blob);info.innerHTML='<div class="edu-cat-confirmed">✓ Rasm tasdiqlandi</div>';const preview=document.getElementById('ad-image-current');if(preview){preview.innerHTML='<img alt="Yangi rasm" class="admin-preview" src="'+eduCatalogPreviewUrl+'">';preview.hidden=false;}const removeBtn=document.getElementById('ad-image-remove');if(removeBtn)removeBtn.hidden=false;}URL.revokeObjectURL(url);},mime,.9);
   };
   draw();
  };
