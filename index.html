@@ -835,7 +835,29 @@ body:has(.edu-catalog) .edu-catalog .edu-card-name {
 .edu-act-bar{height:125px;width:100%;max-width:32px;display:flex;flex-direction:column-reverse;justify-content:flex-start;overflow:hidden;border-radius:5px 5px 0 0}
 .edu-act-bar i{display:block;width:100%;flex-shrink:0}
 .edu-act-col small{font-size:10px;color:var(--muted)}
-</style></head>
+</style>
+<style>
+.edu-progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 26px}
+.edu-progress-card{min-width:0;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:18px 15px;border:1px solid rgba(255,255,255,.85);border-radius:24px;background:linear-gradient(150deg,#fff 0%,#eef5ff 100%);box-shadow:0 13px 30px rgba(13,32,100,.17);color:#17346b;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.edu-progress-card:active{transform:scale(.98)}
+.edu-progress-errors{background:linear-gradient(150deg,#fff 0%,#fff1f4 100%)}
+.edu-progress-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:15px;color:#fff;background:linear-gradient(135deg,#1c67f0,#54a9ff);box-shadow:0 5px 14px #236bdf44}
+.edu-progress-errors .edu-progress-icon{background:linear-gradient(135deg,#f35b78,#f69c75);box-shadow:0 5px 14px #f35b7844}
+.edu-progress-title{font-size:14px;font-weight:800;line-height:1.25;min-height:35px}
+.edu-progress-number{font-size:33px;font-weight:900;line-height:1;letter-spacing:-1px;color:#155dd9}
+.edu-progress-errors .edu-progress-number{color:#df4764}
+.edu-progress-track{display:block;height:7px;width:100%;border-radius:20px;background:#dce8f8;overflow:hidden}
+.edu-progress-track>span{display:block;height:100%;background:linear-gradient(90deg,#246af2,#44b6f9);border-radius:20px}
+.edu-progress-errors .edu-progress-track>span{background:linear-gradient(90deg,#ef5977,#f7a074)}
+.edu-progress-card small{font-size:11px;color:#687c9a;line-height:1.4;min-height:30px}
+.edu-progress-foot{font-size:11px;font-weight:800;color:#2865cf;margin-top:auto}
+.edu-progress-errors .edu-progress-foot{color:#d94c6c}
+.edu-progress-detail-hero{padding:24px 18px;margin-bottom:16px;border-radius:22px;background:linear-gradient(120deg,#245ce5,#7158dc);color:#fff}
+.edu-progress-detail-hero span{font-size:32px}.edu-progress-detail-hero h2{font-size:21px;margin:7px 0}.edu-progress-detail-hero p{opacity:.85;font-size:13px}
+.edu-progress-error-item{margin-bottom:10px}
+@media(max-width:350px){.edu-progress-grid{gap:8px}.edu-progress-card{padding:14px 10px}.edu-progress-title{font-size:12px}.edu-progress-number{font-size:28px}}
+</style>
+</head>
 <body>
 
 <div class="app" id="app"></div>
@@ -1323,6 +1345,58 @@ function eduHomeModeKey(){return 'eduone_home_view_'+(verified?.id||'guest')}
 function eduReadHomeMode(){try{return localStorage.getItem(eduHomeModeKey())==='til'?'til':'fan'}catch(e){return 'fan'}}
 function eduSaveHomeMode(mode){try{localStorage.setItem(eduHomeModeKey(),mode==='til'?'til':'fan')}catch(e){}}
 let eduHomeResource='lessons';
+
+/* EduOne: per-account local quiz performance, no fabricated statistics. */
+function eduProgressKey(){return 'eduone_quiz_progress_'+(verified?.id||'guest')}
+function eduProgressRead(){try{const a=JSON.parse(localStorage.getItem(eduProgressKey())||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+function eduProgressSave(entry){
+ try{
+  const all=eduProgressRead();all.push(entry);
+  localStorage.setItem(eduProgressKey(),JSON.stringify(all.slice(-100)));
+ }catch(e){console.warn('Progress save unavailable',e)}
+}
+function eduProgressStats(subjectId){
+ const rows=eduProgressRead().filter(r=>r.subjectId===subjectId);
+ const total=rows.reduce((n,r)=>n+(Number(r.total)||0),0);
+ const correct=rows.reduce((n,r)=>n+(Number(r.correct)||0),0);
+ const wrong=rows.flatMap(r=>r.wrong||[]);
+ return {total,correct,wrong,pct:total?Math.round(correct*100/total):0};
+}
+function eduHomeProgressCards(isFan,fan,lang){
+ const id=isFan?(fan?.[0]||''):(lang?.[0]||'');
+ const sid=id.startsWith('db:')?id.slice(3):id;
+ const stats=eduProgressStats((isFan?'fan:':'til:')+sid);
+ return `<section class="edu-progress-grid" aria-label="O‘quv natijalari">
+  <button type="button" class="edu-progress-card edu-progress-mastery" data-edu-progress="mastery">
+   <span class="edu-progress-icon">${ic('chart',25)}</span><span class="edu-progress-title">O‘zlashtirish</span>
+   <strong class="edu-progress-number">${stats.pct}%</strong>
+   <span class="edu-progress-track"><span style="width:${stats.pct}%"></span></span>
+   <small>${stats.total?stats.correct+' / '+stats.total+' ta to‘g‘ri javob':'Hali test ishlanmagan'}</small>
+   <span class="edu-progress-foot">Batafsil statistika →</span>
+  </button>
+  <button type="button" class="edu-progress-card edu-progress-errors" data-edu-progress="errors">
+   <span class="edu-progress-icon">${ic('test',25)}</span><span class="edu-progress-title">Xatolarni tuzatish</span>
+   <strong class="edu-progress-number">${stats.wrong.length}</strong>
+   <span class="edu-progress-track"><span style="width:${stats.wrong.length?'100':'0'}%"></span></span>
+   <small>${stats.wrong.length?'ta qayta ko‘riladigan savol':'Hozircha xato yo‘q'}</small>
+   <span class="edu-progress-foot">Xatolarni ko‘rish →</span>
+  </button>
+ </section>`;
+}
+let eduProgressScreen='mastery';
+V['edu-progress-detail']=()=>{
+ const isFan=eduReadHomeMode()==='fan';
+ const choice=isFan?eduReadChoice():eduReadLanguageChoice();
+ const raw=choice?.id||'';
+ const sid=raw.startsWith('db:')?raw.slice(3):raw;
+ const st=eduProgressStats((isFan?'fan:':'til:')+sid);
+ const errors=eduProgressScreen==='errors';
+ return `<div class="scr fade edu-progress-detail">${topbar(errors?'Xatolarni tuzatish':'O‘zlashtirish')}
+  <div class="edu-progress-detail-hero"><span>${errors?'✍️':'📊'}</span><h2>${errors?'Xatolar ustida ishlash':'O‘quv natijalaringiz'}</h2><p>${errors?'Testlarda xato qilingan savollar':'Yakunlangan testlar bo‘yicha statistika'}</p></div>
+  ${errors?(st.wrong.length?`<div class="list">${st.wrong.slice().reverse().map((q,i)=>`<div class="card edu-progress-error-item"><b>${i+1}. ${esc(q.question||'Savol')}</b><p class="sm muted">Sizning javobingiz: ${esc(q.selected||'Belgilanmagan')}</p><p class="sm" style="color:#059669">To‘g‘ri javob: ${esc(q.correct||'Natijada ko‘rsatilmagan')}</p></div>`).join('')}</div>`:'<div class="card">Hozircha saqlangan xato savollar yo‘q. Testlarni ishlaganingizdan keyin bu yerda ko‘rinadi.</div>'):
+  `<div class="card"><h2 style="font-size:34px;color:#2563eb">${st.pct}%</h2><p>To‘g‘ri javoblar: <b>${st.correct}</b></p><p>Jami ishlangan savollar: <b>${st.total}</b></p><p class="sm muted">Foiz yakunlangan testlardagi barcha javoblar asosida hisoblanadi. Bir savol qayta ishlansa, u yana hisobga olinadi.</p></div>`}
+ </div>`;
+};
 V.home=()=>{
  const mode=eduReadHomeMode(),isFan=mode==='fan';
  const fc=eduReadChoice(),lc=eduReadLanguageChoice();
@@ -1356,16 +1430,7 @@ V.home=()=>{
       <span class="edu-home-mode-symbol">${ic('globe',24)}</span><span class="edu-home-mode-copy"><small>Chet tilim</small><strong>${esc(lang?.[1]||'Til tanlanmagan')}</strong></span>
     </button>
   </section>
-  <section class="edu-home-focus ${isFan?'subject':'language'}" aria-label="Tanlangan ta’lim yo‘nalishi">
-    <div class="edu-home-focus-top"><span>${isFan?'Mening fanim':'Chet tilim'}</span><span class="edu-home-focus-status">${active?'✓ Tanlangan':'Tanlanmagan'}</span></div>
-    <div class="edu-home-focus-row">
-      <div class="edu-home-focus-art">${art}</div>
-      <div class="edu-home-focus-info"><h2>${esc(currentName)}</h2><p>${active?(isFan?'Faningiz bo‘yicha materiallarni o‘rganing.':'Tanlangan chet tilingiz bo‘yicha ta’lim.'):('Davom etish uchun '+(isFan?'fan':'chet tili')+' tanlang.')}</p></div>
-    </div>
-    <button type="button" class="edu-home-focus-link" ${active?`data-tab="${isFan?'fanlar':'tillar'}"`:`data-edu-home-picker="${mode}"`}>
-       ${active?(isFan?'Mening fanimga o‘tish':'Chet tilimga o‘tish'):(isFan?'Fan tanlash':'Chet tilini tanlash')} ${ic('arrow',17)}
-    </button>
-  </section>
+  ${eduHomeProgressCards(isFan,fan,lang)}
   <div class="sec edu-home-v54-section"><h3>${isFan?'Fan bo‘yicha o‘rganish':'Chet tili bo‘yicha o‘rganish'}</h3></div>
   <div class="edu-home-quick-grid">
    ${actions.map(([icon,label,color,kind,count])=>`<button type="button" class="edu-home-quick" ${kind==='ai'?'data-tab="ai"':(active&&isFan?`data-edu-home-resource="${kind}"`:active?`data-toast="Chet tili uchun ushbu materiallar hali joylanmagan"`:`data-edu-home-picker="${mode}"`)}>
@@ -1736,6 +1801,10 @@ function bind(){
   if(['signup','reset'].includes(cur))bindEmail();
  app.querySelectorAll('[data-toast]').forEach(b=>b.onclick=()=>toast(b.dataset.toast));
   if(cur==='home'){
+    app.querySelectorAll('[data-edu-progress]').forEach(b=>b.onclick=()=>{
+      eduProgressScreen=b.dataset.eduProgress==='errors'?'errors':'mastery';
+      go('edu-progress-detail');
+    });
     app.querySelectorAll('[data-edu-home-mode]').forEach(b=>b.onclick=()=>{
       const next=b.dataset.eduHomeMode;
       if(next!==eduReadHomeMode()){eduSaveHomeMode(next);render();}
@@ -2253,7 +2322,17 @@ async function eduQuizFinish(){
  if(eduQuizState.busy)return;
  if(!confirm('Testni yakunlab, natijani ko‘rasizmi?'))return;
  eduQuizState.busy=true;render();
- try{const {data,error}=await client.rpc('eduone_grade_quiz',{p_quiz_id:eduQuizState.id,p_answers:eduQuizState.answers});if(error)throw error;eduQuizState.finished=data;render();}
+ try{const {data,error}=await client.rpc('eduone_grade_quiz',{p_quiz_id:eduQuizState.id,p_answers:eduQuizState.answers});if(error)throw error;eduQuizState.finished=data;
+  try{
+   const quiz=eduCatalog.quizzes.find(q=>q.id===eduQuizState.id);
+   const details=Array.isArray(data?.details)?data.details:[];
+   const wrong=details.filter(d=>String(d.selected||'')!==String(d.correct||d.correct_answer||'') && (d.correct||d.correct_answer)).map(d=>{
+    const q=eduQuizState.questions.find(q=>q.number===d.number)||eduQuizState.questions[(Number(d.number)||1)-1]||{};
+    return {question:q.question||'',selected:d.selected||'',correct:d.correct||d.correct_answer||''};
+   }).filter(d=>d.question);
+   eduProgressSave({subjectId:'fan:'+(quiz?.subject_id||''),total:Number(data.total_questions)||0,correct:Number(data.correct_count)||0,wrong});
+  }catch(e){console.warn('Progress tracking skipped',e)}
+  render();}
  catch(e){toast('Natija xatosi: '+e.message);eduQuizState.busy=false;render();}
  finally{eduQuizState.busy=false;}
 }
