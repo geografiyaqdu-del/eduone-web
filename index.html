@@ -8,9 +8,10 @@
 <meta name="eduone-build-admin-navigation" content="V18">
 <meta name="eduone-build-subject-banner" content="V17">
 <meta name="eduone-build" content="V16-admin-statistics-dedup-2026-11-09">
+<meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne — Brend V11</title>
+<title>EduOne — V55</title>
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
@@ -1017,10 +1018,10 @@ V.connecting = () => `<div class="scr nonav fade edu-auth-wait" role="status" ar
  <div class="edu-auth-panel">
   <div class="edu-auth-indicator">${eduAuthError?'!':'◌'}</div>
   <h2>${eduAuthError?'Hisobga ulanishda muammo':'Hisob tekshirilmoqda…'}</h2>
-  <p>${eduAuthError?'Internet yoki autentifikatsiya xizmati bilan vaqtinchalik muammo. Hisobingiz o‘chirilmagan.':'EduOne hisobingiz va tanlangan faningiz tiklanmoqda.'}</p>
+  <p>${eduAuthError?'Kirish sessiyasini tekshirishda muammo yuz berdi. Profilingiz o‘chirilmagan. Qayta tekshiring yoki Google orqali kiring.':'EduOne hisobingiz va tanlangan faningiz tiklanmoqda.'}</p>
   ${eduAuthError?`<p class="edu-auth-reason">${esc(eduAuthError)}</p>`:''}
   <button class="btn" data-auth-retry type="button">${eduAuthError?'Qayta tekshirish':'Qayta urinish'}</button>
-  <button class="edu-auth-back" data-auth-email type="button">Kirish sahifasiga qaytish</button>
+  <button class="edu-auth-back" data-auth-email type="button">${eduAuthError?'Google orqali qayta kirish':'Kirish sahifasiga qaytish'}</button>
  </div>
 </div>`;
 function startAccount(user){
@@ -1147,18 +1148,30 @@ function eduAuthDeadline(promise,ms,message){
 }
 async function initialize(){
  const attempt=++eduAuthAttempt;
+ // Capture the OAuth callback *before* the SDK can consume and remove its code.
+ const hasAuthCallback=/(?:^|[?&])(?:code|error_code)=/.test(location.search)||/(?:^|[#&])access_token=/.test(location.hash);
  if(!live){cur='splash';render();return}
  eduAuthError='';cur='connecting';render();
  try{
   let sdk;
   try{
-   sdk=await eduAuthDeadline(import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/+esm'),9000,'Kutubxonaga ulanish cho‘zildi');
+   sdk=await eduAuthDeadline(import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/+esm'),9000,'Kutubxonaga ulanish cho‘zildi');
   }catch(e){
    // Agar birinchi CDN ishlamasa, ikkinchi manbadan urinib ko‘ramiz.
-   sdk=await eduAuthDeadline(import('https://esm.sh/@supabase/supabase-js@2.49.4'),9000,'Supabase kutubxonasi yuklanmadi');
+   sdk=await eduAuthDeadline(import('https://esm.sh/@supabase/supabase-js@2.112.4'),9000,'Supabase kutubxonasi yuklanmadi');
   }
   if(attempt!==eduAuthAttempt)return;
   if(!client)client=sdk.createClient(AUTH_URL,AUTH_PUBLIC_KEY);
+  // After a completed sign-out there is no persisted login to restore.
+  // Do not block the welcome screen on a session check in that case.
+  // OAuth callback params must still be processed by Supabase as usual.
+  const storageKey='sb-'+new URL(AUTH_URL).hostname.split('.')[0]+'-auth-token';
+  let hasSavedSession=true;
+  try{hasSavedSession=!!localStorage.getItem(storageKey)}catch(e){}
+  if(!hasSavedSession&&!hasAuthCallback){
+   if(attempt!==eduAuthAttempt)return;
+   cur='splash';render();return;
+  }
   const {data,error}=await eduAuthDeadline(client.auth.getSession(),12000,'Hisob sessiyasini tekshirish vaqti tugadi');
   if(attempt!==eduAuthAttempt)return;
   if(error)throw error;
@@ -1182,6 +1195,9 @@ async function initialize(){
  }catch(err){
   if(attempt!==eduAuthAttempt)return;
   eduAuthError=String(err?.message||'Tarmoq bilan ulanish amalga oshmadi');
+  if(eduAuthError==='Hisob sessiyasini tekshirish vaqti tugadi'){
+   eduAuthError='Sessiyani tekshirish cho‘zildi. «Qayta tekshirish» yoki «Google orqali qayta kirish»ni tanlang.';
+  }
   cur='connecting';render();
  }
 }
@@ -1696,7 +1712,7 @@ function bind(){
  if(cur==='admin'){adminBind()}
  if(cur==='profil'){$('#avatar-btn').onclick=()=>$('#avatar-file').click();$('#avatar-file').onchange=e=>{const f=e.target.files?.[0];if(f)avatarChoose(f);e.target.value=''};if($('#thm'))$('#thm').onclick=toggleTheme;
   $('#edit').onclick=()=>{S.draft={...S.user};go('reg')};$('#out').onclick=()=>{const question=({uz:'Haqiqatan ham hisobingizdan chiqmoqchimisiz?',kk:'Rasında da esabıńızdan shıqpaqshısız ba?',ru:'Вы действительно хотите выйти из аккаунта?',en:'Are you sure you want to log out?'})[S.lang]||'Haqiqatan ham hisobingizdan chiqmoqchimisiz?';if(window.confirm(question))$('#outy').click()};
-  $('#outy').onclick=async()=>{try{const {error}=await client.auth.signOut();if(error)throw error}catch{toast('Chiqish amalga oshmadi. Qayta urining.');return}verified=null;number='';delete S.draft;['user','last','xp','tests'].forEach(k=>{try{localStorage.removeItem('edu1_'+k)}catch(e){}});S.user=null;S.last=null;S.xp=0;S.tests=0;S.chat=[];stack=[];cur='splash';render()}}
+  $('#outy').onclick=async()=>{try{const {error}=await client.auth.signOut();if(error)throw error}catch{toast('Chiqish amalga oshmadi. Qayta urining.');return}++eduAuthAttempt;verified=null;number='';delete S.draft;['user','last','xp','tests'].forEach(k=>{try{localStorage.removeItem('edu1_'+k)}catch(e){}});S.user=null;S.last=null;S.xp=0;S.tests=0;S.chat=[];stack=[];cur='splash';render()}}
 }
 
 /* EduOne Russian localization: presentation-only, does not change stored profile data. */
