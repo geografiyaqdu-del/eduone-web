@@ -728,7 +728,51 @@ body:has(.edu-catalog) .edu-catalog .edu-banner {
 .edu-trash-label{display:flex;align-items:center;gap:7px;color:#ad274c;font-weight:700}
 .edu-trash-switch{width:100%;margin-top:10px!important;min-height:44px;background:#e9eeff!important;color:#1b397a!important}
 </style>
-</head>
+
+<style id="eduone-v52-consistent-headings-and-fonts">
+/* Same heading appearance for Fanlar and Chet tillari. */
+body:has(.edu-catalog) .edu-catalog .edu-section,
+body:has(.edu-catalog) .edu-catalog .edu-section.lang {
+  display:flex!important;align-items:center!important;
+  gap:9px!important;margin:28px 0 16px!important;
+  padding:0!important;background:transparent!important;
+  border:0!important;border-radius:0!important;
+  box-shadow:none!important;min-height:0!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-section strong,
+body:has(.edu-catalog) .edu-catalog .edu-section.lang strong {
+  display:inline-flex!important;align-items:center!important;
+  background:linear-gradient(120deg,#0863e9,#208dfb)!important;
+  color:white!important;border:1px solid rgba(255,255,255,.24)!important;
+  border-radius:14px!important;
+  padding:10px 15px!important;
+  box-shadow:0 5px 16px rgba(0,10,55,.25)!important;
+  font-size:17px!important;line-height:1.25!important;
+  font-weight:800!important;white-space:nowrap!important;
+}
+body:has(.edu-catalog) .edu-catalog .edu-section:after,
+body:has(.edu-catalog) .edu-catalog .edu-section.lang:after {
+  content:''!important;display:block!important;flex:1!important;
+  height:2px!important;min-height:2px!important;
+  margin:0!important;border:0!important;border-radius:2px!important;
+  background:linear-gradient(90deg,rgba(141,209,255,.75),rgba(141,209,255,.06))!important;
+}
+/* Slightly larger, still accommodating three cards per row. */
+body:has(.edu-catalog) .edu-catalog .edu-card-name {
+  font-size:clamp(12px,3.15vw,15px)!important;
+  font-weight:800!important;line-height:1.2!important;
+  min-height:39px!important;
+  padding:7px 1px 3px!important;
+  overflow-wrap:break-word!important;
+}
+</style>
+<style id="eduone-v53-my-language">
+.edu-my-language-card{text-align:center;padding:22px 16px!important;margin-top:20px}
+.edu-my-language-art{width:min(220px,75%);aspect-ratio:1;margin:0 auto 14px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(140deg,#d4f2ff,#8bc8ff);overflow:hidden}
+.edu-my-language-art .edu-catalog-image{width:100%;height:100%;object-fit:cover}
+.edu-my-language-card h3{font-size:23px;margin:8px 0}
+.edu-my-language-card .btn{margin-top:16px}
+</style></head>
 <body>
 
 <div class="app" id="app"></div>
@@ -826,7 +870,7 @@ function back(){
  if(verified&&confirm('EduOne’dan chiqmoqchimisiz?')){eduExiting=true;stack=[];const steps=eduNavSeq+1;history.go(-steps);}
 }
 window.addEventListener('popstate',()=>{if(eduRestoring||eduExiting)return;back();});
-const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tillari'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
+const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tilim'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
 function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').setAttribute('data-i18n-ignore','');$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Mening fanim':'Мой предмет','Chet tillari':'Языки','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Mening fanim':'My subject','Chet tillari':'Languages','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Mening fanim':'Meniń pánim','Chet tillari':'Shet tilleri','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
 document.addEventListener('click',e=>{if(e.target.closest('[data-google-login]')){e.preventDefault();signInGoogle();return}if(e.target.closest('[data-theme-toggle]')){e.preventDefault();toggleTheme();return}const b=e.target.closest('[data-tab]');if(b){go(b.dataset.tab)}const g=e.target.closest('[data-go]');if(g)go(g.dataset.go);if(e.target.closest('[data-back]')){if(stack.length&&history.state?.eduone)history.back();else back()}});
 // Profile images: remote storage is preferred; a local preview is retained for offline testing.
@@ -1262,10 +1306,11 @@ V.ai=()=>`<div class="scr fade"><div class="top"><div style="width:40px"></div><
  <form class="ask" id="af"><input class="inp" id="ai-in" placeholder="Savolingizni yozing..." autocomplete="off"><button class="send" aria-label="Yuborish">${ic('send')}</button></form></div>`;
 const EDU_WEEKDAY_INITIALS={uz:['D','S','Ch','P','J','Sh','Y'],en:['M','T','W','T','F','S','S'],ru:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],kk:['Du','Se','Shá','Pi','Ju','Sh','Je']};
 V.tillar=()=>{
- const languages=eduDynamicLangTiles();
- return `<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>Chet tillari</h2><span class="ib" style="color:var(--warn)">${ic('trophy')}</span></div>
- <div class="hero"><h3 style="font-size:20px;position:relative;z-index:1">Chet tillarini o'rganing</h3><p class="sm" style="opacity:.9;margin:6px 0 0">Yangi tillar – yangi imkoniyatlar!</p></div>
- <div class="sec"><h3>${eduProfileLabel("Til kurslari")}</h3></div><div class="list">${languages.map(l=>`<button class="li" data-foreign-lang="${esc(l[0])}"><span class="edu-language-icon">${eduCatalogImageFor('languages',l[0],l[2])}</span><div class="grow"><b>${esc(l[1])}</b><div class="sm muted">${l[4]?'✅ Mavjud':'◷ Hozircha mavjud emas'}</div></div>${ic('next',18)}</button>`).join('')||'<div class="card">Hozircha tillar qo‘shilmagan.</div>'}</div></div>`;
+ const choice=eduReadLanguageChoice();
+ const tile=choice?eduDynamicLangTiles().find(l=>l[0]===choice.id&&l[4]):null;
+ const selected=tile?`<div class="card edu-my-language-card"><div class="edu-my-language-art">${eduCatalogImageFor('languages',tile[0],`<span style="font-size:64px">${tile[2]}</span>`)}</div><h3>${esc(tile[1])}</h3><p class="sm muted">Siz tanlagan chet tili</p><button class="btn" type="button" id="edu-change-language">Chet tilini o‘zgartirish</button></div>`:
+ `<div class="card edu-my-language-card"><h3>Chet tili tanlanmagan</h3><p class="sm muted">O‘rganmoqchi bo‘lgan chet tilingizni tanlang.</p><button class="btn" type="button" id="edu-change-language">Chet tilini tanlash</button></div>`;
+ return `<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>Chet tilim</h2><span class="ib" style="color:var(--warn)">${ic('globe')}</span></div><div class="hero"><h3 style="font-size:20px;position:relative;z-index:1">Chet tilim</h3><p class="sm" style="opacity:.9;margin:6px 0 0">Tanlangan tilingiz bo‘yicha ta’lim</p></div>${selected}</div>`;
 };
 
 function eduProfileLabel(key){
@@ -1316,6 +1361,19 @@ function finish(){clearInterval(timerId);let ok=0,bad=0,skip=0,wrong=[],tp={};Q.
 // A fan or language is chosen only after registration; selection belongs to the signed-in account.
 function eduChoiceKey(){return 'eduone_choice_'+(verified?.id||'guest')}
 function eduReadChoice(){try{return JSON.parse(localStorage.getItem(eduChoiceKey())||'null')||verified?.user_metadata?.eduone_subject_choice||null}catch(e){return verified?.user_metadata?.eduone_subject_choice||null}}
+// Foreign-language selection is independent of the chosen school subject.
+function eduLanguageChoiceKey(){return 'eduone_language_choice_'+(verified?.id||'guest')}
+function eduReadLanguageChoice(){
+ try{const c=JSON.parse(localStorage.getItem(eduLanguageChoiceKey())||'null');if(c?.id)return c;}catch(e){}
+ const remote=verified?.user_metadata?.eduone_language_choice;
+ if(remote?.id)return remote;
+ const legacy=eduReadChoice();return legacy?.type==='til'?legacy:null;
+}
+function eduSaveLanguageChoice(id){
+ const choice={id,type:'til'};
+ try{localStorage.setItem(eduLanguageChoiceKey(),JSON.stringify(choice))}catch(e){}
+ if(client&&verified?.id)client.auth.updateUser({data:{eduone_language_choice:choice}}).catch(e=>console.warn('Language sync:',e));
+}
 function eduHasChoice(){if(new URLSearchParams(location.search).get('test_fan_tanlash')==='1')return false;const c=eduReadChoice();return !!(c&&c.id&&['fan','til'].includes(c.type))}
 function eduSaveChoice(id,type){
  try{localStorage.setItem(eduChoiceKey(),JSON.stringify({id,type}))}catch(e){}
@@ -1460,6 +1518,7 @@ function bind(){
     er.textContent='Profil saqlanmadi: '+(error?.message||'Noma’lum xatolik');return;
    }
    S.user={...profile,phone:d.phone};delete S.draft;stack=[];cur='edu-pick';render();toast("Xush kelibsiz, "+first()+"!")}}
+ if(cur==='tillar'){const b=app.querySelector('#edu-change-language');if(b)b.onclick=()=>{eduPendingChoice=eduReadLanguageChoice();eduOpenPicker();};}
  if(cur==='edu-pick'){
   if(!eduPendingChoice)eduPendingChoice=eduReadChoice();
 
@@ -1484,13 +1543,13 @@ function bind(){
   if(confirm)confirm.onclick=()=>{
    if(!eduPendingChoice){toast('Avval fan yoki tilni tanlang');return}
    const {id,type}=eduPendingChoice;
-   eduSaveChoice(id,type);
+   if(type==='til')eduSaveLanguageChoice(id);else eduSaveChoice(id,type);
    if(type==='fan'){
     const sub=eduVisibleSubjects().find(x=>x.id===id);
     if(sub)eduCatalog.selected=sub.id;
    }
    const prior=stack.length?stack[stack.length-1]:null;
-   if(prior&&prior.page==='profil'){back();}else{stack=[];cur='home';render();}
+   if(type==='til'){stack=[];cur='tillar';render();}else if(prior&&prior.page==='profil'){back();}else{stack=[];cur='home';render();}
   };
  }
 
