@@ -11,7 +11,7 @@
 <meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne — V55</title>
+<title>EduOne V59 — EduOne — V55</title>
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
@@ -857,7 +857,9 @@ body:has(.edu-catalog) .edu-catalog .edu-card-name {
 .edu-progress-error-item{margin-bottom:10px}
 @media(max-width:350px){.edu-progress-grid{gap:8px}.edu-progress-card{padding:14px 10px}.edu-progress-title{font-size:12px}.edu-progress-number{font-size:28px}}
 </style>
-</head>
+<style>
+.edu-retry-screen{padding-top:22px!important}.edu-retry-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:white;font-weight:800}.edu-retry-clock{padding:9px 13px;background:rgba(255,255,255,.2);border-radius:13px;font-variant-numeric:tabular-nums}.edu-retry-bar{height:7px;background:#ffffff44;border-radius:20px;overflow:hidden;margin-bottom:20px}.edu-retry-bar span{display:block;height:100%;background:#a7eaff;border-radius:20px}.edu-retry-paper{background:#fff;border-radius:25px;padding:24px 18px;box-shadow:0 14px 32px #102f8129;color:#172343}.edu-retry-paper h2{font-size:18px;line-height:1.5;margin:0 0 24px;font-weight:800}.edu-retry-options{display:grid;gap:12px}.edu-retry-option{display:flex;align-items:center;gap:13px;padding:14px 12px;border:2px solid #e5ebf7;border-radius:17px;cursor:pointer;font-size:15px;line-height:1.45;color:#263657}.edu-retry-option.selected{border-color:#326af0;background:#eef4ff}.edu-retry-option input{position:absolute;opacity:0;width:1px;height:1px}.edu-retry-option b{display:grid;place-items:center;flex-shrink:0;width:37px;height:37px;background:#edf2fc;border-radius:12px;color:#2558bf}.edu-retry-option.selected b{background:#3068e9;color:#fff}.edu-retry-nav{display:flex;gap:12px;margin-top:17px}.edu-retry-nav button{flex:1;border:1px solid #ffffff80;background:#ffffffee;color:#2552ac;border-radius:14px;padding:13px;font-weight:800}.edu-retry-nav button:disabled{opacity:.45}.edu-retry-dots{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:20px 0}.edu-retry-dots button{width:38px;height:38px;border:1px solid #ffffff90;background:#ffffff30;border-radius:12px;color:#fff;font-weight:800}.edu-retry-dots button.current{background:#fff;color:#295de4}.edu-retry-dots button.answered:not(.current){background:#27ba9b}.edu-retry-finish{width:100%;margin:5px 0 30px}.edu-retry-empty,.edu-retry-result{background:#fff;color:#243657;border-radius:25px;padding:30px 22px;text-align:center;margin-top:30px}.edu-retry-empty>span,.edu-retry-result>span{font-size:48px}.edu-retry-empty h2,.edu-retry-result h2{font-size:22px}.edu-retry-empty p,.edu-retry-result p{line-height:1.6;color:#6c7790}.edu-retry-result strong{display:block;font-size:46px;color:#275fe1}.edu-retry-plain{display:block;margin:18px auto 0;border:0;background:none;color:#255fcf;font-weight:800}
+</style></head>
 <body>
 
 <div class="app" id="app"></div>
@@ -1384,17 +1386,91 @@ function eduHomeProgressCards(isFan,fan,lang){
  </section>`;
 }
 let eduProgressScreen='mastery';
+const eduRetry={items:[],answers:{},index:0,started:0,duration:0,done:false,loading:false,notice:""};
+function eduRetrySubject(){
+ const isFan=eduReadHomeMode()==='fan',choice=isFan?eduReadChoice():eduReadLanguageChoice();
+ const raw=choice?.id||'',sid=raw.startsWith('db:')?raw.slice(3):raw;
+ return (isFan?'fan:':'til:')+sid;
+}
+function eduRetryQuestions(){
+ const seen=new Set();
+ return eduProgressStats(eduRetrySubject()).wrong.slice().reverse().filter(q=>{
+  if(!q.question||!q.options||!['A','B','C','D'].every(k=>String(q.options[k]||'').trim())||!['A','B','C','D'].includes(q.correct))return false;
+  const key=q.question.trim()+'|'+q.correct;
+  if(seen.has(key))return false;seen.add(key);return true;
+ });
+}
+async function eduRetryRecoverLegacy(){
+ if(eduRetry.loading||!client||!verified)return;
+ const legacy=eduProgressStats(eduRetrySubject()).wrong.filter(q=>q.question&&(!q.options||!Object.values(q.options).every(Boolean)));
+ if(!legacy.length)return;
+ eduRetry.loading=true;render();
+ try{
+  const quizIds=eduCatalog.quizzes.filter(q=>('fan:'+q.subject_id)===eduRetrySubject()).map(q=>q.id);
+  const norm=t=>String(t||'').replace(/\s+/g,' ').trim().toLocaleLowerCase();
+  const wanted=new Set(legacy.map(q=>norm(q.question)));
+  const matches=new Map();
+  for(const quizId of quizIds){
+   if(matches.size===wanted.size)break;
+   const {data,error}=await client.rpc('eduone_get_quiz_questions',{p_quiz_id:quizId});
+   if(error)continue;
+   for(const q of data||[]){const key=norm(q.question);if(wanted.has(key)&&!matches.has(key))matches.set(key,q);}
+  }
+  if(matches.size){
+   const rows=eduProgressRead();
+   for(const row of rows){if(row.subjectId!==eduRetrySubject())continue;
+    for(const q of row.wrong||[]){const original=matches.get(norm(q.question));if(!original)continue;
+     q.options={A:original.option_a||'',B:original.option_b||'',C:original.option_c||'',D:original.option_d||''};
+    }
+   }
+   localStorage.setItem(eduProgressKey(),JSON.stringify(rows));
+  }
+  eduRetry.notice=matches.size?`${matches.size} ta eski savolning variantlari tiklandi.`:'Eski savollarning variantlari bazadan topilmadi. Yangi testlarda variantlar avtomatik saqlanadi.';
+ }catch(e){eduRetry.notice='Eski savollarni tiklash amalga oshmadi: '+e.message;}
+ finally{eduRetry.loading=false;eduRetryBegin();render();}
+}
+function eduRetryBegin(){
+ eduRetry.items=eduRetryQuestions();eduRetry.answers={};eduRetry.index=0;
+ eduRetry.duration=eduRetry.items.length*60;eduRetry.started=Date.now();eduRetry.done=false;
+}
+function eduRetryLeft(){return Math.max(0,eduRetry.duration-Math.floor((Date.now()-eduRetry.started)/1000))}
+function eduRetryClockText(){const sec=eduRetryLeft();return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
+function eduRetryRemoveCorrect(){
+ const solved=new Set(eduRetry.items.filter((q,i)=>eduRetry.answers[i]===q.correct).map(q=>q.question.trim()+'|'+q.correct));
+ if(!solved.size)return;
+ const rows=eduProgressRead();rows.forEach(row=>{
+  if(row.subjectId!==eduRetrySubject()||!Array.isArray(row.wrong))return;
+  row.wrong=row.wrong.filter(q=>!solved.has((q.question||'').trim()+'|'+q.correct));
+ });
+ try{localStorage.setItem(eduProgressKey(),JSON.stringify(rows))}catch(e){console.warn('Retry save failed',e)}
+}
+function eduRetryFinish(){
+ if(eduRetry.done)return;
+ eduRetry.done=true;
+ eduRetryRemoveCorrect();render();
+}
 V['edu-progress-detail']=()=>{
- const isFan=eduReadHomeMode()==='fan';
- const choice=isFan?eduReadChoice():eduReadLanguageChoice();
- const raw=choice?.id||'';
- const sid=raw.startsWith('db:')?raw.slice(3):raw;
- const st=eduProgressStats((isFan?'fan:':'til:')+sid);
  const errors=eduProgressScreen==='errors';
- return `<div class="scr fade edu-progress-detail">${topbar(errors?'Xatolarni tuzatish':'O‘zlashtirish')}
-  <div class="edu-progress-detail-hero"><span>${errors?'✍️':'📊'}</span><h2>${errors?'Xatolar ustida ishlash':'O‘quv natijalaringiz'}</h2><p>${errors?'Testlarda xato qilingan savollar':'Yakunlangan testlar bo‘yicha statistika'}</p></div>
-  ${errors?(st.wrong.length?`<div class="list">${st.wrong.slice().reverse().map((q,i)=>`<div class="card edu-progress-error-item"><b>${i+1}. ${esc(q.question||'Savol')}</b><p class="sm muted">Sizning javobingiz: ${esc(q.selected||'Belgilanmagan')}</p><p class="sm" style="color:#059669">To‘g‘ri javob: ${esc(q.correct||'Natijada ko‘rsatilmagan')}</p></div>`).join('')}</div>`:'<div class="card">Hozircha saqlangan xato savollar yo‘q. Testlarni ishlaganingizdan keyin bu yerda ko‘rinadi.</div>'):
-  `<div class="card"><h2 style="font-size:34px;color:#2563eb">${st.pct}%</h2><p>To‘g‘ri javoblar: <b>${st.correct}</b></p><p>Jami ishlangan savollar: <b>${st.total}</b></p><p class="sm muted">Foiz yakunlangan testlardagi barcha javoblar asosida hisoblanadi. Bir savol qayta ishlansa, u yana hisobga olinadi.</p></div>`}
+ const st=eduProgressStats(eduRetrySubject());
+ if(!errors)return `<div class="scr fade edu-progress-detail">${topbar('O‘zlashtirish')}
+  <div class="edu-progress-detail-hero"><span>📊</span><h2>O‘quv natijalaringiz</h2><p>Yakunlangan testlar bo‘yicha statistika</p></div>
+  <div class="card"><h2 style="font-size:34px;color:#2563eb">${st.pct}%</h2><p>To‘g‘ri javoblar: <b>${st.correct}</b></p><p>Jami ishlangan savollar: <b>${st.total}</b></p><p class="sm muted">Foiz yakunlangan testlardagi barcha javoblar asosida hisoblanadi.</p></div></div>`;
+ const available=eduRetryQuestions();
+ if(eduRetry.loading)return `<div class="scr fade edu-progress-detail edu-retry-screen"><div class="edu-retry-empty"><h2>Savollar tayyorlanmoqda...</h2><p>Oldingi testlarning javob variantlari tekshirilmoqda.</p></div></div>`;
+ if(!eduRetry.items.length&&!eduRetry.done)return `<div class="scr fade edu-progress-detail edu-retry-screen">
+ <div class="edu-retry-empty"><span>📝</span><h2>Hozircha variantli xato savollar yo‘q</h2><p>${st.wrong.length?'Oldingi testlarda savollarning A, B, C, D variantlari saqlanmagan. Yangi test ishlaganingizdan keyin xatolar shu yerda variantli ko‘rinadi.':'Test ishlaganingizda xato savollar shu yerga yig‘iladi.'}</p><button class="btn" data-edu-retry-back>Bosh sahifaga qaytish</button></div></div>`;
+ if(eduRetry.done){
+  const correct=eduRetry.items.filter((q,i)=>eduRetry.answers[i]===q.correct).length;
+  return `<div class="scr fade edu-progress-detail edu-retry-screen"><div class="edu-retry-result"><span>🏆</span><h2>Test natijasi</h2><strong>${correct} / ${eduRetry.items.length}</strong><p>Natija: ${Math.round(100*correct/Math.max(1,eduRetry.items.length))}%</p><p>To‘g‘ri javob berilgan savollar xatolar ro‘yxatidan chiqarildi.</p><button class="btn" data-edu-retry-again>Qolgan xatolarni ishlash</button><button class="edu-retry-plain" data-edu-retry-back>Bosh sahifaga qaytish</button></div></div>`;
+ }
+ const i=eduRetry.index,q=eduRetry.items[i],answered=Object.values(eduRetry.answers).filter(Boolean).length;
+ return `<div class="scr fade edu-progress-detail edu-retry-screen">
+ <div class="edu-retry-toolbar"><span class="edu-retry-step">${i+1} / ${eduRetry.items.length} savol</span><span class="edu-retry-clock" id="edu-retry-clock">⏱ ${eduRetryClockText()}</span></div>
+ <div class="edu-retry-bar"><span style="width:${(i+1)/eduRetry.items.length*100}%"></span></div>
+ <div class="edu-retry-paper"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${['A','B','C','D'].map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
+ <div class="edu-retry-nav"><button data-edu-retry-prev ${i===0?'disabled':''}>← Oldingi</button><button data-edu-retry-next ${i===eduRetry.items.length-1?'disabled':''}>Keyingi →</button></div>
+ <div class="edu-retry-dots">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?'answered':''}">${j+1}</button>`).join('')}</div>
+ <button class="btn edu-retry-finish" data-edu-retry-finish>Testni yakunlash (${answered}/${eduRetry.items.length})</button>
  </div>`;
 };
 V.home=()=>{
@@ -1803,7 +1879,9 @@ function bind(){
   if(cur==='home'){
     app.querySelectorAll('[data-edu-progress]').forEach(b=>b.onclick=()=>{
       eduProgressScreen=b.dataset.eduProgress==='errors'?'errors':'mastery';
+      if(eduProgressScreen==='errors'){eduRetryBegin();}
       go('edu-progress-detail');
+      if(eduProgressScreen==='errors'&&!eduRetry.items.length)eduRetryRecoverLegacy();
     });
     app.querySelectorAll('[data-edu-home-mode]').forEach(b=>b.onclick=()=>{
       const next=b.dataset.eduHomeMode;
@@ -2326,16 +2404,37 @@ async function eduQuizFinish(){
   try{
    const quiz=eduCatalog.quizzes.find(q=>q.id===eduQuizState.id);
    const details=Array.isArray(data?.details)?data.details:[];
-   const wrong=details.filter(d=>String(d.selected||'')!==String(d.correct||d.correct_answer||'') && (d.correct||d.correct_answer)).map(d=>{
-    const q=eduQuizState.questions.find(q=>q.number===d.number)||eduQuizState.questions[(Number(d.number)||1)-1]||{};
-    return {question:q.question||'',selected:d.selected||'',correct:d.correct||d.correct_answer||''};
-   }).filter(d=>d.question);
-   eduProgressSave({subjectId:'fan:'+(quiz?.subject_id||''),total:Number(data.total_questions)||0,correct:Number(data.correct_count)||0,wrong});
+   const wrong=details.filter(d=>!d.is_correct).map(d=>{
+    const q=eduQuizState.questions.find(q=>Number(q.number)===Number(d.number))||eduQuizState.questions[(Number(d.number)||1)-1]||{};
+    const selected=eduQuizState.answers[q.id]||d.selected||'';
+    return {question:q.question||'',selected,correct:String(d.correct||d.correct_answer||d.correct_option||d.right_answer||'').toUpperCase(),options:{A:q.option_a||'',B:q.option_b||'',C:q.option_c||'',D:q.option_d||''}};
+   }).filter(d=>d.question&&['A','B','C','D'].includes(d.correct));
+   eduProgressSave({subjectId:'fan:'+(quiz?.subject_id||''),quizId:eduQuizState.id,total:Number(data.total_questions)||0,correct:Number(data.correct_count)||0,wrong});
   }catch(e){console.warn('Progress tracking skipped',e)}
   render();}
  catch(e){toast('Natija xatosi: '+e.message);eduQuizState.busy=false;render();}
  finally{eduQuizState.busy=false;}
 }
+document.addEventListener('change',e=>{
+ if(e.target.matches('[data-edu-retry-answer]')&&!eduRetry.done){eduRetry.answers[eduRetry.index]=e.target.value;render();}
+});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-edu-retry-back],[data-edu-retry-again],[data-edu-retry-prev],[data-edu-retry-next],[data-edu-retry-jump],[data-edu-retry-finish]');
+ if(!b)return;
+ if(b.hasAttribute('data-edu-retry-back')){go('home');return;}
+ if(b.hasAttribute('data-edu-retry-again')){eduRetryBegin();render();return;}
+ if(b.hasAttribute('data-edu-retry-finish')){if(confirm('Testni yakunlaysizmi?'))eduRetryFinish();return;}
+ if(eduRetry.done)return;
+ if(b.hasAttribute('data-edu-retry-prev'))eduRetry.index=Math.max(0,eduRetry.index-1);
+ if(b.hasAttribute('data-edu-retry-next'))eduRetry.index=Math.min(eduRetry.items.length-1,eduRetry.index+1);
+ if(b.hasAttribute('data-edu-retry-jump'))eduRetry.index=Math.max(0,Math.min(eduRetry.items.length-1,Number(b.dataset.eduRetryJump)||0));
+ render();
+});
+setInterval(()=>{
+ if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done||!eduRetry.items.length)return;
+ const clock=document.getElementById('edu-retry-clock');if(clock)clock.textContent='⏱ '+eduRetryClockText();
+ if(eduRetryLeft()===0)eduRetryFinish();
+},1000);
 document.addEventListener('change',e=>{if(e.target.matches('[data-edu-answer]')){eduQuizState.answers[e.target.dataset.eduAnswer]=e.target.value;document.querySelectorAll('.edu-exam-option').forEach(el=>el.classList.toggle('selected',!!el.querySelector('input:checked')));}});
 document.addEventListener('click',e=>{
  const cat=e.target.closest('[data-edu-category]');if(cat){eduSelectedTestCategory=cat.dataset.eduCategory;go('edu-test-list');return;}
