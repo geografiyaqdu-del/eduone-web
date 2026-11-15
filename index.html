@@ -964,7 +964,41 @@ body:has(.edu-catalog) .edu-catalog .edu-card-name {
 .edu-v62-review-actions button{border:1px solid #526b8b;background:#304461;color:#fff;border-radius:12px;padding:12px 17px;font-weight:800}
 .edu-v62-review-actions button:disabled{opacity:.35}
 @media(max-width:360px){.edu-v62-result-panel{padding:15px 10px 20px}.edu-v62-result-questions{gap:4px}.edu-v62-result-questions button{font-size:11px;border-radius:8px}.edu-v62-result-ring{width:160px;height:160px}.edu-v62-result-stats .stat small{font-size:11px}}
-</style></head>
+</style>
+<style id="eduone-v64-polish">
+/* One continuous EduOne canvas, no dark rectangular backdrop */
+.edu-retry-screen.edu-v62-results{background:linear-gradient(155deg,#2563eb 0%,#3c57e7 48%,#6544dc 100%)!important;min-height:calc(100dvh - 72px)!important;padding:12px 14px 24px!important;box-sizing:border-box!important}
+.edu-v62-result-panel{background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:12px 3px 22px!important;max-width:540px!important}
+.edu-v62-result-panel h2{font-size:29px!important;margin:0 0 18px!important;line-height:1.2!important}
+.edu-v62-result-ring{width:174px!important;height:174px!important;background:conic-gradient(var(--ring) calc(var(--result-percent)*1%),rgba(255,255,255,.25) 0)!important;box-shadow:none!important;margin:0 auto 20px!important}
+.edu-v62-result-ring:before{background:linear-gradient(145deg,#3161e9,#514de4)!important;inset:13px!important}
+.edu-v62-ring-inner{background:transparent!important;z-index:1!important;gap:7px!important;text-align:center!important}
+.edu-v62-ring-inner strong,.edu-v62-ring-inner span{background:transparent!important;box-shadow:none!important;text-shadow:none!important;display:block!important;padding:0!important;margin:0!important;border:0!important}
+.edu-v62-ring-inner strong{font-size:44px!important;line-height:1.1!important}
+.edu-v62-ring-inner span{font-size:15px!important;color:#fff!important;line-height:1.3!important}
+.edu-v62-result-stats{gap:9px!important}
+.edu-v62-result-stats .stat{border-radius:17px!important;padding:14px 3px!important;gap:7px!important;backdrop-filter:none!important;box-shadow:0 5px 13px #18268a25!important}
+.edu-v62-result-stats .stat.correct{background:#15803d!important;border:1px solid #16a34a!important;color:#fff!important}
+.edu-v62-result-stats .stat.wrong{background:#dc2626!important;border:1px solid #ef4444!important;color:#fff!important}
+.edu-v62-result-stats .stat.empty{background:#475569!important;border:1px solid #64748b!important;color:#fff!important}
+.edu-v62-result-stats .stat span,.edu-v62-result-stats .stat strong,.edu-v62-result-stats .stat small{color:#fff!important;opacity:1!important;text-shadow:none!important}
+.edu-v62-result-stats .stat span{font-size:25px!important}
+.edu-v62-result-stats .stat strong{font-size:29px!important}
+.edu-v62-result-stats .stat small{font-size:12px!important}
+.edu-v62-result-section{margin-top:23px!important}
+.edu-v62-result-section-head h3{color:#fff!important}
+.edu-v62-result-section-head small{color:#fff!important;opacity:.95!important}
+.edu-v62-result-questions button.correct{background:#15803d!important;border-color:#16a34a!important;color:#fff!important}
+.edu-v62-result-questions button.wrong{background:#dc2626!important;border-color:#ef4444!important;color:#fff!important}
+.edu-v62-result-questions button.unanswered{background:#475569!important;border-color:#64748b!important;color:#fff!important}
+.edu-v62-result-actions{margin-top:24px!important}
+.edu-v62-result-again{background:#ffffff29!important;color:#fff!important;border:1px solid #ffffff7d!important}
+.edu-v62-result-end{background:#fff!important;color:#3158e6!important;box-shadow:0 5px 0 #1c2ca044!important}
+/* Extend the actual swipe surface through the empty lower viewport */
+.edu-retry-screen:not(.edu-v62-results){min-height:calc(100dvh - 95px)!important;box-sizing:border-box!important;touch-action:pan-y}
+@media(max-width:360px){.edu-v62-result-panel{padding-left:0!important;padding-right:0!important}.edu-v62-result-stats{gap:6px!important}}
+</style>
+</head>
 <body>
 
 <div class="app" id="app"></div>
@@ -2593,10 +2627,12 @@ document.addEventListener('click',e=>{
 });
 let eduRetrySwipeStart=null;
 document.addEventListener('touchstart',e=>{
- const area=e.target.closest('.edu-retry-screen');
- if(e.target.closest('.edu-retry-dots, .edu-retry-toolbar, .edu-v62-results')){eduRetrySwipeStart=null;return;}
- if(!area||cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done){eduRetrySwipeStart=null;return;}
- const t=e.touches[0];eduRetrySwipeStart={x:t.clientX,y:t.clientY};
+ // Accept swipes from the entire quiz viewport, including empty space below answers.
+ // Exclude only interactive header controls, number-strip scrolling and modal/result views.
+ if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done||!document.querySelector('.edu-retry-screen:not(.edu-v62-results)')){eduRetrySwipeStart=null;return;}
+ if(e.target.closest('.edu-retry-dots, .edu-retry-toolbar, .edu-v62-results, .bottom-nav, nav, input, textarea, select')){eduRetrySwipeStart=null;return;}
+ const t=e.touches[0];if(!t||e.touches.length!==1){eduRetrySwipeStart=null;return;}
+ eduRetrySwipeStart={x:t.clientX,y:t.clientY};
 },{passive:true});
 document.addEventListener('touchend',e=>{
  if(!eduRetrySwipeStart)return;
@@ -2604,7 +2640,7 @@ document.addEventListener('touchend',e=>{
  if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done)return;
  const t=e.changedTouches[0];if(!t)return;
  const dx=t.clientX-start.x,dy=t.clientY-start.y;
- if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.35)eduRetryGoTo(eduRetry.index+(dx<0?1:-1));
+ if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.35)eduRetryGoTo(eduRetry.index+(dx<0?1:-1));
 },{passive:true});
 setInterval(()=>{
  if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done||!eduRetry.items.length)return;
