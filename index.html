@@ -239,6 +239,21 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .edu-cat-shapes button.selected{background:#2463eb;color:white;border-color:#2463eb}
 .edu-cat-tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
 #edu-cat-canvas{max-height:34dvh;object-fit:contain}
+
+/* V60: xatolarni tuzatish javob natijasi va mobil navigatsiya */
+.edu-retry-option.correct,.edu-retry-option.correct.selected{background:#e5f8ed!important;border-color:#16a34a!important;color:#14532d!important}
+.edu-retry-option.correct b{background:#16a34a!important;color:#fff!important}
+.edu-retry-option.incorrect,.edu-retry-option.incorrect.selected{background:#fff0f0!important;border-color:#dc2626!important;color:#991b1b!important}
+.edu-retry-option.incorrect b{background:#dc2626!important;color:#fff!important}
+.edu-retry-option:has(input:disabled){cursor:default}
+.edu-retry-feedback{margin:17px 0 0;padding:12px 14px;border-radius:13px;font-weight:750;line-height:1.55;font-size:14px}
+.edu-retry-feedback.correct{background:#e5f8ed;color:#166534}
+.edu-retry-feedback.incorrect{background:#fff0f0;color:#991b1b}
+.edu-retry-dots-top{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding:4px 1px 12px;margin:4px 0 13px;scrollbar-width:thin}
+.edu-retry-dots-top button{flex:0 0 38px}
+.edu-retry-dots button.correct:not(.current){background:#16a34a;border-color:#16a34a;color:#fff}
+.edu-retry-dots button.incorrect:not(.current){background:#dc2626;border-color:#dc2626;color:#fff}
+#edu-retry-swipe{touch-action:pan-y}
 </style>
 <style id="eduone-admin-style">
 .ad-hero{background:linear-gradient(125deg,#172b65,#5144ba 65%,#7b55d7);color:#fff;padding:23px;border-radius:24px;box-shadow:0 16px 36px #283f9140;position:relative;overflow:hidden}.ad-hero:after{content:"✦";position:absolute;right:17px;top:0;font-size:100px;opacity:.12}.ad-hero h2{color:#fff;font-size:25px;margin:8px 0}.ad-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ad-kpi{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 4px 14px #00000009}.ad-kpi b{font-size:25px;display:block;margin-top:6px}.ad-kpi small{color:var(--muted)}.ad-tabs{display:flex;overflow-x:auto;gap:8px;padding:5px 0 10px;scrollbar-width:none}.ad-tabs button{white-space:nowrap;padding:11px 14px;border-radius:13px;background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:700}.ad-tabs button.active{background:#5144ba;color:#fff;border-color:#5144ba}.ad-form{display:grid;gap:12px}.ad-form label{font-size:12px;font-weight:700;display:grid;gap:5px;color:var(--ink)}.ad-form input,.ad-form select,.ad-form textarea,.ad-search{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:12px;font:inherit;box-sizing:border-box}.ad-form textarea{min-height:90px}.ad-entry{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.ad-entry:last-child{border:0}.ad-entry-main{flex:1;min-width:0}.ad-entry-main b{display:block;overflow-wrap:anywhere}.ad-entry-main small{display:block;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}.ad-mini{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--ink);padding:8px;font-size:12px;font-weight:700}.ad-danger{color:#d33a4d!important}.ad-note{border-left:3px solid #6d5ce6;background:var(--soft);border-radius:10px;padding:12px;font-size:13px;line-height:1.6}.ad-actions{display:flex;gap:8px;flex-wrap:wrap}.ad-empty{text-align:center;color:var(--muted);padding:26px 10px}.ad-badge{font-size:11px;border-radius:30px;padding:5px 9px;background:#dfeee9;color:#12654b;font-weight:800}
@@ -1386,7 +1401,7 @@ function eduHomeProgressCards(isFan,fan,lang){
  </section>`;
 }
 let eduProgressScreen='mastery';
-const eduRetry={items:[],answers:{},index:0,started:0,duration:0,done:false,loading:false,notice:""};
+const eduRetry={items:[],answers:{},index:0,started:0,duration:0,done:false,loading:false,notice:"",advanceTimer:null};
 function eduRetrySubject(){
  const isFan=eduReadHomeMode()==='fan',choice=isFan?eduReadChoice():eduReadLanguageChoice();
  const raw=choice?.id||'',sid=raw.startsWith('db:')?raw.slice(3):raw;
@@ -1430,8 +1445,27 @@ async function eduRetryRecoverLegacy(){
  finally{eduRetry.loading=false;eduRetryBegin();render();}
 }
 function eduRetryBegin(){
+ eduRetryCancelAdvance();
  eduRetry.items=eduRetryQuestions();eduRetry.answers={};eduRetry.index=0;
  eduRetry.duration=eduRetry.items.length*60;eduRetry.started=Date.now();eduRetry.done=false;
+}
+function eduRetryCancelAdvance(){if(eduRetry.advanceTimer!==null){clearTimeout(eduRetry.advanceTimer);eduRetry.advanceTimer=null;}}
+function eduRetryGoTo(index){
+ eduRetryCancelAdvance();
+ if(eduRetry.done||!eduRetry.items.length)return;
+ eduRetry.index=Math.max(0,Math.min(eduRetry.items.length-1,index));render();
+}
+function eduRetryChooseAnswer(value){
+ if(eduRetry.done||eduRetry.answers[eduRetry.index]||!['A','B','C','D'].includes(value))return;
+ const index=eduRetry.index;
+ eduRetry.answers[index]=value;
+ render();
+ if(value===eduRetry.items[index].correct&&index<eduRetry.items.length-1){
+  eduRetry.advanceTimer=setTimeout(()=>{
+   eduRetry.advanceTimer=null;
+   if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done&&eduRetry.index===index)eduRetryGoTo(index+1);
+  },1000);
+ }
 }
 function eduRetryLeft(){return Math.max(0,eduRetry.duration-Math.floor((Date.now()-eduRetry.started)/1000))}
 function eduRetryClockText(){const sec=eduRetryLeft();return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
@@ -1445,6 +1479,7 @@ function eduRetryRemoveCorrect(){
  try{localStorage.setItem(eduProgressKey(),JSON.stringify(rows))}catch(e){console.warn('Retry save failed',e)}
 }
 function eduRetryFinish(){
+ eduRetryCancelAdvance();
  if(eduRetry.done)return;
  eduRetry.done=true;
  eduRetryRemoveCorrect();render();
@@ -1467,9 +1502,9 @@ V['edu-progress-detail']=()=>{
  return `<div class="scr fade edu-progress-detail edu-retry-screen">
  <div class="edu-retry-toolbar"><span class="edu-retry-step">${i+1} / ${eduRetry.items.length} savol</span><span class="edu-retry-clock" id="edu-retry-clock">⏱ ${eduRetryClockText()}</span></div>
  <div class="edu-retry-bar"><span style="width:${(i+1)/eduRetry.items.length*100}%"></span></div>
- <div class="edu-retry-paper"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${['A','B','C','D'].map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
+ <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
+ <div class="edu-retry-paper" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${['A','B','C','D'].map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div>${eduRetry.answers[i]?`<p class="edu-retry-feedback ${eduRetry.answers[i]===q.correct?'correct':'incorrect'}">${eduRetry.answers[i]===q.correct?'✓ To‘g‘ri! Keyingi savolga o‘tiladi.':`✕ Noto‘g‘ri. To‘g‘ri javob: ${q.correct}. Xatoni ko‘rib chiqing, so‘ng keyingi savolga o‘ting.`}</p>`:''}</div>
  <div class="edu-retry-nav"><button data-edu-retry-prev ${i===0?'disabled':''}>← Oldingi</button><button data-edu-retry-next ${i===eduRetry.items.length-1?'disabled':''}>Keyingi →</button></div>
- <div class="edu-retry-dots">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?'answered':''}">${j+1}</button>`).join('')}</div>
  <button class="btn edu-retry-finish" data-edu-retry-finish>Testni yakunlash (${answered}/${eduRetry.items.length})</button>
  </div>`;
 };
@@ -2416,7 +2451,7 @@ async function eduQuizFinish(){
  finally{eduQuizState.busy=false;}
 }
 document.addEventListener('change',e=>{
- if(e.target.matches('[data-edu-retry-answer]')&&!eduRetry.done){eduRetry.answers[eduRetry.index]=e.target.value;render();}
+ if(e.target.matches('[data-edu-retry-answer]')&&!eduRetry.done){eduRetryChooseAnswer(e.target.value);}
 });
 document.addEventListener('click',e=>{
  const b=e.target.closest('[data-edu-retry-back],[data-edu-retry-again],[data-edu-retry-prev],[data-edu-retry-next],[data-edu-retry-jump],[data-edu-retry-finish]');
@@ -2425,11 +2460,24 @@ document.addEventListener('click',e=>{
  if(b.hasAttribute('data-edu-retry-again')){eduRetryBegin();render();return;}
  if(b.hasAttribute('data-edu-retry-finish')){if(confirm('Testni yakunlaysizmi?'))eduRetryFinish();return;}
  if(eduRetry.done)return;
- if(b.hasAttribute('data-edu-retry-prev'))eduRetry.index=Math.max(0,eduRetry.index-1);
- if(b.hasAttribute('data-edu-retry-next'))eduRetry.index=Math.min(eduRetry.items.length-1,eduRetry.index+1);
- if(b.hasAttribute('data-edu-retry-jump'))eduRetry.index=Math.max(0,Math.min(eduRetry.items.length-1,Number(b.dataset.eduRetryJump)||0));
- render();
+ if(b.hasAttribute('data-edu-retry-prev'))return eduRetryGoTo(eduRetry.index-1);
+ if(b.hasAttribute('data-edu-retry-next'))return eduRetryGoTo(eduRetry.index+1);
+ if(b.hasAttribute('data-edu-retry-jump'))return eduRetryGoTo(Number(b.dataset.eduRetryJump)||0);
 });
+let eduRetrySwipeStart=null;
+document.addEventListener('touchstart',e=>{
+ const area=e.target.closest('#edu-retry-swipe');
+ if(!area||cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done){eduRetrySwipeStart=null;return;}
+ const t=e.touches[0];eduRetrySwipeStart={x:t.clientX,y:t.clientY};
+},{passive:true});
+document.addEventListener('touchend',e=>{
+ if(!eduRetrySwipeStart)return;
+ const start=eduRetrySwipeStart;eduRetrySwipeStart=null;
+ if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done)return;
+ const t=e.changedTouches[0];if(!t)return;
+ const dx=t.clientX-start.x,dy=t.clientY-start.y;
+ if(Math.abs(dx)>65&&Math.abs(dx)>Math.abs(dy)*1.35)eduRetryGoTo(eduRetry.index+(dx<0?1:-1));
+},{passive:true});
 setInterval(()=>{
  if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done||!eduRetry.items.length)return;
  const clock=document.getElementById('edu-retry-clock');if(clock)clock.textContent='⏱ '+eduRetryClockText();
