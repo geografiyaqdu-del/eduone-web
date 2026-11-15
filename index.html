@@ -273,6 +273,27 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .edu-v62-result-again{background:#ffffff35!important;border-color:#ffffff6b!important;color:#fff!important}
 .edu-v62-result-end{background:#fff!important;color:#3158e6!important;box-shadow:0 6px 0 #2938ae55!important}
 @media(max-width:390px){.edu-v62-result-panel{padding:17px 12px}.edu-v62-result-stats{gap:6px}.edu-v62-result-stats .stat{padding:11px 2px}.edu-v62-result-stats .stat small{font-size:11px}}
+
+/* EduOne V67: embedded mastery card + accessible calendar */
+.edu-v66-home-progress .edu-v67-master-card{background:#fff;color:#334155;border-radius:20px;padding:17px 17px 16px;box-shadow:0 8px 25px #10246b18;display:flex;flex-direction:column;gap:20px}
+.edu-v66-home-progress .edu-v67-exam-line,.edu-v66-home-progress .edu-v67-score-line{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.edu-v66-home-progress .edu-v67-exam-label{display:flex;align-items:center;gap:7px;font-size:17px;white-space:nowrap}
+.edu-v66-home-progress .edu-v67-edit-date{border:0;background:transparent;color:#8794aa;font-size:23px;padding:3px 5px;cursor:pointer}
+.edu-v66-home-progress .edu-v67-days{color:#cf890d;font-size:15px;text-align:right}
+.edu-v66-home-progress .edu-v67-percent{color:#2867ed;font-size:34px;line-height:1;font-weight:800}
+.edu-v66-home-progress .edu-v67-counts{display:flex;gap:14px;align-items:center;font-size:19px;white-space:nowrap}
+.edu-v66-home-progress .edu-v67-correct{color:#138653}.edu-v66-home-progress .edu-v67-wrong{color:#d43843}.edu-v66-home-progress .edu-v67-total{color:#738092}
+.edu-v66-home-progress .edu-v67-progress{height:10px;border-radius:20px;background:#e2e8f0;overflow:hidden}.edu-v66-home-progress .edu-v67-progress span{display:block;height:100%;background:#2867ed;border-radius:20px}
+@media(max-width:390px){.edu-v66-home-progress .edu-v67-exam-label{font-size:14px}.edu-v66-home-progress .edu-v67-days{font-size:12px}.edu-v66-home-progress .edu-v67-counts{font-size:16px;gap:9px}}
+.edu-v67-calendar-shade{position:fixed;inset:0;background:#101b39a8;z-index:999999;display:flex;align-items:center;justify-content:center;padding:18px}
+.edu-v67-calendar{width:min(100%,390px);border-radius:24px;background:#fff;color:#26354b;padding:22px;box-shadow:0 25px 90px #0005;font-family:inherit}
+.edu-v67-calendar h3{margin:0 0 6px;font-size:21px}.edu-v67-calendar p{margin:0 0 17px;color:#68778b;font-size:13px}
+.edu-v67-cal-month{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:17px;font-weight:700}
+.edu-v67-cal-month button{background:#eaf0ff;border:0;border-radius:12px;padding:9px 14px;font-size:18px;color:#2867ed}
+.edu-v67-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;text-align:center}
+.edu-v67-cal-grid span{font-size:12px;color:#8290a2;padding:9px 0}.edu-v67-cal-grid button{border:0;border-radius:11px;background:#f4f6fa;min-height:39px;color:#24354a;font-size:14px}
+.edu-v67-cal-grid button:disabled{opacity:.25}.edu-v67-cal-grid button[aria-pressed=true]{background:#2867ed;color:#fff;font-weight:800}
+.edu-v67-cal-actions{display:flex;gap:10px;margin-top:20px}.edu-v67-cal-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;background:#edf1f7;color:#35435b}.edu-v67-cal-actions button:last-child{background:#2867ed;color:white}
 </style>
 <style id="eduone-admin-style">
 .ad-hero{background:linear-gradient(125deg,#172b65,#5144ba 65%,#7b55d7);color:#fff;padding:23px;border-radius:24px;box-shadow:0 16px 36px #283f9140;position:relative;overflow:hidden}.ad-hero:after{content:"✦";position:absolute;right:17px;top:0;font-size:100px;opacity:.12}.ad-hero h2{color:#fff;font-size:25px;margin:8px 0}.ad-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ad-kpi{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 4px 14px #00000009}.ad-kpi b{font-size:25px;display:block;margin-top:6px}.ad-kpi small{color:var(--muted)}.ad-tabs{display:flex;overflow-x:auto;gap:8px;padding:5px 0 10px;scrollbar-width:none}.ad-tabs button{white-space:nowrap;padding:11px 14px;border-radius:13px;background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:700}.ad-tabs button.active{background:#5144ba;color:#fff;border-color:#5144ba}.ad-form{display:grid;gap:12px}.ad-form label{font-size:12px;font-weight:700;display:grid;gap:5px;color:var(--ink)}.ad-form input,.ad-form select,.ad-form textarea,.ad-search{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:12px;font:inherit;box-sizing:border-box}.ad-form textarea{min-height:90px}.ad-entry{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.ad-entry:last-child{border:0}.ad-entry-main{flex:1;min-width:0}.ad-entry-main b{display:block;overflow-wrap:anywhere}.ad-entry-main small{display:block;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}.ad-mini{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--ink);padding:8px;font-size:12px;font-weight:700}.ad-danger{color:#d33a4d!important}.ad-note{border-left:3px solid #6d5ce6;background:var(--soft);border-radius:10px;padding:12px;font-size:13px;line-height:1.6}.ad-actions{display:flex;gap:8px;flex-wrap:wrap}.ad-empty{text-align:center;color:var(--muted);padding:26px 10px}.ad-badge{font-size:11px;border-radius:30px;padding:5px 9px;background:#dfeee9;color:#12654b;font-weight:800}
@@ -1530,12 +1551,11 @@ function eduHomeProgressCards(isFan,fan,lang){
  const stats=eduProgressStats((isFan?'fan:':'til:')+sid);
  const wrong=Math.max(0,stats.total-stats.correct);
  return `<section class="edu-v66-home-progress" aria-label="O‘quv natijalari">
-  <button type="button" class="edu-progress-card edu-progress-mastery edu-v66-mastery" data-edu-progress="mastery">
-   <span class="edu-v66-mastery-head"><span class="edu-progress-icon">${ic('chart',27)}</span><span class="edu-progress-title">O‘zlashtirish</span><strong class="edu-progress-number">${stats.pct}%</strong></span>
-   <span class="edu-progress-track"><span style="width:${stats.pct}%"></span></span>
-   <span class="edu-v66-stats"><span>✓ To‘g‘ri: <b>${stats.correct}</b></span><span>✕ Noto‘g‘ri: <b>${wrong}</b></span><span>Jami: <b>${stats.total}</b></span></span>
-  </button>
-  <div class="edu-v66-exam-row"><span>📅 ${eduExamCountdown()}</span><button type="button" data-edu-exam-date>Sanani tanlash ✎</button></div>
+  <div class="edu-v67-master-card">
+   <div class="edu-v67-exam-line"><span class="edu-v67-exam-label">📅 <b>Imtihongacha</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days">⌛ ${eduExamCountdown().replace(/^Imtihongacha /,'')}</strong></div>
+   <div class="edu-v67-score-line"><strong class="edu-v67-percent">${stats.pct}%</strong><span class="edu-v67-counts"><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></span></div>
+   <div class="edu-v67-progress"><span style="width:${Math.min(100,Math.max(0,stats.pct))}%"></span></div>
+  </div>
   <div class="edu-v66-home-actions">
    <button type="button" class="edu-v66-octagon" data-edu-octagon><span class="edu-v66-action-icon">⚔️</span><strong>Oktagon</strong><small>Birga bir jang</small></button>
    <button type="button" class="edu-v66-errors" data-edu-progress="errors"><span class="edu-v66-action-icon">🎯</span><strong>Xatolarni tuzatish</strong><small>${stats.wrong.length} ta xato savol</small></button>
@@ -2717,8 +2737,35 @@ document.addEventListener('change',e=>{if(e.target.matches('[data-edu-answer]'))
   clearTimeout(eduV66FinishTimer);eduV66FinishTimer=setTimeout(()=>{if(qs===eduQuizState.questions&&qs.every(q=>!!eduQuizState.answers[q.id]))eduQuizFinish(true)},1500);
  }
 }});
+
+function eduV67OpenCalendar(){
+ const existing=document.querySelector('.edu-v67-calendar-shade');if(existing)existing.remove();
+ const today=new Date();today.setHours(0,0,0,0);
+ const saved=eduExamDate();const candidate=saved?new Date(saved+'T12:00:00'):new Date(today);
+ let selected=Number.isFinite(candidate.getTime())&&candidate>=today?candidate:new Date(today);
+ let month=new Date(selected.getFullYear(),selected.getMonth(),1);
+ const overlay=document.createElement('div');overlay.className='edu-v67-calendar-shade';
+ overlay.innerHTML='<div class="edu-v67-calendar" role="dialog" aria-modal="true" aria-label="Imtihon sanasini tanlash"><h3>📅 Imtihon sanasini tanlang</h3><p>Kerakli kunni kalendardan bosing.</p><div class="edu-v67-cal-month"><button type="button" data-cal-prev aria-label="Oldingi oy">‹</button><strong data-cal-title></strong><button type="button" data-cal-next aria-label="Keyingi oy">›</button></div><div class="edu-v67-cal-grid" data-cal-days></div><div class="edu-v67-cal-actions"><button type="button" data-cal-cancel>Bekor qilish</button><button type="button" data-cal-save>Saqlash</button></div></div>';
+ const iso=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+ const redraw=()=>{
+  overlay.querySelector('[data-cal-title]').textContent=month.toLocaleDateString('uz-UZ',{month:'long',year:'numeric'});
+  overlay.querySelector('[data-cal-prev]').disabled=month.getFullYear()===today.getFullYear()&&month.getMonth()===today.getMonth();
+  const grid=overlay.querySelector('[data-cal-days]');grid.replaceChildren();
+  ['Du','Se','Ch','Pa','Ju','Sh','Ya'].forEach(w=>{const el=document.createElement('span');el.textContent=w;grid.append(el)});
+  const start=(new Date(month.getFullYear(),month.getMonth(),1).getDay()+6)%7;
+  for(let i=0;i<start;i++)grid.append(document.createElement('span'));
+  const last=new Date(month.getFullYear(),month.getMonth()+1,0).getDate();
+  for(let d=1;d<=last;d++){const day=new Date(month.getFullYear(),month.getMonth(),d);const btn=document.createElement('button');btn.type='button';btn.textContent=String(d);btn.disabled=day<today;btn.setAttribute('aria-pressed',iso(day)===iso(selected)?'true':'false');btn.onclick=()=>{selected=day;redraw()};grid.append(btn)}
+ };
+ overlay.querySelector('[data-cal-prev]').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()-1,1);redraw()};
+ overlay.querySelector('[data-cal-next]').onclick=()=>{month=new Date(month.getFullYear(),month.getMonth()+1,1);redraw()};
+ overlay.querySelector('[data-cal-cancel]').onclick=()=>overlay.remove();
+ overlay.querySelector('[data-cal-save]').onclick=()=>{try{localStorage.setItem(eduExamDateKey(),iso(selected));overlay.remove();render()}catch(e){toast('Sanani saqlab bo‘lmadi')}};
+ overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});
+ document.body.append(overlay);redraw();overlay.querySelector('[data-cal-cancel]').focus();
+}
 document.addEventListener('click',e=>{
- const exam=e.target.closest('[data-edu-exam-date]');if(exam){const prev=eduExamDate();const next=prompt('Imtihon sanasini kiriting (YYYY-MM-DD):',prev);if(next!==null){if(/^\d{4}-\d{2}-\d{2}$/.test(next)&&!Number.isNaN(new Date(next+'T00:00:00').getTime())){localStorage.setItem(eduExamDateKey(),next);render()}else toast('Sanani YYYY-MM-DD shaklida kiriting')}return;}
+ const exam=e.target.closest('[data-edu-exam-date]');if(exam){eduV67OpenCalendar();return;}
  const oct=e.target.closest('[data-edu-octagon]');if(oct){toast('Oktagon — Birga bir jang bo‘limi tez orada ishga tushadi');return;}
  const cat=e.target.closest('[data-edu-category]');if(cat){eduSelectedTestCategory=cat.dataset.eduCategory;go('edu-test-list');return;}
  const jump=e.target.closest('[data-edu-jump]');if(jump){const n=Number(jump.dataset.eduJump);if(n>=0&&n<eduQuizState.questions.length){eduQuizState.current=n;render();}return;}
