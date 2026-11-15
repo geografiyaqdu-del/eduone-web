@@ -997,6 +997,24 @@ body:has(.edu-catalog) .edu-catalog .edu-card-name {
 /* Extend the actual swipe surface through the empty lower viewport */
 .edu-retry-screen:not(.edu-v62-results){min-height:calc(100dvh - 95px)!important;box-sizing:border-box!important;touch-action:pan-y}
 @media(max-width:360px){.edu-v62-result-panel{padding-left:0!important;padding-right:0!important}.edu-v62-result-stats{gap:6px!important}}
+
+/* EduOne V66: full-width mastery and compact dual action cards */
+.edu-v66-home-progress{margin:14px 0 22px;display:flex;flex-direction:column;gap:10px}
+.edu-v66-mastery{width:100%;padding:16px!important;gap:12px!important;min-height:0!important}
+.edu-v66-mastery-head{display:flex;align-items:center;gap:11px;width:100%}
+.edu-v66-mastery-head .edu-progress-title{font-size:18px;min-height:0;flex:1}
+.edu-v66-mastery-head .edu-progress-number{font-size:29px}
+.edu-v66-stats{display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px;font-size:12px;font-weight:700;color:#405d85;width:100%}
+.edu-v66-exam-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:14px;background:#edf3ff;color:#254b99;font-size:12px;font-weight:800}
+.edu-v66-exam-row button{border:0;background:#fff;color:#2557c2;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:800;white-space:nowrap}
+.edu-v66-home-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.edu-v66-home-actions button{border:1px solid #ffffffaa;border-radius:20px;padding:13px 9px;min-width:0;min-height:116px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;box-shadow:0 12px 25px #17356c24;color:#fff;cursor:pointer}
+.edu-v66-octagon{background:linear-gradient(140deg,#2654db,#7048d9)}
+.edu-v66-errors{background:linear-gradient(140deg,#f05178,#ec8267)}
+.edu-v66-home-actions .edu-v66-action-icon{font-size:30px;line-height:1.1}
+.edu-v66-home-actions strong{font-size:15px;line-height:1.2;text-align:center}
+.edu-v66-home-actions small{font-size:12px;font-weight:700;color:#fffdfd;text-align:center}
+.edu-retry-bookmark.active{background:#f4c542!important;color:#7a4a05!important;border-color:#ffe07a!important}
 </style>
 </head>
 <body>
@@ -1503,27 +1521,28 @@ function eduProgressStats(subjectId){
  const wrong=rows.flatMap(r=>r.wrong||[]);
  return {total,correct,wrong,pct:total?Math.round(correct*100/total):0};
 }
+function eduExamDateKey(){return 'eduone_exam_date_'+(verified?.id||'guest')}
+function eduExamDate(){try{return localStorage.getItem(eduExamDateKey())||''}catch(e){return ''}}
+function eduExamCountdown(){const v=eduExamDate();if(!v)return 'Imtihon sanasini belgilang';const t=new Date(v+'T00:00:00');if(!Number.isFinite(t.getTime()))return 'Imtihon sanasini belgilang';const today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((t-today)/86400000);return days<0?'Imtihon sanasi o‘tgan':days===0?'Imtihon bugun!':`Imtihongacha ${days} kun qoldi`}
 function eduHomeProgressCards(isFan,fan,lang){
  const id=isFan?(fan?.[0]||''):(lang?.[0]||'');
  const sid=id.startsWith('db:')?id.slice(3):id;
  const stats=eduProgressStats((isFan?'fan:':'til:')+sid);
- return `<section class="edu-progress-grid" aria-label="O‘quv natijalari">
-  <button type="button" class="edu-progress-card edu-progress-mastery" data-edu-progress="mastery">
-   <span class="edu-progress-icon">${ic('chart',25)}</span><span class="edu-progress-title">O‘zlashtirish</span>
-   <strong class="edu-progress-number">${stats.pct}%</strong>
+ const wrong=Math.max(0,stats.total-stats.correct);
+ return `<section class="edu-v66-home-progress" aria-label="O‘quv natijalari">
+  <button type="button" class="edu-progress-card edu-progress-mastery edu-v66-mastery" data-edu-progress="mastery">
+   <span class="edu-v66-mastery-head"><span class="edu-progress-icon">${ic('chart',27)}</span><span class="edu-progress-title">O‘zlashtirish</span><strong class="edu-progress-number">${stats.pct}%</strong></span>
    <span class="edu-progress-track"><span style="width:${stats.pct}%"></span></span>
-   <small>${stats.total?stats.correct+' / '+stats.total+' ta to‘g‘ri javob':'Hali test ishlanmagan'}</small>
-   <span class="edu-progress-foot">Batafsil statistika →</span>
+   <span class="edu-v66-stats"><span>✓ To‘g‘ri: <b>${stats.correct}</b></span><span>✕ Noto‘g‘ri: <b>${wrong}</b></span><span>Jami: <b>${stats.total}</b></span></span>
   </button>
-  <button type="button" class="edu-progress-card edu-progress-errors" data-edu-progress="errors">
-   <span class="edu-progress-icon">${ic('test',25)}</span><span class="edu-progress-title">Xatolarni tuzatish</span>
-   <strong class="edu-progress-number">${stats.wrong.length}</strong>
-   <span class="edu-progress-track"><span style="width:${stats.wrong.length?'100':'0'}%"></span></span>
-   <small>${stats.wrong.length?'ta qayta ko‘riladigan savol':'Hozircha xato yo‘q'}</small>
-   <span class="edu-progress-foot">Xatolarni ko‘rish →</span>
-  </button>
+  <div class="edu-v66-exam-row"><span>📅 ${eduExamCountdown()}</span><button type="button" data-edu-exam-date>Sanani tanlash ✎</button></div>
+  <div class="edu-v66-home-actions">
+   <button type="button" class="edu-v66-octagon" data-edu-octagon><span class="edu-v66-action-icon">⚔️</span><strong>Oktagon</strong><small>Birga bir jang</small></button>
+   <button type="button" class="edu-v66-errors" data-edu-progress="errors"><span class="edu-v66-action-icon">🎯</span><strong>Xatolarni tuzatish</strong><small>${stats.wrong.length} ta xato savol</small></button>
+  </div>
  </section>`;
 }
+
 let eduProgressScreen='mastery';
 const eduRetry={items:[],answers:{},index:0,started:0,duration:0,done:false,loading:false,notice:"",advanceTimer:null,reviewIndex:null};
 function eduRetrySavedKey(){return 'eduone_saved_questions_'+(verified?.id||'guest')}
@@ -1597,14 +1616,14 @@ function eduPremiumConfetti(){
  canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
  const ctx=canvas.getContext('2d');if(!ctx){canvas.remove();return;}ctx.scale(dpr,dpr);
  const colors=['#F7C948','#F59E0B','#3B82F6','#60A5FA','#8B5CF6','#C084FC','#10B981','#34D399','#FB7185','#FFFFFF'];
- const particles=Array.from({length:112},(_,i)=>{
+ const particles=Array.from({length:280},(_,i)=>{
   const left=i%2===0,edge=left?-8:w+8,angle=left?(-0.98+Math.random()*1.65):(Math.PI+0.18+Math.random()*1.65);
   const speed=3.2+Math.random()*6.5;
   return {x:edge,y:h*(.28+Math.random()*.50),vx:Math.cos(angle)*speed*(left?1:1),vy:Math.sin(angle)*speed-1.7,
    gravity:.11+Math.random()*.10,rotation:Math.random()*6.28,spin:(Math.random()-.5)*.22,
    size:2.5+Math.random()*5.5,color:colors[i%colors.length],shape:i%5,phase:Math.random()*6.28};
  });
- const token=++eduConfettiRun,start=performance.now(),duration=1050;
+ const token=++eduConfettiRun,start=performance.now(),duration=1500;
  function frame(now){
   if(token!==eduConfettiRun||!canvas.isConnected)return;
   const elapsed=now-start,dt=Math.min(2,(now-(frame.last||now))/16.67);frame.last=now;
@@ -1694,7 +1713,7 @@ V['edu-progress-detail']=()=>{
  const i=eduRetry.index,q=eduRetry.items[i],answered=Object.values(eduRetry.answers).filter(Boolean).length;
  return `<div class="scr fade edu-progress-detail edu-retry-screen">
  <div class="edu-retry-toolbar">
- <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'▣':'▢'}</button>
+ <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'🔖':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4-6 4z"/></svg>'}</button>
  <span class="edu-retry-clock" id="edu-retry-clock">⏱ ${eduRetryClockText()}</span>
  <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash">⚑</button></div></div>
  <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
@@ -2624,9 +2643,9 @@ async function eduQuizLoad(){
  try{eduQuizState.error='';const {data,error}=await client.rpc('eduone_get_quiz_questions',{p_quiz_id:eduQuizState.id});if(error)throw error;eduQuizState.questions=data||[];eduQuizState.answers={};eduQuizState.current=0;eduQuizState.finished=null;render();}
  catch(e){eduQuizState.error='Savollarni yuklab bo‘lmadi: '+e.message;render();}
 }
-async function eduQuizFinish(){
- if(eduQuizState.busy)return;
- if(!confirm('Testni yakunlab, natijani ko‘rasizmi?'))return;
+async function eduQuizFinish(auto=false){
+ if(eduQuizState.busy||eduQuizState.finished)return;
+ if(!auto&&!confirm('Testni yakunlab, natijani ko‘rasizmi?'))return;
  eduQuizState.busy=true;render();
  try{const {data,error}=await client.rpc('eduone_grade_quiz',{p_quiz_id:eduQuizState.id,p_answers:eduQuizState.answers});if(error)throw error;eduQuizState.finished=data;
   if(Number(data?.correct_count)>0)eduPremiumConfetti();
@@ -2689,8 +2708,18 @@ setInterval(()=>{
  const clock=document.getElementById('edu-retry-clock');if(clock)clock.textContent='⏱ '+eduRetryClockText();
  if(eduRetryLeft()===0)eduRetryFinish();
 },1000);
-document.addEventListener('change',e=>{if(e.target.matches('[data-edu-answer]')){eduQuizState.answers[e.target.dataset.eduAnswer]=e.target.value;document.querySelectorAll('.edu-exam-option').forEach(el=>el.classList.toggle('selected',!!el.querySelector('input:checked')));}});
+let eduV66FinishTimer=null;
+document.addEventListener('change',e=>{if(e.target.matches('[data-edu-answer]')){
+ eduQuizState.answers[e.target.dataset.eduAnswer]=e.target.value;
+ document.querySelectorAll('.edu-exam-option').forEach(el=>el.classList.toggle('selected',!!el.querySelector('input:checked')));
+ const qs=eduQuizState.questions;
+ if(qs.length&&qs.every(q=>!!eduQuizState.answers[q.id])&&!eduQuizState.busy&&!eduQuizState.finished){
+  clearTimeout(eduV66FinishTimer);eduV66FinishTimer=setTimeout(()=>{if(qs===eduQuizState.questions&&qs.every(q=>!!eduQuizState.answers[q.id]))eduQuizFinish(true)},1500);
+ }
+}});
 document.addEventListener('click',e=>{
+ const exam=e.target.closest('[data-edu-exam-date]');if(exam){const prev=eduExamDate();const next=prompt('Imtihon sanasini kiriting (YYYY-MM-DD):',prev);if(next!==null){if(/^\d{4}-\d{2}-\d{2}$/.test(next)&&!Number.isNaN(new Date(next+'T00:00:00').getTime())){localStorage.setItem(eduExamDateKey(),next);render()}else toast('Sanani YYYY-MM-DD shaklida kiriting')}return;}
+ const oct=e.target.closest('[data-edu-octagon]');if(oct){toast('Oktagon — Birga bir jang bo‘limi tez orada ishga tushadi');return;}
  const cat=e.target.closest('[data-edu-category]');if(cat){eduSelectedTestCategory=cat.dataset.eduCategory;go('edu-test-list');return;}
  const jump=e.target.closest('[data-edu-jump]');if(jump){const n=Number(jump.dataset.eduJump);if(n>=0&&n<eduQuizState.questions.length){eduQuizState.current=n;render();}return;}
  if(e.target.closest('#edu-quiz-load'))eduQuizLoad();
