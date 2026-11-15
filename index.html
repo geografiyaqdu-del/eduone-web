@@ -1584,12 +1584,53 @@ function eduRetryGoTo(index){
  if(eduRetry.done||!eduRetry.items.length)return;
  eduRetry.index=Math.max(0,Math.min(eduRetry.items.length-1,index));render();
 }
+/* EduOne V65: premium dual-edge confetti, light canvas overlay */
+let eduConfettiFrame=0,eduConfettiCanvas=null,eduConfettiRun=0;
+function eduPremiumConfetti(){
+ if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ if(eduConfettiFrame)cancelAnimationFrame(eduConfettiFrame);
+ if(eduConfettiCanvas)eduConfettiCanvas.remove();
+ const canvas=document.createElement('canvas');canvas.className='edu-premium-confetti';canvas.setAttribute('aria-hidden','true');
+ canvas.style.cssText='position:fixed;inset:0;width:100vw;height:100dvh;z-index:2147483000;pointer-events:none;background:transparent;';
+ document.body.appendChild(canvas);eduConfettiCanvas=canvas;
+ const w=window.innerWidth,h=window.innerHeight,dpr=Math.min(window.devicePixelRatio||1,2);
+ canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+ const ctx=canvas.getContext('2d');if(!ctx){canvas.remove();return;}ctx.scale(dpr,dpr);
+ const colors=['#F7C948','#F59E0B','#3B82F6','#60A5FA','#8B5CF6','#C084FC','#10B981','#34D399','#FB7185','#FFFFFF'];
+ const particles=Array.from({length:112},(_,i)=>{
+  const left=i%2===0,edge=left?-8:w+8,angle=left?(-0.98+Math.random()*1.65):(Math.PI+0.18+Math.random()*1.65);
+  const speed=3.2+Math.random()*6.5;
+  return {x:edge,y:h*(.28+Math.random()*.50),vx:Math.cos(angle)*speed*(left?1:1),vy:Math.sin(angle)*speed-1.7,
+   gravity:.11+Math.random()*.10,rotation:Math.random()*6.28,spin:(Math.random()-.5)*.22,
+   size:2.5+Math.random()*5.5,color:colors[i%colors.length],shape:i%5,phase:Math.random()*6.28};
+ });
+ const token=++eduConfettiRun,start=performance.now(),duration=1050;
+ function frame(now){
+  if(token!==eduConfettiRun||!canvas.isConnected)return;
+  const elapsed=now-start,dt=Math.min(2,(now-(frame.last||now))/16.67);frame.last=now;
+  ctx.clearRect(0,0,w,h);const alpha=Math.min(1,(duration-elapsed)/280);
+  particles.forEach(p=>{
+   p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=p.gravity*dt;p.vx*=Math.pow(.994,dt);p.rotation+=p.spin*dt;
+   if(p.x< -20||p.x>w+20||p.y>h+20)return;
+   ctx.save();ctx.globalAlpha=Math.max(0,alpha)*(.75+.25*Math.sin(elapsed*.013+p.phase)**2);
+   ctx.translate(p.x,p.y);ctx.rotate(p.rotation);ctx.fillStyle=p.color;
+   if(p.shape===0){ctx.beginPath();ctx.arc(0,0,p.size*.58,0,Math.PI*2);ctx.fill();}
+   else if(p.shape===1){ctx.fillRect(-p.size*.5,-p.size*.18,p.size,p.size*.36);}
+   else if(p.shape===2){ctx.beginPath();for(let k=0;k<10;k++){let a=k*Math.PI/5-Math.PI/2,r=k%2?p.size*.38:p.size;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();}
+   else{ctx.fillRect(-p.size*.5,-p.size*.5,p.size,p.size*.7);}
+   ctx.restore();
+  });
+  if(elapsed<duration)eduConfettiFrame=requestAnimationFrame(frame);
+  else{canvas.remove();if(eduConfettiCanvas===canvas)eduConfettiCanvas=null;eduConfettiFrame=0;}
+ }
+ eduConfettiFrame=requestAnimationFrame(frame);
+}
 function eduRetryChooseAnswer(value){
  if(eduRetry.done||eduRetry.answers[eduRetry.index]||!['A','B','C','D'].includes(value))return;
  const index=eduRetry.index;
  eduRetry.answers[index]=value;
  render();
- if(value===eduRetry.items[index].correct){
+ if(value===eduRetry.items[index].correct){eduPremiumConfetti();
   eduRetry.advanceTimer=setTimeout(()=>{
    eduRetry.advanceTimer=null;
    if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done&&eduRetry.index===index){const next=eduRetry.items.findIndex((_,j)=>j>index&&!eduRetry.answers[j]);const wrap=next<0?eduRetry.items.findIndex((_,j)=>!eduRetry.answers[j]):next;if(wrap>=0)eduRetryGoTo(wrap);}
@@ -2588,6 +2629,7 @@ async function eduQuizFinish(){
  if(!confirm('Testni yakunlab, natijani ko‘rasizmi?'))return;
  eduQuizState.busy=true;render();
  try{const {data,error}=await client.rpc('eduone_grade_quiz',{p_quiz_id:eduQuizState.id,p_answers:eduQuizState.answers});if(error)throw error;eduQuizState.finished=data;
+  if(Number(data?.correct_count)>0)eduPremiumConfetti();
   try{
    const quiz=eduCatalog.quizzes.find(q=>q.id===eduQuizState.id);
    const details=Array.isArray(data?.details)?data.details:[];
