@@ -2520,12 +2520,80 @@ Object.assign(KK_UI,{
  "Tanlangan til saqlandi. Chet tillari uchun darslar, testlar va kitoblar bog‘lash imkoniyati keyingi bosqichda qo‘shiladi.":"Tańlanǵan til saqlandı. Shet tilleri ushın sabaqlar, testler hám kitaplar keyingi basqıshta qosıladı.",
  "Hozircha ushbu bo‘limga materiallar joylanmagan.":"Bul bólimge ele materiallar jaylastırılmaǵan."
 });
+/* V76: full-string UI translations; never translate pieces of one sentence. */
+const EDU_V76_UI={
+ ru:{
+ 'Imtihon sanasini belgilang':'Укажите дату экзамена','Imtihon sanasi o‘tgan':'Дата экзамена прошла','Imtihon bugun!':'Экзамен сегодня!',
+ 'Imtihon sanasini tanlang':'Выберите дату экзамена','Kerakli kunni kalendardan bosing.':'Выберите нужную дату в календаре.',
+ 'Imtihongacha':'До экзамена','Siz tanlagan chet tili':'Выбранный иностранный язык',
+ 'Chet tilini o‘zgartirish':'Изменить иностранный язык','O‘rganmoqchi bo‘lgan chet tilingizni tanlang.':'Выберите иностранный язык для изучения.',
+ 'Tanlangan tilingiz bo‘yicha ta’lim':'Обучение на выбранном языке',
+ 'Hozircha variantli xato savollar yo‘q':'Пока нет вопросов с ошибками',
+ 'Test ishlaganingizda xato savollar shu yerga yig‘iladi.':'Вопросы, на которые вы ответили неправильно, появятся здесь.',
+ 'Oldingi testlarda savollarning A, B, C, D variantlari saqlanmagan. Yangi test ishlaganingizdan keyin xatolar shu yerda variantli ko‘rinadi.':'В предыдущих тестах варианты ответов не сохранились. После прохождения нового теста вопросы с ошибками появятся здесь.',
+ 'Bosh sahifaga qaytish':'Вернуться на главную','Hammasi':'Все','Video':'Видео','Test':'Тест','Kitob':'Книги',
+ 'Jami:':'Всего:','Faqat ochilgan o‘quv materiallaridagi faol vaqt hisoblanadi. Ma’lumot bo‘lmasa 0 ko‘rsatiladi.':'Учитывается только активное время в открытых учебных материалах. Если данных нет, отображается 0.',
+ 'Imtihon sanasini':'Дата экзамена','Tilni tanlang':'Выберите язык','Ilova tilini tanlang':'Выберите язык приложения',
+ 'Birga bir jang':'Бой один на один','Qayta boshlash':'Начать заново','Oktagon':'Октагон',
+ 'Xatolarni tuzatish':'Работа над ошибками','Fan bo‘yicha o‘rganish':'Изучение предмета','Chet tili bo‘yicha o‘rganish':'Изучение языка',
+ 'daqiqa':'минута','daq':'мин','kun':'день','Barcha':'Все',
+ },
+ en:{
+ 'Imtihon sanasini belgilang':'Set your exam date','Imtihon sanasi o‘tgan':'Exam date has passed','Imtihon bugun!':'Exam today!',
+ 'Imtihon sanasini tanlang':'Choose exam date','Kerakli kunni kalendardan bosing.':'Select a date on the calendar.',
+ 'Imtihongacha':'Until the exam','Siz tanlagan chet tili':'Your selected foreign language',
+ 'Chet tilini o‘zgartirish':'Change foreign language','O‘rganmoqchi bo‘lgan chet tilingizni tanlang.':'Choose a foreign language to learn.',
+ 'Tanlangan tilingiz bo‘yicha ta’lim':'Study your selected language',
+ 'Hozircha variantli xato savollar yo‘q':'No incorrect questions yet',
+ 'Test ishlaganingizda xato savollar shu yerga yig‘iladi.':'Questions you answer incorrectly will appear here.',
+ 'Oldingi testlarda savollarning A, B, C, D variantlari saqlanmagan. Yangi test ishlaganingizdan keyin xatolar shu yerda variantli ko‘rinadi.':'Answer choices from earlier tests were not saved. Incorrect questions from new tests will appear here.',
+ 'Bosh sahifaga qaytish':'Back to home','Hammasi':'All','Video':'Video','Test':'Test','Kitob':'Books',
+ 'Jami:':'Total:','Faqat ochilgan o‘quv materiallaridagi faol vaqt hisoblanadi. Ma’lumot bo‘lmasa 0 ko‘rsatiladi.':'Only active time in opened learning materials is counted. Missing data is shown as zero.',
+ 'Imtihon sanasini':'Exam date','Tilni tanlang':'Choose a language','Ilova tilini tanlang':'Choose app language',
+ 'Birga bir jang':'One-on-one battle','Qayta boshlash':'Start over','Xatolarni tuzatish':'Correct mistakes',
+ 'Fan bo‘yicha o‘rganish':'Learn your subject','Chet tili bo‘yicha o‘rganish':'Learn your language',
+ 'daqiqa':'minute','daq':'min','kun':'day','Barcha':'All'
+ },
+ kk:{
+ 'Imtihon sanasini belgilang':'Imtixan sánesin belgileń','Imtihon sanasi o‘tgan':'Imtixan sá­nesi ótip ketti','Imtihon bugun!':'Imtixan búgin!',
+ 'Imtihon sanasini tanlang':'Imtixan sánesin tańlań','Kerakli kunni kalendardan bosing.':'Kerekli kúndi kúntizbeden tańlań.',
+ 'Imtihongacha':'Imtixanǵa shekem','Siz tanlagan chet tili':'Siz tańlaǵan shet tili',
+ 'Chet tilini o‘zgartirish':'Shet tilin ózgertiw','O‘rganmoqchi bo‘lgan chet tilingizni tanlang.':'Úyrenbekshi bolǵan shet tilińizdi tańlań.',
+ 'Tanlangan tilingiz bo‘yicha ta’lim':'Tańlanǵan tilińiz boyınsha oqıw',
+ 'Hozircha variantli xato savollar yo‘q':'Házirinshe qáte juwap berilgen sorawlar joq',
+ 'Test ishlaganingizda xato savollar shu yerga yig‘iladi.':'Testte qáte juwap bergen sorawlarıńız usı jerge jıynaladı.',
+ 'Oldingi testlarda savollarning A, B, C, D variantlari saqlanmagan. Yangi test ishlaganingizdan keyin xatolar shu yerda variantli ko‘rinadi.':'Aldınǵı testlerdiń juwap variantları saqlanbaǵan. Jańa testten keyin qáte sorawlar usı jerde kórinedi.',
+ 'Bosh sahifaga qaytish':'Bas betke qaytıw','Hammasi':'Hámmesi','Video':'Video','Test':'Test','Kitob':'Kitap',
+ 'Jami:':'Jámi:','Faqat ochilgan o‘quv materiallaridagi faol vaqt hisoblanadi. Ma’lumot bo‘lmasa 0 ko‘rsatiladi.':'Tek ashılǵan oqıw materiallarındaǵı belsendi waqıt esaplanadı. Maǵlıwmat bolmasa 0 kórsetiledi.',
+ 'Imtihon sanasini':'Imtixan sánesi','Tilni tanlang':'Tildi tańlań','Ilova tilini tanlang':'Qosımsha tilin tańlań',
+ 'Birga bir jang':'Birge bir sawash','Qayta boshlash':'Qaytadan baslaw','Xatolarni tuzatish':'Qátelerdi dúzetiw',
+ 'Fan bo‘yicha o‘rganish':'Pán boyınsha úyreniw','Chet tili bo‘yicha o‘rganish':'Shet tilin úyreniw',
+ 'daqiqa':'minut','daq':'min','kun':'kún','Barcha':'Hámmesi'
+ }
+};
+Object.assign(RU_UI,EDU_V76_UI.ru);
+Object.assign(EN_UI,EDU_V76_UI.en);
+Object.assign(KK_UI,EDU_V76_UI.kk);
+// Force recompilation of the regex after dictionary extensions.
+for(const code of ['ru','en','kk'])delete EDU_I18N_CACHE[code];
+function eduV76Dynamic(source,lang){
+ const n=source.match(/^Imtihongacha\s+(\d+)\s+kun\s+qoldi$/i);
+ if(n){const v=+n[1];if(lang==='ru')return `До экзамена осталось ${v} ${v%10===1&&v%100!==11?'день':([2,3,4].includes(v%10)&&![12,13,14].includes(v%100)?'дня':'дней')}`;if(lang==='en')return `${v} day${v===1?'':'s'} until the exam`;return `Imtixanǵa ${v} kún qaldı`;}
+ const m=source.match(/^(Video|Test|Kitob):\s*(\d+)\s*daq$/i);
+ if(m){const name={ru:{Video:'Видео',Test:'Тест',Kitob:'Книги'},en:{Video:'Video',Test:'Test',Kitob:'Books'},kk:{Video:'Video',Test:'Test',Kitob:'Kitap'}}[lang][m[1]];return `${name}: ${m[2]} ${lang==='ru'?'мин':lang==='en'?'min':'min'}`;}
+ const total=source.match(/^Jami:\s*(\d+)\s*daq\.?$/i);
+ if(total)return `${{ru:'Всего',en:'Total',kk:'Jámi'}[lang]}: ${total[1]} ${lang==='ru'?'мин':'min'}`;
+ const d=source.match(/^(\d+)\s+kun\s+qoldi$/i);
+ if(d){const v=+d[1];return lang==='ru'?`${v} ${v%10===1&&v%100!==11?'день':([2,3,4].includes(v%10)&&![12,13,14].includes(v%100)?'дня':'дней')} осталось`:lang==='en'?`${v} day${v===1?'':'s'} left`:`${v} kún qaldı`;}
+ return null;
+}
 function eduTranslateText(input,lang){
  if(typeof input!=='string'||!input.trim()||!['en','ru','kk'].includes(lang))return input;
  const dict=lang==='en'?EN_UI:lang==='ru'?RU_UI:KK_UI;
  const pre=input.match(/^\s*/)?.[0]||'';
  const post=input.match(/\s*$/)?.[0]||'';
  const trimmed=input.trim();
+ const v76=eduV76Dynamic(trimmed,lang);if(v76!==null)return pre+v76+post;
  // V75: localize the whole count, not just a fragment of a sentence.
  const countMatch=trimmed.match(/^(\d+) ta (xato savol|material)$/i);
  if(countMatch){const n=Number(countMatch[1]);const type=countMatch[2];
