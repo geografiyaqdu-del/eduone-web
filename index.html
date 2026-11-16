@@ -11,7 +11,7 @@
 <meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne V59 — EduOne — V55</title>
+<title>EduOne — White Premium</title>
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
@@ -1094,6 +1094,39 @@ html,body,#app{max-width:100%;margin-left:0!important;margin-right:0!important}b
 #edu-v69-overlay .edu-v70-scroll::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
 #edu-v69-overlay .edu-v70-scroll.edu-v73-fits{overflow-y:hidden!important;touch-action:none!important;}
 #edu-v69-overlay .edu-v70-scroll:not(.edu-v73-fits){overflow-y:auto!important;touch-action:pan-y!important;}
+</style>
+<style id="eduone-v78-white-premium-theme">
+/* EduOne White Premium — visual skin only. Existing application logic retained. */
+:root:not([data-theme="dark"]){--bg:#F8FAFF;--card:#FFFFFF;--ink:#121B3A;--muted:#707C98;--line:#E5EAF5;--shadow:0 10px 30px rgba(39,62,128,.08)}
+html,body{background:#F8FAFF!important}
+body{color:var(--ink)}
+.app{background:transparent}
+.scr{background:transparent}
+/* Homepage: retain brand identity on the actions, not on the entire canvas */
+.edu-home-v54 .edu-home-greeting h2{color:#121B3A!important}
+.edu-home-v54 .edu-home-greeting .muted{color:#707C98!important}
+.edu-home-v54 .edu-home-v54-section h3,.edu-home-v54-section h3{color:#121B3A!important;font-weight:800}
+.edu-home-mode{background:#fff!important;color:#253556!important;border:1px solid #E1E7F4!important;box-shadow:0 9px 22px rgba(29,56,120,.07)!important;border-radius:19px!important}
+.edu-home-mode.on{background:linear-gradient(135deg,#fff,#EFF4FF)!important;border:1.5px solid #4565FF!important;box-shadow:0 9px 25px rgba(62,84,231,.12)!important}
+.edu-home-mode-symbol{background:#EEF2FF!important;color:#345EEA!important}
+.edu-v67-master-card{border:1px solid #E9EDF8!important;border-radius:23px!important;box-shadow:0 12px 32px rgba(31,51,113,.075)!important}
+.edu-v66-home-actions button{border-radius:22px!important;box-shadow:0 12px 24px rgba(51,59,142,.14)!important}
+.edu-v66-octagon{background:linear-gradient(130deg,#2384EE 0%,#4556EE 52%,#743DE5 100%)!important}
+.edu-v66-errors{background:linear-gradient(130deg,#E74B95 0%,#F15B76 55%,#FF9060 100%)!important}
+.edu-home-quick{background:#fff!important;border:1px solid #E6EBF5!important;border-radius:21px!important;box-shadow:0 9px 24px rgba(28,55,122,.07)!important}
+.edu-home-quick strong{color:#152246!important}
+.edu-home-quick small{color:#74809B!important}
+/* Section headings across the app should remain readable on white. */
+.scr .sec h3,.scr .sec h2{color:#142044}
+/* Subject/language pages: preserve the branded hero, use dark text for standalone headings. */
+.scr > h1,.scr > h2,.scr > h3{color:#15234B}
+/* Floating bottom navigation: clean white surface and blue active tab. */
+.tabs{background:rgba(255,255,255,.98)!important;border-top:1px solid #E7EBF5!important;box-shadow:0 -8px 28px rgba(33,54,114,.055)!important}
+/* Quiz screen must retain its own deliberate blue-purple game background. */
+.edu-retry-screen,.edu-retry-game,.edu-retry-shell{color:inherit}
+/* Selected language / exam modal remain white and functional. */
+@media(max-width:380px){.edu-v66-home-actions button{min-height:104px!important}.edu-home-mode{padding:10px 8px!important}}
+
 </style>
 </head>
 <body>
