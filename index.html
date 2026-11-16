@@ -1037,7 +1037,12 @@ body:has(.edu-catalog) .edu-catalog .edu-card-name {
 .edu-v66-home-actions small{font-size:12px;font-weight:700;color:#fffdfd;text-align:center}
 .edu-retry-bookmark.active{background:#f4c542!important;color:#7a4a05!important;border-color:#ffe07a!important}
 </style>
-</head>
+<style id="edu-v69-css">
+html,body,#app{max-width:100%;margin-left:0!important;margin-right:0!important}body{overflow-x:hidden} .scr{box-sizing:border-box} .edu-retry-paper h2{width:100%!important;max-width:none!important;word-break:normal;overflow-wrap:break-word;letter-spacing:-.3px}
+.edu-retry-clock{display:inline-flex;align-items:center;gap:6px}.edu-v69-font-small h2{font-size:17px!important}.edu-v69-font-medium h2{font-size:20px!important}.edu-v69-font-large h2{font-size:23px!important}.edu-v69-font-small .edu-retry-option{font-size:15px!important}.edu-v69-font-medium .edu-retry-option{font-size:17px!important}.edu-v69-font-large .edu-retry-option{font-size:20px!important}.edu-v69-style-normal{font-family:Arial,sans-serif!important}.edu-v69-style-bold h2,.edu-v69-style-bold .edu-retry-option{font-weight:800!important}
+#edu-v69-overlay{position:fixed;inset:0;z-index:2147482000;display:flex;align-items:flex-end}.edu-v69-backdrop{position:absolute;inset:0;background:#07152b99}.edu-v69-sheet{position:relative;background:white;border-radius:26px 26px 0 0;width:100%;max-height:90dvh;overflow:auto;padding:15px 20px max(22px,env(safe-area-inset-bottom));box-sizing:border-box;color:#1d2b46}.edu-v69-handle{width:65px;height:5px;background:#cbd5e1;border-radius:9px;margin:0 auto 13px}.edu-v69-sheet h2{text-align:center;font-size:22px;margin:0 0 12px}.edu-v69-setting{width:100%;box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:13px 0;min-height:58px;border:0;border-bottom:1px solid #e9edf4;background:transparent;text-align:left;color:#263753;font-size:15px;font-weight:600}.edu-v69-setting>span:nth-child(2){flex:1}.edu-v69-setting-icon{width:35px;height:35px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(135deg,#2a6bef,#7850e9);color:#fff;border-radius:50%;font-size:20px}.edu-v69-setting input[type=checkbox]{position:absolute;opacity:0;pointer-events:none}.edu-v69-switch{width:47px;height:27px;background:#cbd5e1;border-radius:50px;position:relative;flex-shrink:0;transition:background .2s}.edu-v69-switch:before{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:white;box-shadow:0 1px 4px #33415533;transition:transform .2s}.edu-v69-setting input:checked+.edu-v69-switch{background:linear-gradient(110deg,#2563eb,#6545e8)}.edu-v69-setting input:checked+.edu-v69-switch:before{transform:translateX(20px)}.edu-v69-setting select{max-width:115px;font:inherit;color:#53647f;border:0;background:white}.edu-v69-setting b{font-size:13px;color:#68788f}.edu-v69-save{width:100%;border:0;border-radius:17px;background:linear-gradient(110deg,#2563eb,#6545e8);color:white;font-size:18px;font-weight:800;padding:16px;margin-top:16px}
+/* Remove inset background strips without altering card layout */.edu-my-subject-page,.edu-home-content{background:transparent!important}
+</style><style id="edu-v69-subject-css">.edu-my-hero{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important}.edu-v69-subject-heading{font-size:23px!important;text-align:center!important;margin:0!important;color:white!important}.edu-v69-subject-row{display:flex;align-items:center;gap:18px}.edu-v69-subject-row h2{margin:0!important}.edu-my-name{font-size:clamp(18px,4.3vw,22px)!important}.edu-v69-quiz-tools{display:flex;justify-content:flex-end;margin:5px 0 12px}.edu-v69-quiz-tools button{background:#ffffff25;border:1px solid #ffffff65;border-radius:12px;padding:9px 12px;color:white;font-weight:700}.edu-exam .edu-v69-font-small [data-edu-question-content]{font-size:15px!important}.edu-exam .edu-v69-font-medium [data-edu-question-content]{font-size:18px!important}.edu-exam .edu-v69-font-large [data-edu-question-content]{font-size:21px!important}</style></head>
 <body>
 
 <div class="app" id="app"></div>
@@ -1585,6 +1590,28 @@ function eduHomeProgressCards(isFan,fan,lang){
 }
 
 let eduProgressScreen='mastery';
+/* V69: persistent, functional quiz preferences */
+const eduSettingsDefaults={autoCorrect:true,autoWrong:false,sound:false,noAnimation:false,shuffle:false,fontSize:'medium',fontStyle:'soft',showCorrect:false};
+function eduSettingsKey(){return 'eduone_test_settings_'+(verified?.id||'guest')}
+function eduSettingsRead(){try{return {...eduSettingsDefaults,...JSON.parse(localStorage.getItem(eduSettingsKey())||'{}')}}catch(e){return {...eduSettingsDefaults}}}
+let eduSettingsDraft=null;
+function eduSettingsOpen(){eduSettingsDraft=eduSettingsRead();let old=document.getElementById('edu-v69-overlay');if(old)old.remove();let layer=document.createElement('div');layer.id='edu-v69-overlay';document.body.appendChild(layer);eduSettingsPaint();}
+function eduSettingsClose(){document.getElementById('edu-v69-overlay')?.remove();eduSettingsDraft=null}
+function eduSettingsPaint(){const el=document.getElementById('edu-v69-overlay');if(!el||!eduSettingsDraft)return;const d=eduSettingsDraft;
+ const toggles=[['autoCorrect','To‘g‘ri javobda avtomatik o‘tish','⏭'],['autoWrong','Xato javobda avtomatik o‘tish','⏭'],['sound','Ovozli effektlar','♫'],['noAnimation','Animatsiyasiz o‘tish','ϟ'],['shuffle','Variantlarni aralashtirish','⇄'],['showCorrect','To‘g‘ri javoblarni ko‘rsatish','◉']];
+ const row=([key,label,ico])=>`<label class="edu-v69-setting"><span class="edu-v69-setting-icon">${ico}</span><span>${label}</span><input type="checkbox" data-edu-v69-setting="${key}" ${d[key]?'checked':''}><span class="edu-v69-switch"></span></label>`;
+ el.innerHTML=`<div class="edu-v69-backdrop" data-edu-v69-close></div><div class="edu-v69-sheet" role="dialog" aria-modal="true" aria-label="Test sozlamalari"><div class="edu-v69-handle"></div><h2>Test sozlamalari</h2>${toggles.slice(0,5).map(row).join('')}
+ <label class="edu-v69-setting"><span class="edu-v69-setting-icon">T</span><span>Shrift o‘lchami</span><select data-edu-v69-select="fontSize"><option value="small" ${d.fontSize==='small'?'selected':''}>Kichik</option><option value="medium" ${d.fontSize==='medium'?'selected':''}>O‘rtacha</option><option value="large" ${d.fontSize==='large'?'selected':''}>Katta</option></select></label>
+ <label class="edu-v69-setting"><span class="edu-v69-setting-icon">T</span><span>Shrift uslubi</span><select data-edu-v69-select="fontStyle"><option value="soft" ${d.fontStyle==='soft'?'selected':''}>Yumshoq</option><option value="normal" ${d.fontStyle==='normal'?'selected':''}>Oddiy</option><option value="bold" ${d.fontStyle==='bold'?'selected':''}>Qalin</option></select></label>
+ <button class="edu-v69-setting" type="button" data-edu-v69-language><span class="edu-v69-setting-icon">◎</span><span>Ilova tili</span><b>${esc(({uz:'O‘zbekcha',kk:'Qaraqalpaqsha',ru:'Русский',en:'English'})[S.lang]||S.lang||'O‘zbekcha')}</b></button>
+ ${row(toggles[5])}<button class="edu-v69-setting" type="button" data-edu-v69-report><span class="edu-v69-setting-icon">⚑</span><span>Xatolik haqida xabar berish</span><b>›</b></button>
+ <button type="button" class="edu-v69-save" data-edu-v69-save>Saqlash</button></div>`;
+}
+function eduSettingsSound(ok){if(!eduSettingsRead().sound)return;try{const ctx=new (window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=ok?740:260;g.gain.setValueAtTime(.06,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.16);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.17);o.onended=()=>ctx.close();}catch(e){console.warn('Audio unavailable',e)}}
+function eduSettingsOptionOrder(){const a=['A','B','C','D'];if(!eduSettingsRead().shuffle)return a;const q=eduRetry.items[eduRetry.index];if(!q)return a;const seed=String(q.question||'').split('').reduce((v,c)=>((v*31+c.charCodeAt(0))>>>0),0);return a.map((k,i)=>({k,rank:((seed^(i*2654435761))>>>0)})).sort((x,y)=>x.rank-y.rank).map(x=>x.k)}
+function eduSettingsReport(){const q=eduRetry.items[eduRetry.index];if(!q){alert('Savol topilmadi');return;}const description=prompt('Savoldagi xatolikni tushuntiring:');if(!description?.trim())return;if(!client||!verified?.id){alert('Xabar yuborish uchun hisobingizga kiring.');return;}client.from('edu_question_reports').insert({user_id:verified.id,question:q.question,subject_id:eduRetrySubject(),description:description.trim()}).then(({error})=>{if(error){alert('Xabar serverga yuborilmadi. Administrator bazada edu_question_reports jadvalini va ruxsatlarini sozlashi kerak.');console.error(error);}else alert('Xatolik haqidagi xabar yuborildi.');}).catch(e=>alert('Xabar yuborilmadi: '+e.message));}
+document.addEventListener('change',e=>{if(e.target.matches('[data-edu-v69-setting]')&&eduSettingsDraft)eduSettingsDraft[e.target.dataset.eduV69Setting]=e.target.checked;if(e.target.matches('[data-edu-v69-select]')&&eduSettingsDraft)eduSettingsDraft[e.target.dataset.eduV69Select]=e.target.value;});
+document.addEventListener('click',e=>{if(e.target.closest('[data-edu-v69-quiz-settings]')){eduSettingsOpen();return;}const b=e.target.closest('[data-edu-v69-close],[data-edu-v69-save],[data-edu-v69-report],[data-edu-v69-language]');if(!b)return;if(b.hasAttribute('data-edu-v69-close'))eduSettingsClose();if(b.hasAttribute('data-edu-v69-save')){try{localStorage.setItem(eduSettingsKey(),JSON.stringify(eduSettingsDraft));eduSettingsClose();render();}catch(err){alert('Sozlamalarni saqlash amalga oshmadi.')}}if(b.hasAttribute('data-edu-v69-report'))eduSettingsReport();if(b.hasAttribute('data-edu-v69-language')){eduSettingsClose();go('tilni');}});
 const eduRetry={items:[],answers:{},index:0,started:0,duration:0,done:false,loading:false,notice:"",advanceTimer:null,reviewIndex:null};
 function eduRetrySavedKey(){return 'eduone_saved_questions_'+(verified?.id||'guest')}
 function eduRetrySavedList(){try{const v=JSON.parse(localStorage.getItem(eduRetrySavedKey())||'[]');return Array.isArray(v)?v:[]}catch(e){return []}}
@@ -1691,17 +1718,17 @@ function eduRetryChooseAnswer(value){
  eduRetry.answers[index]=value;
  const correct=value===eduRetry.items[index].correct;
  render();
- if(correct)eduPremiumConfetti();
+ eduSettingsSound(correct);if(correct&&!eduSettingsRead().noAnimation)eduPremiumConfetti();
  const allAnswered=eduRetry.items.length>0&&eduRetry.items.every((_,j)=>!!eduRetry.answers[j]);
  if(allAnswered){
   eduRetryCancelAdvance();
   eduRetry.advanceTimer=setTimeout(()=>{
    eduRetry.advanceTimer=null;
    if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done)eduRetryFinish();
-  },correct?1000:1500);
+  },eduSettingsRead().noAnimation?100:(correct?1000:1500));
   return;
  }
- if(correct){
+ if((correct&&eduSettingsRead().autoCorrect)||(!correct&&eduSettingsRead().autoWrong)){
   eduRetry.advanceTimer=setTimeout(()=>{
    eduRetry.advanceTimer=null;
    if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done&&eduRetry.index===index){
@@ -1709,7 +1736,7 @@ function eduRetryChooseAnswer(value){
     const wrap=next<0?eduRetry.items.findIndex((_,j)=>!eduRetry.answers[j]):next;
     if(wrap>=0)eduRetryGoTo(wrap);
    }
-  },1000);
+  },eduSettingsRead().noAnimation?100:(correct?1000:1500));
  }
 }
 function eduRetryLeft(){return Math.max(0,eduRetry.duration-Math.floor((Date.now()-eduRetry.started)/1000))}
@@ -1770,10 +1797,10 @@ V['edu-progress-detail']=()=>{
  return `<div class="scr fade edu-progress-detail edu-retry-screen">
  <div class="edu-retry-toolbar">
  <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'🔖':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4-6 4z"/></svg>'}</button>
- <span class="edu-retry-clock" id="edu-retry-clock">⏱ ${eduRetryClockText()}</span>
+ <span class="edu-retry-clock" id="edu-retry-clock"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V3"/></svg> <span class="edu-v69-time">${eduRetryClockText()}</span></span>
  <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash">⚑</button></div></div>
  <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
- <div class="edu-retry-paper" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${['A','B','C','D'].map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
+ <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):(eduSettingsRead().showCorrect&&k===q.correct?'correct':'')}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
  </div>`;
 };
 V.home=()=>{
@@ -2039,7 +2066,7 @@ V.profil=()=>{const u=S.user||{};const dark=document.documentElement.getAttribut
  <div class="card list" style="gap:4px;padding:8px 16px">
   <button class="row sp" style="padding:10px 0" data-go="tilni"><span class="row" style="display:inline-flex;align-items:center;gap:12px">${flag(S.lang)}<span>Til / Language</span></span><span class="muted sm" style="display:inline-flex;align-items:center;gap:8px"><span>${({uz:'O‘zbekcha',kk:'Qaraqalpaqsha',ru:'Русский',en:'English'})[S.lang]||'O‘zbekcha'}</span> ›</span></button>
   <button class="row sp" style="padding:10px 0" id="edit"><span class="row">${ic('user',20)}Ma'lumotlarni tahrirlash</span>${ic('next',18)}</button>
-  <button class="row sp" style="padding:10px 0;color:#d97706" id="edu-reset-progress"><span class="row">${ic('refresh',20)}Qayta boshlash</span>${ic('next',18)}</button>
+  <button class="row sp" style="padding:10px 0;color:#d97706" id="edu-reset-progress"><span class="row"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>Qayta boshlash</span>${ic('next',18)}</button>
   <button class="row sp" style="padding:10px 0;color:var(--bad)" id="out"><span class="row">${ic('logout',20)}Hisobdan chiqish</span></button>
 
   <button id="outy" type="button" hidden style="display:none!important"></button>
@@ -2617,8 +2644,8 @@ let eduMySubjectSection=null;
 function eduSubjectDetail(inTab=false){
  const s=eduVisibleSubjects().find(x=>x.id===eduCatalog.selected);if(!s)return `<div class="scr fade"><div class="top"><h2>Mening fanim</h2></div><div class="card" style="text-align:center;padding:28px 18px"><div style="font-size:42px;margin-bottom:12px">📚</div><h3>${eduProfileLabel("Fan tanlanmagan")}</h3><p class="muted" style="margin:12px 0 20px">${eduProfileLabel("O‘qishni boshlash uchun fan tanlang")}</p><button type="button" class="btn" id="edu-select-subject-now">${eduProfileLabel("Fan tanlash")}</button></div></div>`;
  const count=eduCatalog.lessons.filter(x=>x.subject_id===eduSubjectId(s)).length;
- return `<div class="scr fade edu-my-subject">${inTab?'<div class="top"><div style="width:40px"></div><h2>Mening fanim</h2><div style="width:40px"></div></div>':topbar('Mening fanim')}
- <div class="edu-my-hero"><div class="edu-my-globe">${eduSubjectHeroImage(s)}</div><div><h2>${esc(s.n)}</h2></div></div>
+ return `<div class="scr fade edu-my-subject">${inTab?'':''}
+ <div class="edu-my-hero"><h2 class="edu-v69-subject-heading">Mening fanim</h2><div class="edu-v69-subject-row"><div class="edu-my-globe">${eduSubjectHeroImage(s)}</div><div><h2>${esc(s.n)}</h2></div></div></div>
  ${eduMySubjectGroups.map((g,gi)=>`<section class="edu-my-group"><div class="edu-my-heading"><span>${g.icon}</span><h3>${g.title}</h3></div><div class="edu-my-grid">${g.items.map(([title,emoji],ii)=>`<button type="button" class="edu-my-tile" data-my-group="${gi}" data-my-item="${ii}"><span class="edu-my-emoji">${emoji}</span><span class="edu-my-name">${title}</span><span class="edu-my-chevron">›</span></button>`).join('')}</div></section>`).join('')}
  </div>`;
 }
@@ -2674,6 +2701,7 @@ function eduItemDetail(){
 
 /* Student quiz: correct answers never fetched with questions. Server RPC grades responses. */
 const eduQuizState={id:null,questions:[],answers:{},busy:false,finished:null,error:'',current:0};
+function eduQuizOptionOrder(q){const a=['A','B','C','D'];if(!eduSettingsRead().shuffle)return a;const seed=String(q?.id||q?.question||'').split('').reduce((v,c)=>((v*31+c.charCodeAt(0))>>>0),0);return a.map((k,i)=>({k,rank:((seed^(i*2654435761))>>>0)})).sort((x,y)=>x.rank-y.rank).map(x=>x.k)}
 function eduQuizView(x){
  if(eduQuizState.id!==x.id){eduQuizState.id=x.id;eduQuizState.questions=[];eduQuizState.answers={};eduQuizState.finished=null;eduQuizState.error='';eduQuizState.current=0;}
  const ru=S.lang==='ru',en=S.lang==='en';
@@ -2687,10 +2715,10 @@ function eduQuizView(x){
  const pct=Math.round(100*(i+1)/count);
  const safeTitle=esc(x.title||'Milliy sertifikat');
  return `<section class="edu-exam" data-i18n-ignore>
- <div class="edu-exam-info"><div><small>${tr('Fan','Предмет','Subject')}</small><b>${tr('Geografiya','География','Geography')}</b></div><div><small>${tr('Test turi','Тип теста','Test type')}</small><b>${safeTitle}</b></div><div><small>${tr('Savollar','Вопросы','Questions')}</small><b>${count}</b></div></div>
+ <div class="edu-v69-quiz-tools"><button type="button" data-edu-v69-quiz-settings aria-label="Test sozlamalari">⚙ Sozlamalar</button></div><div class="edu-exam-info"><div><small>${tr('Fan','Предмет','Subject')}</small><b>${tr('Geografiya','География','Geography')}</b></div><div><small>${tr('Test turi','Тип теста','Test type')}</small><b>${safeTitle}</b></div><div><small>${tr('Savollar','Вопросы','Questions')}</small><b>${count}</b></div></div>
  <div class="edu-exam-progress"><b>${i+1} / ${count}</b><div class="edu-exam-track"><span style="width:${pct}%"></span></div><b>${pct}%</b></div>
- <div class="edu-exam-paper"><div class="edu-exam-heading"><span class="edu-exam-number">${i+1}</span><h3 data-edu-question-content>${esc(q.question)}</h3></div>
- <div class="edu-exam-options">${['A','B','C','D'].map(k=>`<label class="edu-exam-option ${eduQuizState.answers[q.id]===k?'selected':''}"><input type="radio" name="edu-q-${i}" data-edu-answer="${esc(q.id)}" value="${k}" ${eduQuizState.answers[q.id]===k?'checked':''}><span class="edu-exam-letter">${k}</span><span data-edu-question-content>${esc(q['option_'+k.toLowerCase()]||'')}</span></label>`).join('')}</div>
+ <div class="edu-exam-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}"><div class="edu-exam-heading"><span class="edu-exam-number">${i+1}</span><h3 data-edu-question-content>${esc(q.question)}</h3></div>
+ <div class="edu-exam-options">${eduQuizOptionOrder(q).map(k=>`<label class="edu-exam-option ${eduQuizState.answers[q.id]===k?'selected':''}"><input type="radio" name="edu-q-${i}" data-edu-answer="${esc(q.id)}" value="${k}" ${eduQuizState.answers[q.id]===k?'checked':''}><span class="edu-exam-letter">${k}</span><span data-edu-question-content>${esc(q['option_'+k.toLowerCase()]||'')}</span></label>`).join('')}</div>
  <div class="edu-exam-actions"><button type="button" class="edu-exam-prev" data-edu-jump="${i-1}" ${i===0?'disabled':''}>${tr('← Oldingi','← Назад','← Previous')}</button><button type="button" class="edu-exam-next" data-edu-jump="${i+1}" ${i===count-1?'disabled':''}>${tr('Keyingi →','Далее →','Next →')}</button></div></div>
  <div class="edu-exam-paper edu-exam-index"><div class="edu-exam-index-head"><b>${tr('Savollar ro‘yxati','Список вопросов','Question list')}</b><span>${answered}/${count} ${tr('javob','ответов','answered')}</span></div><div class="edu-exam-dots">${eduQuizState.questions.map((v,j)=>`<button type="button" data-edu-jump="${j}" class="${j===i?'current':''} ${eduQuizState.answers[v.id]?'answered':''}">${j+1}</button>`).join('')}</div><button class="btn edu-exam-finish" id="edu-quiz-finish" ${eduQuizState.busy?'disabled':''}>${eduQuizState.busy?tr('Tekshirilmoqda...','Проверка...','Checking...'):tr('Testni yakunlash','Завершить тест','Finish test')}</button></div>
  </section>`;
@@ -2706,7 +2734,7 @@ async function eduQuizFinish(auto=false){
  if(!auto&&!confirm('Testni yakunlab, natijani ko‘rasizmi?'))return;
  eduQuizState.busy=true;render();
  try{const {data,error}=await client.rpc('eduone_grade_quiz',{p_quiz_id:eduQuizState.id,p_answers:eduQuizState.answers});if(error)throw error;eduQuizState.finished=data;
-  if(Number(data?.correct_count)>0)eduPremiumConfetti();
+  if(Number(data?.correct_count)>0&&!eduSettingsRead().noAnimation)eduPremiumConfetti();
   try{
    const quiz=eduCatalog.quizzes.find(q=>q.id===eduQuizState.id);
    const details=Array.isArray(data?.details)?data.details:[];
@@ -2736,7 +2764,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('click',e=>{
  const b=e.target.closest('[data-edu-retry-back],[data-edu-retry-again],[data-edu-retry-prev],[data-edu-retry-next],[data-edu-retry-jump],[data-edu-retry-finish],[data-edu-retry-save],[data-edu-retry-settings]');
  if(!b)return;
- if(b.hasAttribute('data-edu-retry-save')){eduRetryToggleSaved();return;} if(b.hasAttribute('data-edu-retry-settings')){alert('Sozlamalar keyingi bosqichda qo‘shiladi.');return;} if(b.hasAttribute('data-edu-retry-back')){go('home');return;}
+ if(b.hasAttribute('data-edu-retry-save')){eduRetryToggleSaved();return;} if(b.hasAttribute('data-edu-retry-settings')){eduSettingsOpen();return;} if(b.hasAttribute('data-edu-retry-back')){go('home');return;}
  if(b.hasAttribute('data-edu-retry-again')){eduRetryBegin();render();return;}
  if(b.hasAttribute('data-edu-retry-finish')){if(confirm('Testni yakunlaysizmi?'))eduRetryFinish();return;}
  if(eduRetry.done)return;
@@ -2763,7 +2791,7 @@ document.addEventListener('touchend',e=>{
 },{passive:true});
 setInterval(()=>{
  if(cur!=='edu-progress-detail'||eduProgressScreen!=='errors'||eduRetry.done||!eduRetry.items.length)return;
- const clock=document.getElementById('edu-retry-clock');if(clock)clock.textContent='⏱ '+eduRetryClockText();
+ const clock=document.getElementById('edu-retry-clock');if(clock){const label=clock.querySelector('.edu-v69-time');if(label)label.textContent=eduRetryClockText();else clock.textContent=eduRetryClockText();}
  if(eduRetryLeft()===0)eduRetryFinish();
 },1000);
 let eduV66FinishTimer=null;
@@ -2772,7 +2800,7 @@ document.addEventListener('change',e=>{if(e.target.matches('[data-edu-answer]'))
  document.querySelectorAll('.edu-exam-option').forEach(el=>el.classList.toggle('selected',!!el.querySelector('input:checked')));
  const qs=eduQuizState.questions;
  if(qs.length&&qs.every(q=>!!eduQuizState.answers[q.id])&&!eduQuizState.busy&&!eduQuizState.finished){
-  clearTimeout(eduV66FinishTimer);eduV66FinishTimer=setTimeout(()=>{if(qs===eduQuizState.questions&&qs.every(q=>!!eduQuizState.answers[q.id]))eduQuizFinish(true)},1500);
+  clearTimeout(eduV66FinishTimer);eduV66FinishTimer=setTimeout(()=>{if(qs===eduQuizState.questions&&qs.every(q=>!!eduQuizState.answers[q.id]))eduQuizFinish(true)},eduSettingsRead().noAnimation?100:1500);
  }
 }});
 
