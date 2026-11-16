@@ -1542,6 +1542,27 @@ function eduProgressStats(subjectId){
  const wrong=rows.flatMap(r=>r.wrong||[]);
  return {total,correct,wrong,pct:total?Math.round(correct*100/total):0};
 }
+async function eduResetLearningProgress(){
+ if(!window.confirm('Barcha o‘quv natijalaringiz 0 ga qaytariladi. Bu amalni ortga qaytarib bo‘lmaydi. Davom etasizmi?'))return;
+ if(!window.confirm('Oxirgi tasdiq: test natijalari, xatolar, o‘zlashtirish va faoliyat statistikasi tozalansinmi?'))return;
+ // Cloud activity may otherwise reappear on the next synchronization.
+ if(client&&verified&&S.user?.id){
+  try{
+   const {error}=await client.from('edu_activity_daily').delete().eq('user_id',S.user.id);
+   if(error)throw error;
+   const check=await client.from('edu_activity_daily').select('activity_date').eq('user_id',S.user.id).limit(1);
+   if(check.error||check.data?.length){alert('Serverdagi faoliyatni tozalashga ruxsat yo‘q. Natijalar qayta paydo bo‘lmasligi uchun administratorga murojaat qiling. Hozircha qayta boshlash bajarilmadi.');return;}
+  }catch(e){alert('Serverdagi faoliyatni tozalab bo‘lmadi. Qayta boshlash bajarilmadi.');return;}
+ }
+ const keys=[eduProgressKey(),eduRetrySavedKey(),eduActKey()];
+ for(const k of keys){try{localStorage.removeItem(k)}catch(e){}}
+ // Reset only learning metrics; retain user, subscription, language, subject and exam date.
+ S.xp=0;S.tests=0;S.last=null;
+ ['xp','tests','last'].forEach(k=>{try{localStorage.removeItem('edu1_'+k)}catch(e){}});
+ eduActData=[];eduActQueue={};eduQuizState.finished=null;eduQuizState.answers={};eduQuizState.questions=[];
+ eduRetryCancelAdvance();eduRetry.done=false;eduRetry.items=[];eduRetry.answers=[];
+ render();toast('O‘quv natijalari 0 ga qaytarildi');
+}
 function eduExamDateKey(){return 'eduone_exam_date_'+(verified?.id||'guest')}
 function eduExamDate(){try{return localStorage.getItem(eduExamDateKey())||''}catch(e){return ''}}
 function eduExamCountdown(){const v=eduExamDate();if(!v)return 'Imtihon sanasini belgilang';const t=new Date(v+'T00:00:00');if(!Number.isFinite(t.getTime()))return 'Imtihon sanasini belgilang';const today=new Date();today.setHours(0,0,0,0);const days=Math.ceil((t-today)/86400000);return days<0?'Imtihon sanasi o‘tgan':days===0?'Imtihon bugun!':`Imtihongacha ${days} kun qoldi`}
@@ -1668,11 +1689,26 @@ function eduRetryChooseAnswer(value){
  if(eduRetry.done||eduRetry.answers[eduRetry.index]||!['A','B','C','D'].includes(value))return;
  const index=eduRetry.index;
  eduRetry.answers[index]=value;
+ const correct=value===eduRetry.items[index].correct;
  render();
- if(value===eduRetry.items[index].correct){eduPremiumConfetti();
+ if(correct)eduPremiumConfetti();
+ const allAnswered=eduRetry.items.length>0&&eduRetry.items.every((_,j)=>!!eduRetry.answers[j]);
+ if(allAnswered){
+  eduRetryCancelAdvance();
   eduRetry.advanceTimer=setTimeout(()=>{
    eduRetry.advanceTimer=null;
-   if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done&&eduRetry.index===index){const next=eduRetry.items.findIndex((_,j)=>j>index&&!eduRetry.answers[j]);const wrap=next<0?eduRetry.items.findIndex((_,j)=>!eduRetry.answers[j]):next;if(wrap>=0)eduRetryGoTo(wrap);}
+   if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done)eduRetryFinish();
+  },correct?1000:1500);
+  return;
+ }
+ if(correct){
+  eduRetry.advanceTimer=setTimeout(()=>{
+   eduRetry.advanceTimer=null;
+   if(cur==='edu-progress-detail'&&eduProgressScreen==='errors'&&!eduRetry.done&&eduRetry.index===index){
+    const next=eduRetry.items.findIndex((_,j)=>j>index&&!eduRetry.answers[j]);
+    const wrap=next<0?eduRetry.items.findIndex((_,j)=>!eduRetry.answers[j]):next;
+    if(wrap>=0)eduRetryGoTo(wrap);
+   }
   },1000);
  }
 }
@@ -2003,6 +2039,7 @@ V.profil=()=>{const u=S.user||{};const dark=document.documentElement.getAttribut
  <div class="card list" style="gap:4px;padding:8px 16px">
   <button class="row sp" style="padding:10px 0" data-go="tilni"><span class="row" style="display:inline-flex;align-items:center;gap:12px">${flag(S.lang)}<span>Til / Language</span></span><span class="muted sm" style="display:inline-flex;align-items:center;gap:8px"><span>${({uz:'O‘zbekcha',kk:'Qaraqalpaqsha',ru:'Русский',en:'English'})[S.lang]||'O‘zbekcha'}</span> ›</span></button>
   <button class="row sp" style="padding:10px 0" id="edit"><span class="row">${ic('user',20)}Ma'lumotlarni tahrirlash</span>${ic('next',18)}</button>
+  <button class="row sp" style="padding:10px 0;color:#d97706" id="edu-reset-progress"><span class="row">${ic('refresh',20)}Qayta boshlash</span>${ic('next',18)}</button>
   <button class="row sp" style="padding:10px 0;color:var(--bad)" id="out"><span class="row">${ic('logout',20)}Hisobdan chiqish</span></button>
 
   <button id="outy" type="button" hidden style="display:none!important"></button>
@@ -2241,7 +2278,7 @@ function bind(){
   app.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>send(b.dataset.ask));$('#af').onsubmit=e=>{e.preventDefault();send($('#ai-in').value)};$('#clr').onclick=()=>{S.chat=[];render();toast('Suhbat tozalandi')}}
  if(cur==='admin'){adminBind()}
  if(cur==='profil'){$('#avatar-btn').onclick=()=>$('#avatar-file').click();$('#avatar-file').onchange=e=>{const f=e.target.files?.[0];if(f)avatarChoose(f);e.target.value=''};if($('#thm'))$('#thm').onclick=toggleTheme;
-  $('#edit').onclick=()=>{S.draft={...S.user};go('reg')};$('#out').onclick=()=>{const question=({uz:'Haqiqatan ham hisobingizdan chiqmoqchimisiz?',kk:'Rasında da esabıńızdan shıqpaqshısız ba?',ru:'Вы действительно хотите выйти из аккаунта?',en:'Are you sure you want to log out?'})[S.lang]||'Haqiqatan ham hisobingizdan chiqmoqchimisiz?';if(window.confirm(question))$('#outy').click()};
+  $('#edit').onclick=()=>{S.draft={...S.user};go('reg')};$('#edu-reset-progress').onclick=eduResetLearningProgress;$('#out').onclick=()=>{const question=({uz:'Haqiqatan ham hisobingizdan chiqmoqchimisiz?',kk:'Rasında da esabıńızdan shıqpaqshısız ba?',ru:'Вы действительно хотите выйти из аккаунта?',en:'Are you sure you want to log out?'})[S.lang]||'Haqiqatan ham hisobingizdan chiqmoqchimisiz?';if(window.confirm(question))$('#outy').click()};
   $('#outy').onclick=async()=>{try{const {error}=await client.auth.signOut();if(error)throw error}catch{toast('Chiqish amalga oshmadi. Qayta urining.');return}++eduAuthAttempt;verified=null;number='';delete S.draft;['user','last','xp','tests'].forEach(k=>{try{localStorage.removeItem('edu1_'+k)}catch(e){}});S.user=null;S.last=null;S.xp=0;S.tests=0;S.chat=[];stack=[];cur='splash';render()}}
 }
 
@@ -2659,6 +2696,7 @@ function eduQuizView(x){
  </section>`;
 }
 async function eduQuizLoad(){
+ clearTimeout(eduV66FinishTimer);eduV66FinishTimer=null;
  if(!client||!verified){toast('Avval hisobingizga kiring');return;}
  try{eduQuizState.error='';const {data,error}=await client.rpc('eduone_get_quiz_questions',{p_quiz_id:eduQuizState.id});if(error)throw error;eduQuizState.questions=data||[];eduQuizState.answers={};eduQuizState.current=0;eduQuizState.finished=null;render();}
  catch(e){eduQuizState.error='Savollarni yuklab bo‘lmadi: '+e.message;render();}
