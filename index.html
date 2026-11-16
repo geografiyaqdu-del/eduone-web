@@ -1088,6 +1088,13 @@ html,body,#app{max-width:100%;margin-left:0!important;margin-right:0!important}b
 }
 #edu-v69-overlay .edu-v69-handle{margin:5px auto 10px!important;}
 </style>
+<style id="edu-v73-settings-scroll-fix">
+/* No visible scrollbar; no touch scroll when everything fits. */
+#edu-v69-overlay .edu-v70-scroll{scrollbar-width:none!important;-ms-overflow-style:none!important;overscroll-behavior:contain!important;}
+#edu-v69-overlay .edu-v70-scroll::-webkit-scrollbar{display:none!important;width:0!important;height:0!important;}
+#edu-v69-overlay .edu-v70-scroll.edu-v73-fits{overflow-y:hidden!important;touch-action:none!important;}
+#edu-v69-overlay .edu-v70-scroll:not(.edu-v73-fits){overflow-y:auto!important;touch-action:pan-y!important;}
+</style>
 </head>
 <body>
 
@@ -1652,7 +1659,17 @@ function eduSettingsPaint(){const el=document.getElementById('edu-v69-overlay');
  <button class="edu-v69-setting" type="button" data-edu-v69-language><span class="edu-v69-setting-icon" data-tone="blue">◎</span><span>Ilova tili</span><b>${esc(({uz:'O‘zbekcha',kk:'Qaraqalpaqsha',ru:'Русский',en:'English'})[S.lang]||S.lang||'O‘zbekcha')}</b></button>
  ${row(toggles[5])}<button class="edu-v69-setting" type="button" data-edu-v69-report><span class="edu-v69-setting-icon" data-tone="red">⚑</span><span>Xatolik haqida xabar berish</span><b>›</b></button></div>
  <button type="button" class="edu-v69-save" data-edu-v69-save>Saqlash</button></div>`;
+ requestAnimationFrame(()=>eduV73FitSettings());
 }
+
+function eduV73FitSettings(){
+ const area=document.querySelector('#edu-v69-overlay .edu-v70-scroll');if(!area)return;
+ area.classList.remove('edu-v73-fits');
+ const fits=area.scrollHeight<=area.clientHeight+2;
+ area.classList.toggle('edu-v73-fits',fits);
+ if(fits)area.scrollTop=0;
+}
+window.addEventListener('resize',eduV73FitSettings);
 // Close by dragging the sheet handle downward; scrolling inside the settings remains independent.
 let eduV70Drag=null;
 document.addEventListener('pointerdown',e=>{const h=e.target.closest('#edu-v69-overlay .edu-v69-handle');if(!h)return;eduV70Drag={id:e.pointerId,y:e.clientY};h.setPointerCapture?.(e.pointerId);});
@@ -1858,7 +1875,7 @@ V['edu-progress-detail']=()=>{
  <span class="edu-retry-clock" id="edu-retry-clock"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V3"/></svg> <span class="edu-v69-time">${eduRetryClockText()}</span></span>
  <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash">⚑</button></div></div>
  <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduSettingsRead().showCorrect?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):'answered'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
- <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(eduSettingsRead().showCorrect?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):''):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
+ <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(eduRetry.answers[i]===k?(k===q.correct?'correct':'incorrect'):(eduSettingsRead().showCorrect&&k===q.correct?'correct':'')):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
  </div>`;
 };
 V.home=()=>{
