@@ -11,7 +11,7 @@
 <meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne — White Premium</title>
+<title>EduOne V80 — White Premium</title>
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
@@ -1166,6 +1166,174 @@ html,body,body:has(.app),.app,.scr,.edu-catalog,.edu-my-subject,.edu-my-language
 /* Keep existing green/red answer selectors untouched. */
 @media(max-width:480px){.app{width:100%}.scr{padding-left:16px;padding-right:16px}}
 </style>
+
+<style id="eduone-v80-white-premium-verified-override">
+/* V80 — unified white/light canvas. Legacy V21/V48 gradient rules had higher
+   specificity than the V79 global .scr rule; override the actual root views. */
+:root{color-scheme:light;--bg:#fff!important;--card:#fff!important;--ink:#111C3A!important;--muted:#5E6B84!important;--line:#E3E9F4!important;--soft:#EEF3FF!important}
+html,body,body:has(.edu-catalog),body:has(.edu-catalog) #app,
+html:has(.edu-catalog),#app,.app,.scr,.scr.edu-my-subject,
+body:has(.edu-catalog) .edu-catalog,.scr.edu-home-v54,
+.scr.edu-login-screen,.scr.edu-home-content,.scr.edu-my-language,
+.scr.edu-retry-screen,.scr.edu-retry-game,.scr.edu-retry-shell {
+ background:#fff!important;background-image:none!important;
+ color:#111C3A!important;
+ border-color:transparent;
+}
+html,body,#app{max-width:100%;overflow-x:clip}
+.app:not(:has(.edu-catalog)){max-width:480px!important;margin-inline:auto}
+.scr.edu-my-subject{background:#fff!important;color:#111C3A!important;
+ padding:15px 16px 105px!important;min-height:calc(100dvh - 68px)!important}
+.edu-my-subject .edu-my-heading h3,
+.scr.edu-my-subject .edu-my-heading h3{color:#152444!important;text-shadow:none!important;
+ font-size:19px!important;letter-spacing:-.3px}
+.edu-my-subject .edu-my-heading small{background:#EDF3FF!important;color:#2563EB!important;
+ border:1px solid #DCE6FF!important}
+.edu-my-subject .edu-my-group{margin:0 0 23px!important}
+.edu-my-subject .edu-my-hero{
+ background:linear-gradient(115deg,#176DEF,#4B54ED 57%,#854AF3)!important;
+ box-shadow:0 12px 30px rgba(39,60,170,.20)!important;
+ border:1px solid rgba(255,255,255,.35)!important;
+ margin:0 0 22px!important}
+.edu-my-subject .edu-my-hero h2,.edu-my-subject .edu-my-hero .edu-v69-subject-heading{color:#fff!important}
+.edu-my-subject .edu-my-grid{gap:11px!important}
+.edu-my-subject .edu-my-tile{background:linear-gradient(150deg,#fff,#F5F8FF)!important;
+ border:1px solid #E3EAF6!important;box-shadow:0 9px 21px rgba(31,55,111,.09)!important;
+ color:#142545!important}
+.edu-my-subject .edu-my-name{color:#17284B!important;font-size:clamp(15px,3.8vw,17px)!important;
+ font-weight:800!important;line-height:1.26!important}
+.edu-my-subject .edu-my-globe{box-shadow:0 5px 14px rgba(20,42,110,.14)!important}
+/* Catalog/pickers had a full-page dark blue gradient via :has and #app. */
+body:has(.edu-catalog) .edu-catalog{background:#fff!important;background-image:none!important;
+ color:#142243!important;border:0!important;box-shadow:none!important}
+body:has(.edu-catalog) #app{background:#fff!important;background-image:none!important}
+.edu-catalog .edu-section,.edu-catalog .edu-section strong,.edu-catalog h2,
+.edu-catalog .edu-subtitle{color:#142443!important;text-shadow:none!important}
+.edu-catalog .edu-section strong{font-weight:800!important}
+.edu-catalog .edu-banner{background:linear-gradient(115deg,#2674EF,#6F47EB)!important;color:#fff!important}
+.edu-catalog .edu-banner strong,.edu-catalog .edu-banner h2,.edu-catalog .edu-banner h3{color:#fff!important}
+/* Consistent typographic contrast on white, including language selection and login. */
+.scr:not(.edu-my-subject)>.top h2,.scr>.sec h2,.scr>.sec h3,
+.scr .sec h2,.scr .sec h3,.scr>.row h2{color:#142243!important;text-shadow:none!important}
+.scr:has([data-edu-language-heading]) h1,
+.scr:has([data-edu-language-heading]) [data-edu-language-heading]{color:#142243!important;
+ -webkit-text-fill-color:#142243!important;opacity:1!important;font-weight:850!important}
+.scr:has([data-edu-language-heading]) p.muted{color:#5A6986!important;opacity:1!important;
+ -webkit-text-fill-color:#5A6986!important}
+.scr:has([data-edu-language-heading]) .lang{background:#fff!important;color:#152442!important}
+.scr:has([data-edu-language-heading]) .lang.on{background:linear-gradient(120deg,#F2F5FF,#E7EEFF)!important;
+ color:#17316A!important;border-color:#8DA9FF!important}
+.edu-login-screen .edu-login-subtitle,.edu-login-screen .edu-login-footnote{
+ color:#505D7B!important;-webkit-text-fill-color:#505D7B!important;opacity:1!important;
+ font-weight:600!important;text-shadow:none!important}
+.edu-login-screen .edu-login-subtitle{font-size:14px!important}
+.edu-login-screen .edu-login-footnote{font-size:12.5px!important}
+.edu-login-screen .edu-login-card{background:#fff!important;color:#162442!important;
+ border:1px solid #E4EAF5!important;box-shadow:0 10px 30px rgba(28,54,120,.09)!important}
+.edu-login-screen .edu-login-card h2{color:#182347!important}
+/* White pages: accessible buttons, topbar, content cards. */
+.scr .top .ib,.scr .top h2{color:#142443!important}
+.scr .muted{color:#60708C!important}
+.scr .li,.scr .card,.scr .stat,.scr .lang{color:#172542}
+.scr .hero{background:linear-gradient(125deg,#256BE9,#6D49E7)!important;color:#fff!important}
+.scr .hero h1,.scr .hero h2,.scr .hero h3,.scr .hero p,
+.scr .edu-my-hero h2,.scr .edu-my-hero p{color:#fff!important}
+.edu-my-language-card h3{color:#152347!important}
+/* Home screen: compact, balanced spacing without changing its content/actions. */
+.scr.edu-home-v54{gap:9px!important;padding:12px 15px 96px!important}
+.edu-home-v54 .edu-home-top{padding:3px 0 9px!important;gap:7px!important}
+.edu-home-v54 .edu-home-greeting{margin:0!important}
+.edu-home-v54 .edu-home-greeting h2{color:#111C3A!important;font-size:20px!important;line-height:1.25!important}
+.edu-home-v54 .edu-home-greeting .muted{color:#62708A!important;line-height:1.3!important}
+.edu-home-v54 .edu-home-top .ib[aria-label="Bildirishnomalar"]{
+ color:#1D4FE1!important;background:#EDF3FF!important;border:1px solid #DCE6FB!important;
+ box-shadow:0 2px 7px rgba(31,76,155,.08)!important;opacity:1!important;}
+.edu-home-v54 .edu-home-top .ib[aria-label="Bildirishnomalar"] svg{
+ color:#1D4FE1!important;stroke:#1D4FE1!important;opacity:1!important}
+.edu-home-switcher{gap:9px!important;margin:0!important}
+.edu-home-mode{min-height:65px!important;padding:9px 10px!important;
+ border-radius:18px!important;box-shadow:0 6px 16px rgba(32,60,126,.065)!important}
+.edu-home-mode.on{background:linear-gradient(125deg,#fff,#EFF4FF)!important;
+ border:1.5px solid #426CF2!important;box-shadow:0 6px 18px rgba(49,86,214,.10)!important}
+.edu-home-mode-symbol{width:39px!important;height:39px!important;flex:0 0 39px!important;
+ background:#EAF1FF!important;color:#2563EB!important;border-radius:13px!important}
+.edu-home-mode-copy{gap:3px!important}
+.edu-home-mode-copy small{font-size:11.5px!important;color:#64718C!important;opacity:1!important}
+.edu-home-mode-copy strong{font-size:clamp(13px,3.6vw,15px)!important;color:#172547!important}
+/* Favorite circular progress design; true percentage and totals come from V79 JS. */
+.edu-v66-home-progress.edu-v80-home-progress{margin:4px 0 5px!important;gap:9px!important}
+.edu-v66-home-progress .edu-v67-master-card.edu-v80-master-card{
+ gap:11px!important;padding:14px 15px 12px!important;border:1px solid #E8EDF6!important;
+ box-shadow:0 8px 22px rgba(29,52,115,.065)!important;border-radius:21px!important}
+.edu-v80-master-card .edu-v67-exam-line{gap:7px!important;min-height:30px}
+.edu-v66-home-progress .edu-v67-exam-label{font-size:14px!important;gap:5px!important;
+ color:#142443!important}
+.edu-v66-home-progress .edu-v67-edit-date{color:#667999!important;font-size:18px!important;
+ padding:2px 4px!important;line-height:1!important}
+.edu-v66-home-progress .edu-v67-days{color:#B8700B!important;font-size:12px!important;
+ border-radius:100px;padding:6px 9px;background:#FFF5E9;max-width:54%;white-space:nowrap}
+.edu-v80-progress-summary{display:grid;grid-template-columns:62px minmax(0,1fr) auto;
+ align-items:center;gap:10px;min-height:65px}
+.edu-v80-progress-ring{width:60px;height:60px;display:grid;place-items:center;border-radius:50%;
+ background:conic-gradient(#3469EC 0 var(--edu-v80-pct),#E3EAF8 var(--edu-v80-pct) 100%);
+ box-shadow:0 3px 8px rgba(44,87,177,.06);position:relative}
+.edu-v80-progress-ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#fff}
+.edu-v80-progress-ring strong{position:relative;z-index:1;font-size:18px;color:#2563EB;font-weight:850}
+.edu-v80-progress-title{display:flex;flex-direction:column;gap:4px;min-width:0}
+.edu-v80-progress-title b{font-size:clamp(12px,3.4vw,15px);color:#172547;line-height:1.2}
+.edu-v80-progress-title small{font-size:10.5px;color:#74819B;line-height:1.25}
+.edu-v80-progress-summary .edu-v67-counts{display:flex!important;gap:7px!important;
+ align-items:center!important;font-size:clamp(12px,3.3vw,15px)!important;white-space:nowrap}
+.edu-v80-master-card .edu-v67-progress{height:8px!important;margin:1px 1px 0;background:#E5EAF4!important}
+.edu-v80-master-card .edu-v67-progress span{background:linear-gradient(90deg,#246DF3,#6747E9)!important}
+.edu-v66-home-actions.edu-v80-home-actions{gap:9px!important}
+.edu-v80-home-actions button{min-height:78px!important;padding:10px 10px!important;
+ border:0!important;display:flex!important;flex-direction:row!important;align-items:center!important;
+ justify-content:flex-start!important;gap:9px!important;border-radius:19px!important;
+ box-shadow:0 9px 19px rgba(51,63,142,.12)!important;color:#fff!important}
+.edu-v80-home-actions .edu-v66-action-icon{font-size:29px!important;flex:0 0 35px;line-height:1!important}
+.edu-v80-home-actions .edu-v80-action-copy{display:flex;flex-direction:column;align-items:flex-start;
+ min-width:0;gap:4px;text-align:left;flex:1}
+.edu-v80-home-actions .edu-v80-action-copy strong{font-size:clamp(12px,3.15vw,15px)!important;
+ font-weight:850!important;text-align:left!important;color:#fff!important;line-height:1.18!important}
+.edu-v80-home-actions .edu-v80-action-copy small{font-size:clamp(10px,2.75vw,12px)!important;
+ color:#fff!important;opacity:.96;line-height:1.22!important;text-align:left!important}
+.edu-v80-action-arrow{font-size:23px;line-height:1;opacity:.94;font-weight:300;flex:0 0 9px}
+.edu-home-v54-section{margin:2px 0 0!important}
+.edu-home-v54-section h3{font-size:17px!important;color:#142443!important}
+.edu-home-quick-grid{gap:9px!important}
+.edu-home-quick{min-height:92px!important;padding:11px!important;gap:5px!important;
+ border-radius:18px!important;box-shadow:0 7px 18px rgba(31,52,110,.065)!important}
+.edu-home-quick-icon{width:33px;height:33px;border-radius:11px}
+.edu-home-quick-icon svg{width:21px;height:21px}
+.edu-home-quick strong{font-size:13px!important;color:#182648!important}
+.edu-home-quick small{font-size:10.5px!important;color:#697891!important}
+.edu-home-v54-summary{margin:3px 0!important;padding:14px!important}
+/* Bottom nav stays white and readable at all times. */
+.tabs{background:#fff!important;color:#52627D!important;border-top:1px solid #E8EDF6!important;
+ box-shadow:0 -4px 14px rgba(17,43,106,.04)!important}
+.tabs button{color:#6B7892!important}
+.tabs button.on,.tabs button.active{color:#2865EC!important}
+@media(max-width:390px){
+ .scr.edu-home-v54{padding-left:12px!important;padding-right:12px!important;gap:8px!important}
+ .edu-v80-progress-summary{grid-template-columns:52px minmax(0,1fr) auto;gap:7px}
+ .edu-v80-progress-ring{width:51px;height:51px}
+ .edu-v80-progress-ring:before{inset:7px}
+ .edu-v80-progress-ring strong{font-size:15px}
+ .edu-v80-progress-summary .edu-v67-counts{font-size:12px!important;gap:5px!important}
+ .edu-v80-master-card .edu-v67-exam-label{font-size:12px!important}
+ .edu-v80-master-card .edu-v67-days{font-size:11px!important}
+ .edu-v80-home-actions button{padding:9px 8px!important;gap:6px!important;min-height:76px!important}
+ .edu-v80-home-actions .edu-v66-action-icon{flex-basis:27px;font-size:25px!important}
+ .edu-v80-action-arrow{display:none}
+}
+@media(max-width:340px){
+ .edu-v80-progress-title small{font-size:9px}
+ .edu-v80-progress-summary .edu-v67-counts{font-size:11px!important;gap:3px!important}
+ .edu-v80-master-card .edu-v67-days{max-width:48%;font-size:10px!important}
+}
+</style>
+
 </head>
 <body>
 
@@ -1722,20 +1890,31 @@ function eduExamCountdownLocalized(){
  if(language==='kk')return `${days} kún qaldı`;
  return `${days} kun qoldi`;
 }
+function eduV80Copy(uz,ru,en,kk){
+ const language=(typeof S!=="undefined" && S.lang)||"uz";
+ return language==="ru"?ru:language==="en"?en:language==="kk"?kk:uz;
+}
 function eduHomeProgressCards(isFan,fan,lang){
  const id=isFan?(fan?.[0]||''):(lang?.[0]||'');
  const sid=id.startsWith('db:')?id.slice(3):id;
  const stats=eduProgressStats((isFan?'fan:':'til:')+sid);
  const wrong=Math.max(0,stats.total-stats.correct);
- return `<section class="edu-v66-home-progress" aria-label="O‘quv natijalari">
-  <div class="edu-v67-master-card">
-   <div class="edu-v67-exam-line"><span class="edu-v67-exam-label">📅 <b>Imtihongacha</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
-   <div class="edu-v67-score-line"><strong class="edu-v67-percent">${stats.pct}%</strong><span class="edu-v67-counts"><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></span></div>
-   <div class="edu-v67-progress"><span style="width:${Math.min(100,Math.max(0,stats.pct))}%"></span></div>
+ const pct=Math.min(100,Math.max(0,Number(stats.pct)||0));
+ const masteryLabel=eduV80Copy('O‘zlashtirish','Прогресс','Progress','Ózlestiriw');
+ const totalLabel=eduV80Copy(`Jami: ${stats.total} savol`,`Всего: ${stats.total} вопросов`,`Total: ${stats.total} questions`,`Jámi: ${stats.total} soraw`);
+ return `<section class="edu-v66-home-progress edu-v80-home-progress" aria-label="O‘quv natijalari">
+  <div class="edu-v67-master-card edu-v80-master-card">
+   <div class="edu-v67-exam-line"><span class="edu-v67-exam-label">📅 <b>${eduV80Copy('Imtihongacha','До экзамена','Until exam','Imtixanǵa shekem')}</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
+   <div class="edu-v80-progress-summary">
+    <div class="edu-v80-progress-ring" style="--edu-v80-pct:${pct}%" aria-label="${masteryLabel} ${pct}%"><strong>${pct}%</strong></div>
+    <div class="edu-v80-progress-title"><b>${masteryLabel}</b><small data-i18n-ignore>${totalLabel}</small></div>
+    <div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div>
+   </div>
+   <div class="edu-v67-progress"><span style="width:${pct}%"></span></div>
   </div>
-  <div class="edu-v66-home-actions">
-   <button type="button" class="edu-v66-octagon" data-edu-octagon><span class="edu-v66-action-icon">⚔️</span><strong>Oktagon</strong><small>Birga bir jang</small></button>
-   <button type="button" class="edu-v66-errors" data-edu-progress="errors"><span class="edu-v66-action-icon">🎯</span><strong>Xatolarni tuzatish</strong><small>${stats.wrong.length} ta xato savol</small></button>
+  <div class="edu-v66-home-actions edu-v80-home-actions">
+   <button type="button" class="edu-v66-octagon" data-edu-octagon><span class="edu-v66-action-icon">⚔️</span><span class="edu-v80-action-copy"><strong>Oktagon</strong><small>${eduV80Copy('Birga bir jang','Бой один на один','One-on-one battle','Birge-bir ayqas')}</small></span><span class="edu-v80-action-arrow" aria-hidden="true">›</span></button>
+   <button type="button" class="edu-v66-errors" data-edu-progress="errors"><span class="edu-v66-action-icon">🎯</span><span class="edu-v80-action-copy"><strong>${eduV80Copy('Xatolarni tuzatish','Работа над ошибками','Correct mistakes','Qátelerdi dúzetiw')}</strong><small data-i18n-ignore>${eduV80Copy(`${stats.wrong.length} ta xato savol`,`${stats.wrong.length} вопросов с ошибками`,`${stats.wrong.length} incorrect questions`,`${stats.wrong.length} qáte soraw`)}</small></span><span class="edu-v80-action-arrow" aria-hidden="true">›</span></button>
   </div>
  </section>`;
 }
