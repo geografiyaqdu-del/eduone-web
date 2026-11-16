@@ -294,6 +294,7 @@ svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke
 .edu-v67-cal-grid span{font-size:12px;color:#8290a2;padding:9px 0}.edu-v67-cal-grid button{border:0;border-radius:11px;background:#f4f6fa;min-height:39px;color:#24354a;font-size:14px}
 .edu-v67-cal-grid button:disabled{opacity:.25}.edu-v67-cal-grid button[aria-pressed=true]{background:#2867ed;color:#fff;font-weight:800}
 .edu-v67-cal-actions{display:flex;gap:10px;margin-top:20px}.edu-v67-cal-actions button{flex:1;border:0;border-radius:13px;padding:13px;font-weight:700;background:#edf1f7;color:#35435b}.edu-v67-cal-actions button:last-child{background:#2867ed;color:white}
+.edu-retry-dots .answered{background:#eef2ff!important;color:#345bd4!important;border-color:#8da8ff!important;}
 </style>
 <style id="eduone-admin-style">
 .ad-hero{background:linear-gradient(125deg,#172b65,#5144ba 65%,#7b55d7);color:#fff;padding:23px;border-radius:24px;box-shadow:0 16px 36px #283f9140;position:relative;overflow:hidden}.ad-hero:after{content:"✦";position:absolute;right:17px;top:0;font-size:100px;opacity:.12}.ad-hero h2{color:#fff;font-size:25px;margin:8px 0}.ad-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.ad-kpi{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 4px 14px #00000009}.ad-kpi b{font-size:25px;display:block;margin-top:6px}.ad-kpi small{color:var(--muted)}.ad-tabs{display:flex;overflow-x:auto;gap:8px;padding:5px 0 10px;scrollbar-width:none}.ad-tabs button{white-space:nowrap;padding:11px 14px;border-radius:13px;background:var(--card);color:var(--ink);border:1px solid var(--line);font-weight:700}.ad-tabs button.active{background:#5144ba;color:#fff;border-color:#5144ba}.ad-form{display:grid;gap:12px}.ad-form label{font-size:12px;font-weight:700;display:grid;gap:5px;color:var(--ink)}.ad-form input,.ad-form select,.ad-form textarea,.ad-search{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:12px;font:inherit;box-sizing:border-box}.ad-form textarea{min-height:90px}.ad-entry{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.ad-entry:last-child{border:0}.ad-entry-main{flex:1;min-width:0}.ad-entry-main b{display:block;overflow-wrap:anywhere}.ad-entry-main small{display:block;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}.ad-mini{border:1px solid var(--line);border-radius:9px;background:var(--soft);color:var(--ink);padding:8px;font-size:12px;font-weight:700}.ad-danger{color:#d33a4d!important}.ad-note{border-left:3px solid #6d5ce6;background:var(--soft);border-radius:10px;padding:12px;font-size:13px;line-height:1.6}.ad-actions{display:flex;gap:8px;flex-wrap:wrap}.ad-empty{text-align:center;color:var(--muted);padding:26px 10px}.ad-badge{font-size:11px;border-radius:30px;padding:5px 9px;background:#dfeee9;color:#12654b;font-weight:800}
@@ -1053,7 +1054,41 @@ html,body,#app{max-width:100%;margin-left:0!important;margin-right:0!important}b
 #edu-v69-overlay .edu-v69-setting-icon[data-tone=green]{background:#24bf54}#edu-v69-overlay .edu-v69-setting-icon[data-tone=red]{background:#f04f60}#edu-v69-overlay .edu-v69-setting-icon[data-tone=cyan]{background:#20b5e9}#edu-v69-overlay .edu-v69-setting-icon[data-tone=purple]{background:#ba6aee}#edu-v69-overlay .edu-v69-setting-icon[data-tone=yellow]{background:#efb915}#edu-v69-overlay .edu-v69-setting-icon[data-tone=blue]{background:#2986e9}
 .edu-v69-style-soft{font-family:'Trebuchet MS',system-ui,sans-serif!important;letter-spacing:.12px}.edu-v69-style-normal{font-family:Arial,Helvetica,sans-serif!important;letter-spacing:normal}.edu-v69-style-bold{font-family:system-ui,sans-serif!important;font-weight:800!important}.edu-v69-style-bold :is(h2,h3,.edu-retry-option,.edu-exam-option){font-weight:800!important}
 .edu-exam .edu-v69-font-small :is(h3,.edu-exam-option){font-size:15px!important}.edu-exam .edu-v69-font-medium :is(h3,.edu-exam-option){font-size:18px!important}.edu-exam .edu-v69-font-large :is(h3,.edu-exam-option){font-size:21px!important}
-</style></head>
+</style><style id="edu-v72-spacing-fix">
+/* Content-sized bottom sheet: remove empty flex spacer above Save. */
+#edu-v69-overlay .edu-v69-sheet{
+ height:auto!important;
+ max-height:calc(100dvh - env(safe-area-inset-top) - 8px)!important;
+ padding:10px 18px max(14px,env(safe-area-inset-bottom))!important;
+ display:flex!important;flex-direction:column!important;
+ overflow:hidden!important;
+}
+#edu-v69-overlay .edu-v70-scroll{
+ flex:0 1 auto!important;min-height:0!important;
+ overflow-y:auto!important;
+}
+#edu-v69-overlay .edu-v69-setting{
+ min-height:clamp(57px,7.1dvh,70px)!important;
+ padding:10px 2px!important;
+ gap:12px!important;
+ font-size:clamp(14px,3.7vw,17px)!important;
+ line-height:1.25!important;
+}
+#edu-v69-overlay .edu-v69-setting-icon{
+ width:clamp(36px,5dvh,44px)!important;
+ height:clamp(36px,5dvh,44px)!important;
+ font-size:20px!important;
+}
+#edu-v69-overlay .edu-v69-setting select{font-size:clamp(13px,3.4vw,16px)!important;}
+#edu-v69-overlay .edu-v69-save{
+ margin:10px 0 2px!important;
+ padding:15px!important;
+ font-size:18px!important;
+ flex-shrink:0!important;
+}
+#edu-v69-overlay .edu-v69-handle{margin:5px auto 10px!important;}
+</style>
+</head>
 <body>
 
 <div class="app" id="app"></div>
@@ -1822,8 +1857,8 @@ V['edu-progress-detail']=()=>{
  <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'🔖':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4-6 4z"/></svg>'}</button>
  <span class="edu-retry-clock" id="edu-retry-clock"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V3"/></svg> <span class="edu-v69-time">${eduRetryClockText()}</span></span>
  <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash">⚑</button></div></div>
- <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
- <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):(eduSettingsRead().showCorrect&&k===q.correct?'correct':'')}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
+ <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduSettingsRead().showCorrect?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):'answered'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
+ <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2>${i+1}. ${esc(q.question)}</h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(eduSettingsRead().showCorrect?(k===q.correct?'correct':eduRetry.answers[i]===k?'incorrect':''):''):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span>${esc(q.options[k])}</span></label>`).join('')}</div></div>
  </div>`;
 };
 V.home=()=>{
