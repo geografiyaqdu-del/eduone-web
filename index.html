@@ -1676,10 +1676,11 @@ let eduV70Drag=null;
 document.addEventListener('pointerdown',e=>{const h=e.target.closest('#edu-v69-overlay .edu-v69-handle');if(!h)return;eduV70Drag={id:e.pointerId,y:e.clientY};h.setPointerCapture?.(e.pointerId);});
 document.addEventListener('pointerup',e=>{if(!eduV70Drag||e.pointerId!==eduV70Drag.id)return;const distance=e.clientY-eduV70Drag.y;eduV70Drag=null;if(distance>65)eduSettingsClose();});
 document.addEventListener('pointercancel',()=>{eduV70Drag=null});
+const EDU_KK_FLAG_V75=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 150" role="img" aria-label="Qaraqalpaqstan bayraǵı" style="width:34px;height:23px;display:block;border-radius:3px;box-shadow:0 1px 3px #0002"><rect width="300" height="150" fill="#009A5A"/><rect width="300" height="60" fill="#008ACD"/><rect y="65" width="300" height="20" fill="#fff"/><rect y="70" width="300" height="10" fill="#CE2335"/><rect y="85" width="300" height="45" fill="#F7D417"/><rect y="130" width="300" height="10" fill="#CE2335"/><rect y="140" width="300" height="10" fill="#fff"/><circle cx="53" cy="30" r="18" fill="white"/><circle cx="61" cy="26" r="17" fill="#008ACD"/><g fill="white"><circle cx="100" cy="15" r="3"/><circle cx="118" cy="15" r="3"/><circle cx="136" cy="15" r="3"/><circle cx="109" cy="29" r="3"/><circle cx="127" cy="29" r="3"/></g></svg>`;
 function eduV70LanguageOpen(){
  const old=document.getElementById('edu-v70-language');if(old)old.remove();
  const el=document.createElement('div');el.id='edu-v70-language';el.style.cssText='position:fixed;inset:0;z-index:2147482001;background:#0b173b99;display:flex;align-items:flex-end';
- el.innerHTML=`<div style="background:white;width:100%;border-radius:25px 25px 0 0;padding:20px;color:#1d2b46"><h3 style="text-align:center;margin:0 0 15px">Ilova tilini tanlang</h3>${[['uz','O‘zbekcha','🇺🇿'],['kk','Qaraqalpaqsha','🇺🇿'],['ru','Русский','🇷🇺'],['en','English','🇬🇧']].map(([v,n,f])=>`<button type="button" data-edu-v70-lang="${v}" style="display:block;width:100%;padding:13px;display:flex;align-items:center;justify-content:space-between;text-align:left;border:1px solid #dce5f3;border-radius:12px;margin-bottom:7px;background:${S.lang===v?'#e7edff':'white'};color:#1d2b46"><span>${n}${S.lang===v?' ✓':''}</span><span style="font-size:27px;line-height:1">${f}</span></button>`).join('')}<button type="button" data-edu-v70-dismiss style="padding:12px;width:100%;border:0;background:#eef2fa;border-radius:12px">Bekor qilish</button></div>`;
+ el.innerHTML=`<div style="background:white;width:100%;border-radius:25px 25px 0 0;padding:20px;color:#1d2b46"><h3 style="text-align:center;margin:0 0 15px">${eduTranslateText("Ilova tilini tanlang",S.lang)}</h3>${[['uz','O‘zbekcha','🇺🇿'],['kk','Qaraqalpaqsha',EDU_KK_FLAG_V75],['ru','Русский','🇷🇺'],['en','English','🇬🇧']].map(([v,n,f])=>`<button type="button" data-edu-v70-lang="${v}" style="display:block;width:100%;padding:13px;display:flex;align-items:center;justify-content:space-between;text-align:left;border:1px solid #dce5f3;border-radius:12px;margin-bottom:7px;background:${S.lang===v?'#e7edff':'white'};color:#1d2b46"><span>${n}${S.lang===v?' ✓':''}</span><span style="font-size:27px;line-height:1">${f}</span></button>`).join('')}<button type="button" data-edu-v70-dismiss style="padding:12px;width:100%;border:0;background:#eef2fa;border-radius:12px">${eduTranslateText("Bekor qilish",S.lang)}</button></div>`;
  document.body.appendChild(el);
 }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-edu-v70-lang],[data-edu-v70-dismiss]');if(!b)return;if(b.hasAttribute('data-edu-v70-lang')){S.lang=b.dataset.eduV70Lang;eduCloudI18nEpoch++;store.set('lang',S.lang);document.getElementById('edu-v70-language')?.remove();render();if(['ru','en'].includes(S.lang)&&(!verified||!client))toast('Tarjima uchun hisobga kirish kerak');}else document.getElementById('edu-v70-language')?.remove();});
@@ -2425,6 +2426,31 @@ const KK_KEYS=Object.keys(KK_UI).sort((a,b)=>b.length-a.length);
 const EN_KEYS=Object.keys(EN_UI).sort((a,b)=>b.length-a.length);
 const RU_KEYS=Object.keys(RU_UI).sort((a,b)=>b.length-a.length);
 /* Apply translations to static EduOne interface strings without modifying saved data. */
+/* V75: complete labels for recently added UI; fixed translations work offline. */
+Object.assign(RU_UI,{
+ 'Qayta boshlash':'Начать заново','Birga bir jang':'Бой один на один','Xatolarni tuzatish':'Работа над ошибками',
+ 'ta xato savol':'вопросов с ошибками','ta material':'материалов','Oktagon':'Октагон',
+ 'Imtihongacha':'До экзамена','Fan bo‘yicha o‘rganish':'Изучение предмета',
+ 'Xatolik haqida xabar berish':'Сообщить об ошибке','Ilova tilini tanlang':'Выберите язык приложения',
+ 'Bekor qilish':'Отмена','Savol bering':'Задать вопрос','Tanlash kerak':'Нужно выбрать','Tez orada':'Скоро',
+ 'ta xato':'ошибок','ta savol':'вопросов','Qayta boshlash bajarilmadi.':'Не удалось начать заново.'
+});
+Object.assign(EN_UI,{
+ 'Qayta boshlash':'Start over','Birga bir jang':'One-on-one battle','Xatolarni tuzatish':'Correct mistakes',
+ 'ta xato savol':'incorrect questions','ta material':'materials','Oktagon':'Octagon',
+ 'Imtihongacha':'Until exam','Fan bo‘yicha o‘rganish':'Study by subject',
+ 'Xatolik haqida xabar berish':'Report an error','Ilova tilini tanlang':'Choose app language',
+ 'Bekor qilish':'Cancel','Savol bering':'Ask a question','Tanlash kerak':'Choose first','Tez orada':'Coming soon',
+ 'ta xato':'mistakes','ta savol':'questions'
+});
+Object.assign(KK_UI,{
+ 'Qayta boshlash':'Qaytadan baslaw','Birga bir jang':'Birge-bir ayqas','Xatolarni tuzatish':'Qátelerdi dúzetiw',
+ 'ta xato savol':'qáte soraw','ta material':'material','Oktagon':'Oktagon',
+ 'Imtihongacha':'Imtixanǵa shekem','Fan bo‘yicha o‘rganish':'Pán boyınsha úyreniw',
+ 'Xatolik haqida xabar berish':'Qáte haqqında xabar beriw','Ilova tilini tanlang':'Qosımsha tilin tańlań',
+ 'Bekor qilish':'Biykarlaw','Savol bering':'Soraw beriń','Tanlash kerak':'Tańlaw kerek','Tez orada':'Jaqında',
+ 'ta xato':'qáte','ta savol':'soraw'
+});
 const EDU_I18N_CACHE={};
 // Curated Russian UI labels take priority over machine translations.
 Object.assign(RU_UI, {
@@ -2500,6 +2526,12 @@ function eduTranslateText(input,lang){
  const pre=input.match(/^\s*/)?.[0]||'';
  const post=input.match(/\s*$/)?.[0]||'';
  const trimmed=input.trim();
+ // V75: localize the whole count, not just a fragment of a sentence.
+ const countMatch=trimmed.match(/^(\d+) ta (xato savol|material)$/i);
+ if(countMatch){const n=Number(countMatch[1]);const type=countMatch[2];
+  if(type==='material')return pre+(lang==='ru'?`${n} ${n%10===1&&n%100!==11?'материал':([2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?'материала':'материалов')}`:lang==='en'?`${n} material${n===1?'':'s'}`:`${n} material`)+post;
+  return pre+(lang==='ru'?`${n} ${n%10===1&&n%100!==11?'вопрос с ошибкой':([2,3,4].includes(n%10)&&![12,13,14].includes(n%100)?'вопроса с ошибками':'вопросов с ошибками')}`:lang==='en'?`${n} incorrect question${n===1?'':'s'}`:`${n} qáte soraw`)+post;
+ }
  const normalized=trimmed.replace(/[‘’ʻʼ`]/g,"'");
  // Exact match wins. This also ensures short words such as weekday labels are localized.
  if(Object.prototype.hasOwnProperty.call(dict,trimmed))return pre+dict[trimmed]+post;
