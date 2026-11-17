@@ -1398,6 +1398,18 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 :root[data-theme="dark"] .edu-v84-master-name{color:#eef3ff}
 :root[data-theme="dark"] .edu-v84-exam-bottom{border-top-color:#354663}
 </style>
+
+<style id="edu-v85-master-polish">
+/* V85: improve only mastery icon, heading and circular indicator. */
+.edu-v80-home-progress .edu-v84-master-name{font-size:clamp(17px,4.25vw,21px)!important;font-weight:850!important;gap:9px!important}
+.edu-v80-home-progress .edu-v84-master-name b{font-weight:850!important}
+.edu-v80-home-progress .edu-v84-master-icon{width:32px;height:32px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;background:#eaf1ff;color:#2868e9;font-size:0!important}
+.edu-v80-home-progress .edu-v84-master-icon svg{width:21px;height:21px;display:block}
+.edu-v80-home-progress .edu-v84-master-middle{min-height:82px!important}
+.edu-v80-home-progress .edu-v84-master-middle .edu-v80-progress-ring{width:76px!important;height:76px!important;flex:none}
+.edu-v80-home-progress .edu-v84-master-middle .edu-v80-progress-ring strong{font-size:21px!important;font-weight:850!important}
+:root[data-theme="dark"] .edu-v80-home-progress .edu-v84-master-icon{background:#253a62;color:#91b8ff}
+</style>
 </head>
 <body>
 
@@ -1968,7 +1980,7 @@ function eduHomeProgressCards(isFan,fan,lang){
  const totalLabel=eduV80Copy(`Jami: ${stats.total} savol`,`Всего: ${stats.total} вопросов`,`Total: ${stats.total} questions`,`Jámi: ${stats.total} soraw`);
  return `<section class="edu-v66-home-progress edu-v80-home-progress" aria-label="O‘quv natijalari">
   <div class="edu-v67-master-card edu-v80-master-card">
-   <div class="edu-v84-master-heading"><span class="edu-v84-master-name"><span class="edu-v84-master-icon" aria-hidden="true">▥</span><b>${masteryLabel}</b></span><div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div></div>
+   <div class="edu-v84-master-heading"><span class="edu-v84-master-name"><span class="edu-v84-master-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 16 4-5 3 2 5-7"/><path d="M16 6h3v3"/></svg></span><b>${masteryLabel}</b></span><div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div></div>
    <div class="edu-v84-master-middle"><div class="edu-v80-progress-ring" style="--edu-v80-pct:${pct}%" aria-label="${masteryLabel} ${pct}%"><strong>${pct}%</strong></div></div>
    <div class="edu-v67-exam-line edu-v84-exam-bottom"><span class="edu-v67-exam-label">📅 <b>${eduV80Copy('Imtihongacha','До экзамена','Until exam','Imtixanǵa shekem')}</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
   </div>
