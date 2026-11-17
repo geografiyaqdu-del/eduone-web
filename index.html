@@ -1433,18 +1433,25 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 :root[data-theme="dark"] .edu-v86-rank-trigger{background:#183b29;color:#c3ffd3;border-color:#346e4b}
 </style>
 
-<style id="eduone-v87-auth-recovery">
-/* V87 — high contrast, accessible account recovery */
-.edu-auth-wait{min-height:100dvh!important;background:linear-gradient(165deg,#f7fbff 0%,#fff 53%,#f1fcf5 100%)!important;color:#142440!important;padding:24px 18px 46px!important;display:flex!important;align-items:center!important;justify-content:center!important}
-.edu-auth-panel{position:relative;overflow:hidden;width:min(100%,430px)!important;min-height:340px;background:#fff!important;border:1px solid #dce8e2!important;border-radius:28px!important;box-shadow:0 16px 48px rgba(17,65,51,.12)!important;padding:32px 23px 28px!important;text-align:center!important}
-.edu-auth-panel:before{content:'EduOne';display:block;color:#087e48;font-size:25px;letter-spacing:-.7px;font-weight:900;margin-bottom:24px}
-.edu-auth-panel h2{color:#142440!important;font-size:23px!important;line-height:1.25!important;font-weight:850!important;margin:15px 0 12px!important;opacity:1!important}
-.edu-auth-panel p{color:#52627a!important;font-size:15px!important;line-height:1.6!important;font-weight:550!important;opacity:1!important;margin:12px 0!important}
-.edu-auth-panel .edu-auth-indicator{width:58px!important;height:58px!important;background:#e9f9f0!important;color:#0b9857!important;border-radius:50%!important;font-size:28px!important;box-shadow:inset 0 0 0 2px #c5efd8}
-.edu-auth-panel .edu-auth-reason{color:#8c3a24!important;background:#fff5ee!important;border:1px solid #ffdbc7!important;border-radius:12px!important;font-size:13px!important;padding:12px!important;overflow-wrap:anywhere}
-.edu-auth-panel .btn[data-auth-retry]{display:block!important;width:100%!important;min-height:54px!important;background:linear-gradient(100deg,#1267ef,#07965a)!important;color:#fff!important;border:0!important;border-radius:15px!important;font-size:16px!important;font-weight:800!important;box-shadow:0 8px 19px #157f8140!important;margin-top:24px!important;opacity:1!important}
-.edu-auth-panel .edu-auth-back{display:block!important;width:100%!important;min-height:48px!important;margin:12px auto 0!important;border:1px solid #c9d8e5!important;background:#f6f9fc!important;border-radius:14px!important;color:#1f3958!important;text-decoration:none!important;font-size:14px!important;font-weight:750!important;opacity:1!important}
-@media(max-width:390px){.edu-auth-panel{padding:28px 17px!important}.edu-auth-panel h2{font-size:21px!important}}
+<style id="edu-v88-emerald-brand">
+/* EduOne V88: restrained emerald brand accents, accessible loading screen. */
+:root{--edu-emerald:#087f50;--edu-emerald-dark:#075d3d;--edu-emerald-light:#eaf8f0}
+.edu-v86-rank-trigger{background:linear-gradient(110deg,#effcf5,#ddf7e8)!important;border-color:#a9ddc2!important;color:#075d3d!important}
+.edu-v86-rank-trigger .edu-v86-chevron{color:#087f50!important}
+.edu-v86-panel{background:linear-gradient(180deg,#f3fff8 0%,#fff 33%)!important}
+.edu-v86-head h2{color:#075d3d!important}
+.edu-v86-feature{border-color:#d9bb65!important;background:linear-gradient(120deg,#fffdf3,#fff0c2 70%,#e7faec)!important}
+.edu-v86-range{background:#087f50!important}
+.edu-v86-fill{background:linear-gradient(90deg,#087f50,#28c77c)!important}
+.edu-v86-level.current{border-color:#86d7aa!important;background:linear-gradient(110deg,#e5fff0,#f8fff9)!important}
+.edu-auth-wait{min-height:100dvh!important;background:#f7fbf9!important;color:#172d27!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:20px!important}
+.edu-auth-panel{background:#fff!important;color:#172d27!important;border:1px solid #dce9e2!important;border-radius:26px!important;padding:30px 22px!important;box-shadow:0 16px 40px #064e3020!important;max-width:440px!important;width:100%!important;text-align:center!important}
+.edu-auth-panel h2{color:#142b24!important;opacity:1!important;font-size:23px!important;line-height:1.3!important;font-weight:800!important}
+.edu-auth-panel p{color:#50685f!important;opacity:1!important;font-size:15px!important;line-height:1.6!important}
+.edu-auth-panel .edu-auth-reason{color:#9d3929!important;background:#fff5f0!important;border-radius:12px!important;padding:10px!important;overflow-wrap:anywhere}
+.edu-auth-panel .edu-auth-indicator{color:#087f50!important;background:#e5f8ed!important;border-radius:50%!important}
+.edu-auth-panel .btn[data-auth-retry]{background:linear-gradient(110deg,#087f50,#10a36c)!important;color:white!important;opacity:1!important;border-radius:15px!important;min-height:52px!important;font-weight:800!important}
+.edu-auth-panel .edu-auth-back{background:#eff8f3!important;color:#075d3d!important;border:1px solid #bcdcc9!important;border-radius:14px!important;min-height:48px!important;font-weight:700!important;opacity:1!important}
 </style>
 </head>
 <body>
@@ -1777,11 +1784,6 @@ async function initialize(){
  // Capture the OAuth callback *before* the SDK can consume and remove its code.
  const hasAuthCallback=/(?:^|[?&])(?:code|error_code)=/.test(location.search)||/(?:^|[#&])access_token=/.test(location.hash);
  if(!live){cur='splash';render();return}
- // Do not fetch a remote SDK just to display the login page to signed-out users.
- let hasStoredAuth=true;
- try{const key='sb-'+new URL(AUTH_URL).hostname.split('.')[0]+'-auth-token';hasStoredAuth=!!localStorage.getItem(key)}catch(e){}
- const oauthReturn=/(?:^|[?&])(?:code|error_code)=/.test(location.search)||/(?:^|[#&])access_token=/.test(location.hash);
- if(!hasStoredAuth&&!oauthReturn){cur='splash';render();return}
  eduAuthError='';cur='connecting';render();
  try{
   let sdk;
@@ -3736,7 +3738,24 @@ overlay.innerHTML='<div class="edu-v86-panel" role="dialog" aria-modal="true" ar
 document.body.appendChild(overlay);overlay.addEventListener('click',e=>{if(e.target===overlay||e.target.closest('[data-edu-v86-close]'))overlay.remove()});}
 document.addEventListener('click',e=>{if(e.target.closest('[data-edu-v86-open]'))open()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('edu-v86-overlay')?.remove()});
-const observer=new MutationObserver(()=>{if(document.getElementById('edu-v86-rank-anchor'))anchor()});observer.observe(document.body,{childList:true,subtree:true});anchor();
+// Update only when the anchor is newly rendered or its actual level changes.
+// Never rewrite the anchor on every DOM mutation: that creates an infinite microtask loop.
+let lastAnchor=null,lastLevel='';
+function syncRank(){
+ const a=document.getElementById('edu-v86-rank-anchor');
+ if(!a){lastAnchor=null;lastLevel='';return}
+ const key=levelFor(percentage())+'|'+((typeof S!=='undefined'&&S.lang)||'uz');
+ if(a===lastAnchor&&key===lastLevel&&a.querySelector('[data-edu-v86-open]'))return;
+ lastAnchor=a;lastLevel=key;anchor();
+}
+let pending=false;
+const observer=new MutationObserver(()=>{
+ if(pending)return;
+ pending=true;
+ requestAnimationFrame(()=>{pending=false;syncRank()});
+});
+observer.observe(document.body,{childList:true,subtree:true});
+syncRank();
 })();
 </script>
 </body>
