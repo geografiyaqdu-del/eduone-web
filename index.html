@@ -1334,6 +1334,29 @@ body:has(.edu-catalog) #app{background:#fff!important;background-image:none!impo
 }
 </style>
 
+<style id="edu-v82-final-polish">
+/* Compact, premium white homepage */
+.edu-v80-home-progress .edu-v67-master-card{gap:10px!important;padding:15px 17px!important}
+.edu-v80-home-progress .edu-v80-progress-summary{margin:0!important;min-height:84px!important}
+.edu-v80-home-progress .edu-v80-progress-title small,.edu-v80-home-progress .edu-v67-progress{display:none!important}
+.edu-v80-home-actions .edu-v80-action-copy strong{font-size:clamp(15px,3.8vw,19px)!important;line-height:1.2!important}
+.edu-home-switcher .edu-home-mode-symbol{overflow:hidden;flex-shrink:0;display:grid;place-items:center}
+.edu-home-switcher .edu-home-mode-symbol img{width:100%!important;height:100%!important;object-fit:cover;border-radius:12px}
+.edu-home-header [data-toast*="bildirishnoma"],.edu-home-header [aria-label="Bildirishnomalar"]{background:transparent!important;border:0!important;box-shadow:none!important}
+.edu-home-header [aria-label="Bildirishnomalar"] svg{color:#225bd6!important;stroke:#225bd6!important}
+/* Make onboarding/login text visible against white */
+:root[data-theme="light"] .edu-welcome-subtitle,:root[data-theme="light"] .edu-language-title,:root[data-theme="light"] .edu-language-subtitle{color:#1a2c4b!important;opacity:1!important}
+/* Certificate quiz occupies screen, no legacy paper surrounding it */
+.edu-cert81{box-sizing:border-box;width:100%;max-width:100%!important;min-height:calc(100dvh - 70px)!important;padding:18px 16px 32px!important}
+.edu-cert81 .edu-cert-question{max-width:800px;margin:0 auto}
+.edu-cert81 .edu-cert-numbers{max-width:800px;margin:0 auto 18px}
+.edu-cert81 .edu-cert-choice input{position:absolute;opacity:0;pointer-events:none}
+.edu-cert81 .edu-cert-choice{cursor:pointer}
+:root[data-theme="dark"] body{background:#0d152c!important;color:#eaf0ff!important}
+:root[data-theme="dark"] .scr:not(.edu-cert81),:root[data-theme="dark"] .edu-v80-home{background:#0d152c!important;color:#eaf0ff!important}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .edu-v67-master-card,:root[data-theme="dark"] .edu-home-mode,:root[data-theme="dark"] .edu-v80-card{background:#1b2945!important;color:#eaf0ff!important;border-color:#36476c!important}
+:root[data-theme="dark"] .muted{color:#b9c6db!important}
+</style>
 </head>
 <body>
 
@@ -1907,10 +1930,9 @@ function eduHomeProgressCards(isFan,fan,lang){
    <div class="edu-v67-exam-line"><span class="edu-v67-exam-label">📅 <b>${eduV80Copy('Imtihongacha','До экзамена','Until exam','Imtixanǵa shekem')}</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
    <div class="edu-v80-progress-summary">
     <div class="edu-v80-progress-ring" style="--edu-v80-pct:${pct}%" aria-label="${masteryLabel} ${pct}%"><strong>${pct}%</strong></div>
-    <div class="edu-v80-progress-title"><b>${masteryLabel}</b><small data-i18n-ignore>${totalLabel}</small></div>
+    <div class="edu-v80-progress-title"><b>${masteryLabel}</b></div>
     <div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div>
    </div>
-   <div class="edu-v67-progress"><span style="width:${pct}%"></span></div>
   </div>
   <div class="edu-v66-home-actions edu-v80-home-actions">
    <button type="button" class="edu-v66-octagon" data-edu-octagon><span class="edu-v66-action-icon">⚔️</span><span class="edu-v80-action-copy"><strong>Oktagon</strong><small>${eduV80Copy('Birga bir jang','Бой один на один','One-on-one battle','Birge-bir ayqas')}</small></span><span class="edu-v80-action-arrow" aria-hidden="true">›</span></button>
@@ -2183,10 +2205,10 @@ V.home=()=>{
   <div class="row sp edu-home-greeting"><div><h2 style="font-size:20px">Salom, ${esc(first())}! 👋</h2><p class="muted sm" style="margin:4px 0 0">Bugun qaysi yo‘nalishda o‘qiymiz?</p></div></div>
   <section class="edu-home-switcher" aria-label="Bosh sahifadagi yo‘nalish">
     <button type="button" class="edu-home-mode ${isFan?'on':''}" data-edu-home-mode="fan" aria-pressed="${isFan}">
-      <span class="edu-home-mode-symbol">${ic('book',24)}</span><span class="edu-home-mode-copy"><small>Mening fanim</small><strong>${esc(fan?.[1]||'Fan tanlanmagan')}</strong></span>
+      <span class="edu-home-mode-symbol">${fan?eduCatalogImageFor('subjects',fan[0],'📚'):ic('book',24)}</span><span class="edu-home-mode-copy"><small>Mening fanim</small><strong>${esc(fan?.[1]||'Fan tanlanmagan')}</strong></span>
     </button>
     <button type="button" class="edu-home-mode ${!isFan?'on':''}" data-edu-home-mode="til" aria-pressed="${!isFan}">
-      <span class="edu-home-mode-symbol">${ic('globe',24)}</span><span class="edu-home-mode-copy"><small>Chet tilim</small><strong>${esc(lang?.[1]||'Til tanlanmagan')}</strong></span>
+      <span class="edu-home-mode-symbol">${lang?eduCatalogImageFor('languages',lang[0],'🌐'):ic('globe',24)}</span><span class="edu-home-mode-copy"><small>Chet tilim</small><strong>${esc(lang?.[1]||'Til tanlanmagan')}</strong></span>
     </button>
   </section>
   ${eduHomeProgressCards(isFan,fan,lang)}
@@ -3147,7 +3169,7 @@ function eduItemDetail(){
  let content='';
  if(type==='lessons'){const u=x.video_url||'';content=/^https:\/\//i.test(u)?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">▶ Videoni ochish</a>`:'<p class="muted">Video havolasi hali kiritilmagan.</p>';}
  if(type==='books')content='<p class="muted">PDF kitoblar maxfiy saqlanadi. Obuna huquqini tekshirish va xavfsiz yuklab olish keyingi bosqichda ulanadi.</p>';
- if(type==='quizzes')content=eduQuizView(x);
+ if(type==='quizzes')return eduQuizView(x);
  return `<div class="scr fade">${topbar(esc(x.title))}<div class="card"><h2>${esc(x.title)}</h2><p>${esc(x.description||'')}</p>${content}</div></div>`;
 }
 
@@ -3587,7 +3609,7 @@ function examView(x){
  const knownCorrect=q.correct_answer||q.correct_option||q.correct||null;
  const reveal=!!settings.showCorrect&&!!knownCorrect&&!!chosen;
  const right=reveal?String(knownCorrect).toUpperCase():'';
- return `<div class="scr nonav fade edu-cert81"><div class="edu-cert-toolbar"><div class="edu-cert-left"><button class="edu-cert-tool ${certSaved.has(String(q.id))?'saved':''}" data-cert-bookmark title="${trans('Savolni saqlash','Сохранить вопрос','Save question','Sorawdı saqlaw')}" aria-label="Bookmark">${certSaved.has(String(q.id))?'🔖':'🔖'}</button></div><div class="edu-cert-clock" id="edu-cert-clock">⏱ ${timeText()}</div><div class="edu-cert-right"><button class="edu-cert-tool" data-edu-v69-quiz-settings aria-label="Settings">⚙</button><button class="edu-cert-tool" id="edu-quiz-finish" aria-label="Finish">⚑</button></div></div><div class="edu-cert-numbers">${qs.map((v,j)=>`<button type="button" data-edu-jump="${j}" class="${j===i?'active':''} ${eduQuizState.answers[v.id]?'answered':''}">${j+1}</button>`).join('')}</div><div class="edu-cert-question edu-v69-font-${settings.fontSize} edu-v69-style-${settings.fontStyle}"><h3 class="edu-translatable-content" data-edu-question-content>${i+1}. ${esc(q.question)}</h3>${eduQuizOptionOrder(q).map(k=>`<label class="edu-cert-choice ${chosen===k?'chosen':''} ${reveal&&right===k?'correct':''} ${reveal&&chosen===k&&chosen!==right?'wrong':''}"><input type="radio" data-edu-answer="${esc(q.id)}" name="edu-cert-${i}" value="${k}" ${chosen===k?'checked':''}><span class="edu-cert-letter">${k}</span><span class="edu-translatable-content" data-edu-question-content>${esc(q['option_'+k.toLowerCase()]||'')}</span></label>`).join('')}</div><div class="edu-cert-help">${trans('Savollarni almashtirish uchun yuqoridagi raqamlarni bosing yoki yon tomonga suring.','Для перехода используйте номера вопросов или свайп.','Tap a question number or swipe to navigate.','Soraw nomerin basıń yamasa jılıstırıń.')}</div></div>`;
+ return `<div class="scr nonav fade edu-cert81"><div class="edu-cert-toolbar"><div class="edu-cert-left"><button class="edu-cert-tool ${certSaved.has(String(q.id))?'saved':''}" data-cert-bookmark title="${trans('Savolni saqlash','Сохранить вопрос','Save question','Sorawdı saqlaw')}" aria-label="Bookmark">${certSaved.has(String(q.id))?'<svg viewBox="0 0 24 24" width="24" height="24" fill="#ffcc58" stroke="#ffcc58" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg>':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="white" stroke-width="2"><path d="M6 3h12v18l-6-4-6 4z"/></svg>'}</button></div><div class="edu-cert-clock" id="edu-cert-clock">⏱ ${timeText()}</div><div class="edu-cert-right"><button class="edu-cert-tool" data-edu-v69-quiz-settings aria-label="Settings">⚙</button><button class="edu-cert-tool" id="edu-quiz-finish" aria-label="Finish">⚑</button></div></div><div class="edu-cert-numbers">${qs.map((v,j)=>`<button type="button" data-edu-jump="${j}" class="${j===i?'active':''} ${eduQuizState.answers[v.id]?'answered':''}">${j+1}</button>`).join('')}</div><div class="edu-cert-question edu-v69-font-${settings.fontSize} edu-v69-style-${settings.fontStyle}"><h3 class="edu-translatable-content" data-edu-question-content>${i+1}. ${esc(q.question)}</h3>${eduQuizOptionOrder(q).map(k=>`<label class="edu-cert-choice ${chosen===k?'chosen':''} ${reveal&&right===k?'correct':''} ${reveal&&chosen===k&&chosen!==right?'wrong':''}"><input type="radio" data-edu-answer="${esc(q.id)}" name="edu-cert-${i}" value="${k}" ${chosen===k?'checked':''}><span class="edu-cert-letter">${k}</span><span class="edu-translatable-content" data-edu-question-content>${esc(q['option_'+k.toLowerCase()]||'')}</span></label>`).join('')}</div><div class="edu-cert-help">${trans('Savollarni almashtirish uchun yuqoridagi raqamlarni bosing yoki yon tomonga suring.','Для перехода используйте номера вопросов или свайп.','Tap a question number or swipe to navigate.','Soraw nomerin basıń yamasa jılıstırıń.')}</div></div>`;
 }
 // Override only the Supabase quiz view, leaving existing quiz loading, grading, and progress persistence intact.
 eduQuizView=examView;
