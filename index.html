@@ -1432,6 +1432,20 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 @media(min-width:600px){.edu-v86-overlay{align-items:center}.edu-v86-panel{border-radius:30px;max-height:88dvh}}
 :root[data-theme="dark"] .edu-v86-rank-trigger{background:#183b29;color:#c3ffd3;border-color:#346e4b}
 </style>
+
+<style id="eduone-v87-auth-recovery">
+/* V87 — high contrast, accessible account recovery */
+.edu-auth-wait{min-height:100dvh!important;background:linear-gradient(165deg,#f7fbff 0%,#fff 53%,#f1fcf5 100%)!important;color:#142440!important;padding:24px 18px 46px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.edu-auth-panel{position:relative;overflow:hidden;width:min(100%,430px)!important;min-height:340px;background:#fff!important;border:1px solid #dce8e2!important;border-radius:28px!important;box-shadow:0 16px 48px rgba(17,65,51,.12)!important;padding:32px 23px 28px!important;text-align:center!important}
+.edu-auth-panel:before{content:'EduOne';display:block;color:#087e48;font-size:25px;letter-spacing:-.7px;font-weight:900;margin-bottom:24px}
+.edu-auth-panel h2{color:#142440!important;font-size:23px!important;line-height:1.25!important;font-weight:850!important;margin:15px 0 12px!important;opacity:1!important}
+.edu-auth-panel p{color:#52627a!important;font-size:15px!important;line-height:1.6!important;font-weight:550!important;opacity:1!important;margin:12px 0!important}
+.edu-auth-panel .edu-auth-indicator{width:58px!important;height:58px!important;background:#e9f9f0!important;color:#0b9857!important;border-radius:50%!important;font-size:28px!important;box-shadow:inset 0 0 0 2px #c5efd8}
+.edu-auth-panel .edu-auth-reason{color:#8c3a24!important;background:#fff5ee!important;border:1px solid #ffdbc7!important;border-radius:12px!important;font-size:13px!important;padding:12px!important;overflow-wrap:anywhere}
+.edu-auth-panel .btn[data-auth-retry]{display:block!important;width:100%!important;min-height:54px!important;background:linear-gradient(100deg,#1267ef,#07965a)!important;color:#fff!important;border:0!important;border-radius:15px!important;font-size:16px!important;font-weight:800!important;box-shadow:0 8px 19px #157f8140!important;margin-top:24px!important;opacity:1!important}
+.edu-auth-panel .edu-auth-back{display:block!important;width:100%!important;min-height:48px!important;margin:12px auto 0!important;border:1px solid #c9d8e5!important;background:#f6f9fc!important;border-radius:14px!important;color:#1f3958!important;text-decoration:none!important;font-size:14px!important;font-weight:750!important;opacity:1!important}
+@media(max-width:390px){.edu-auth-panel{padding:28px 17px!important}.edu-auth-panel h2{font-size:21px!important}}
+</style>
 </head>
 <body>
 
@@ -1763,6 +1777,11 @@ async function initialize(){
  // Capture the OAuth callback *before* the SDK can consume and remove its code.
  const hasAuthCallback=/(?:^|[?&])(?:code|error_code)=/.test(location.search)||/(?:^|[#&])access_token=/.test(location.hash);
  if(!live){cur='splash';render();return}
+ // Do not fetch a remote SDK just to display the login page to signed-out users.
+ let hasStoredAuth=true;
+ try{const key='sb-'+new URL(AUTH_URL).hostname.split('.')[0]+'-auth-token';hasStoredAuth=!!localStorage.getItem(key)}catch(e){}
+ const oauthReturn=/(?:^|[?&])(?:code|error_code)=/.test(location.search)||/(?:^|[#&])access_token=/.test(location.hash);
+ if(!hasStoredAuth&&!oauthReturn){cur='splash';render();return}
  eduAuthError='';cur='connecting';render();
  try{
   let sdk;
