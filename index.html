@@ -1499,6 +1499,32 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 .edu-v80-home-progress .edu-v84-master-icon svg{stroke:#087F50!important;width:22px!important;height:22px!important}
 :root[data-theme="dark"] .edu-v80-home-progress .edu-v84-master-icon{background:#143E30!important;border-color:#28674C!important}
 </style>
+<style id="edu-v92-zumrad-brand-consistency">
+/* V92: only remaining brand-color surfaces; preserve lesson tile colors and all behavior. */
+.scr .hero, .scr .edu-my-hero,
+.scr.edu-my-subject .edu-my-hero,
+.scr.edu-my-language .hero{
+ background:linear-gradient(120deg,#087F50 0%,#075B3D 58%,#064632 100%)!important;
+ box-shadow:0 12px 28px rgba(5,91,61,.17)!important;
+ color:#fff!important;
+}
+.scr .hero::after,.scr .edu-my-hero::after{background:rgba(255,255,255,.10)!important}
+.scr.edu-my-language #edu-change-language,
+.scr.edu-my-language .edu-my-language-card>.btn{
+ background:linear-gradient(105deg,#087F50,#075B3D)!important;color:#fff!important;
+ box-shadow:0 7px 18px rgba(8,127,80,.16)!important;
+}
+/* AI send action is not a lesson-category button. */
+.scr:has(#clr) button:has(svg):not(.ib):not([data-tab]).btn,
+.scr:has(#clr) button#send,
+.scr:has(#clr) button#ai-send{background:linear-gradient(120deg,#087F50,#075B3D)!important}
+/* Profile stat icons and XP progress, without recoloring activity chart data series. */
+.scr:has(#avatar-btn) .grid4 .stat>span:first-child,
+.scr:has(#avatar-btn) .grid4 .stat>span:first-child svg{color:#087F50!important;stroke:#087F50!important}
+.scr:has(#avatar-btn) .ring{background:conic-gradient(#087F50 calc(var(--p)*1%),var(--line) 0)!important}
+:root[data-theme="dark"] .scr .hero,
+:root[data-theme="dark"] .scr .edu-my-hero{background:linear-gradient(120deg,#075B3D,#043D2D)!important}
+</style>
 </head>
 <body>
 
@@ -2558,7 +2584,7 @@ function eduActUpdateChart(){
 V.profil=()=>{const u=S.user||{};const dark=document.documentElement.getAttribute('data-theme')==='dark'||(!document.documentElement.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);const lvl=Math.floor(S.xp/100);
  return `<div class="scr fade"><div class="top"><div style="width:40px"></div><h2>${eduProfileLabel("Profil")}</h2><button type="button" class="ib theme-icon" data-theme-toggle aria-label="${dark?'Yorug‘ rejimga o‘tish':'Tungi rejimga o‘tish'}" title="${dark?'Yorug‘ rejim':'Tungi rejim'}">${ic(dark?'moon':'sun',25)}</button></div>
  <div class="hero row" style="gap:14px"><button type="button" id="avatar-btn" class="avatar-pick" aria-label="Profil rasmini tanlash">${avatarSrc()?`<img class="avatar-photo" src="${esc(avatarSrc())}" alt="Profil rasmi">`:esc((u.name||'U')[0])}<span class="avatar-camera" aria-hidden="true">${ic('camera',14)}</span></button><input type="file" id="avatar-file" accept="image/*" hidden><div style="min-width:0;position:relative;z-index:1"><h3 data-i18n-ignore style="font-size:18px">${esc(u.name||'')}</h3><span class="pill" style="background:#FFE9C7;color:#B26A00;margin:6px 0">${esc(eduProfileLabel(u.role||''))}</span></div></div>
- <div class="card row sp" style="background:#141A3A;color:#fff"><div><div class="sm" style="opacity:.75">${esc(eduProfileLabel(eduChoiceLabel(eduReadChoice())||'Tanlanmagan fan'))}${eduProfileLabel(' fanidan reytingingiz')}</div><b style="font-size:22px;font-family:var(--display)">—</b></div><span class="sm" style="color:#4ADE80">${eduProfileLabel("Reyting hali yo‘q")}</span></div>
+ <div class="card row sp" style="background:linear-gradient(125deg,#063E2D,#075B3D);color:#fff"><div><div class="sm" style="opacity:.75">${esc(eduProfileLabel(eduChoiceLabel(eduReadChoice())||'Tanlanmagan fan'))}${eduProfileLabel(' fanidan reytingingiz')}</div><b style="font-size:22px;font-family:var(--display)">—</b></div><span class="sm" style="color:#4ADE80">${eduProfileLabel("Reyting hali yo‘q")}</span></div>
  <div class="sec"><h3>${eduProfileLabel("Umumiy statistika")}</h3></div>
  <div class="grid4">${[['book','0',eduProfileLabel("Darslar")],['test',S.tests,eduProfileLabel("Testlar")],['star',(S.last?Math.round(S.last.ok/S.last.n*100):0)+'%',"O'rtacha"],['clock','0',eduProfileLabel("Soat")]].map(([i,v,n])=>`<div class="stat"><span style="color:var(--brand)">${ic(i,20)}</span><b>${v}</b><span>${n}</span></div>`).join('')}</div>
  <div class="card row" style="gap:16px"><div class="ring" style="--p:${S.xp%100};width:90px;height:90px;background:conic-gradient(var(--violet) calc(var(--p)*1%),var(--line) 0)"><div style="width:70px;height:70px"><div><b style="font-size:20px">Lv.${lvl}</b></div></div></div><div><b>${eduProfileLabel("O'quvchi darajasi")}</b><p class="sm muted" style="margin:4px 0 0">${eduProfileLabel('Keyingi daraja uchun')} <b style="color:var(--ink)">${100-S.xp%100} XP</b> ${eduProfileLabel("kerak. Har bir to'g'ri javob +10 XP.")}</p></div></div>
