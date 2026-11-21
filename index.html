@@ -1625,7 +1625,7 @@ function back(){
  if(cur!=='home'&&verified){eduSaveScroll();cur='home';render();return}
  if(verified&&confirm('EduOne’dan chiqmoqchimisiz?')){eduExiting=true;stack=[];history.back();}
 }
-window.addEventListener('popstate',()=>{if(eduRestoring||eduExiting)return;if(cur!=='home'){stack=[];cur='home';render();try{history.pushState({eduone:true},'',location.href)}catch(_){}}else if(verified){if(confirm('EduOne’dan chiqmoqchimisiz?')){eduExiting=true;history.back()}else try{history.pushState({eduone:true},'',location.href)}catch(_){}}});
+window.addEventListener('popstate',()=>{if(eduRestoring||eduExiting)return; if(cur!=='home'){back();try{history.pushState({eduone:true,backGuard:true},'',location.href)}catch(_){}}else if(verified){if(confirm('EduOne’dan chiqmoqchimisiz?')){eduExiting=true;history.back()}else try{history.pushState({eduone:true},'',location.href)}catch(_){}}});
 try{if(!history.state?.eduone)history.pushState({eduone:true},'',location.href)}catch(_){}
 const TABS=[['home','home','Bosh sahifa'],['fanlar','book','Mening fanim'],['tillar','globe','Chet tilim'],['ai','bot','AI Ustoz'],['profil','user','Profil']];
 function tabbar(on){const t=$('#tabs');if(!on){t.hidden=true;return}t.hidden=false;$('#tabsIn').setAttribute('data-i18n-ignore','');$('#tabsIn').innerHTML=TABS.map(([k,i,n])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${ic(i)}${S.lang==='ru'?({'Bosh sahifa':'Главная','Mening fanim':'Мой предмет','Chet tilim':'Мой язык','AI Ustoz':'ИИ-учитель','Profil':'Профиль'}[n]||n):S.lang==='en'?({'Bosh sahifa':'Home','Mening fanim':'My subject','Chet tilim':'My language','AI Ustoz':'AI Tutor','Profil':'Profile'}[n]||n):S.lang==='kk'?({'Bosh sahifa':'Bas bet','Mening fanim':'Meniń pánim','Chet tilim':'Meniń shet tilim','AI Ustoz':'AI Ustaz','Profil':'Profil'}[n]||n):n}</button>`).join('')}
@@ -2098,7 +2098,7 @@ function eduHomeProgressCards(isFan,fan,lang){
  const totalLabel=eduV80Copy(`Jami: ${stats.total} savol`,`Всего: ${stats.total} вопросов`,`Total: ${stats.total} questions`,`Jámi: ${stats.total} soraw`);
  return `<section class="edu-v66-home-progress edu-v80-home-progress" aria-label="O‘quv natijalari">
   <div class="edu-v67-master-card edu-v80-master-card">
-   <div class="edu-v84-master-heading"><span class="edu-v84-master-name"><span class="edu-v84-master-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 16 4-5 3 2 5-7"/><path d="M16 6h3v3"/></svg></span><b>${masteryLabel}</b></span><div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div></div>
+   <div class="edu-v84-master-heading"><span class="edu-v84-master-name"><span class="edu-v84-master-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-label="O‘suvchi ustunli diagramma"><path d="M3 20h18"/><rect x="5" y="12" width="3.2" height="8" rx="1" fill="currentColor" fill-opacity=".16"/><rect x="10.4" y="8" width="3.2" height="12" rx="1" fill="currentColor" fill-opacity=".22"/><rect x="15.8" y="4" width="3.2" height="16" rx="1" fill="currentColor" fill-opacity=".32"/><path d="m5.5 10 5-4 3 1 5-5" stroke-width="1.6"/></svg></span><b>${masteryLabel}</b></span><div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div></div>
    <div class="edu-v84-master-middle"><div class="edu-v80-progress-ring" style="--edu-v80-pct:${pct}%" aria-label="${masteryLabel} ${pct}%"><strong>${pct}%</strong></div><div id="edu-v86-rank-anchor" class="edu-v89-rank-slot"></div></div>
    <div class="edu-v67-exam-line edu-v84-exam-bottom"><span class="edu-v67-exam-label">📅 <b>${eduV80Copy('Imtihongacha','До экзамена','Until exam','Imtixanǵa shekem')}</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
   </div>
@@ -3859,17 +3859,7 @@ function init(){requestAnimationFrame(()=>requestAnimationFrame(drawRoad))}
 const old=V['edu-my-section'];V['edu-my-section']=function(){const item=eduMySubjectGroups[eduMySubjectSection?.group]?.items[eduMySubjectSection?.item];return item?.[0]==='7-sinf'?geoView():old()};
 const obs=new MutationObserver(()=>{if(document.getElementById('edu-v93-map'))init()});obs.observe(document.body,{childList:true,subtree:false});
 window.addEventListener('resize',()=>{if(document.getElementById('edu-v93-map'))drawRoad()});
-window.addEventListener('popstate',function(e){
- if(!document.getElementById('edu-v93-map'))return;
- e.stopImmediatePropagation();
- // 7-sinf sahifasidan doimo Mening fanim sinflar ro'yxatiga qaytish.
- if(typeof eduSaveScroll==='function')eduSaveScroll();
- cur='fanlar';
- stack=[];
- render();
- if(typeof eduRestoreScroll==='function')eduRestoreScroll('fanlar');
- try{history.pushState({eduone:true,geoReturn:true},'',location.href)}catch(_){}
-},true);
+// V97: yagona orqaga qaytish boshqaruvi asosiy navigatsiya stack orqali ishlaydi.
 
 document.addEventListener('click',e=>{if(e.target.closest('[data-geo-back]')){if(typeof back==='function')back();else go('edu-subject');return;}const node=e.target.closest('[data-geo-lesson]');if(node){const id=node.dataset.geoLesson,ci=Number(id.split('.')[0])-1,li=Number(id.split('.')[1])-1,name=chapters[ci]?.[3]?.[li];if(!name)return;const locked=!node.classList.contains('active')&&!node.classList.contains('done');const host=document.getElementById('edu-v93-dialog-host');if(!host)return;host.innerHTML=`<div class="geo-modal" role="dialog" aria-modal="true"><div class="geo-dialog"><h3>${id}. ${name}</h3><p>${locked?'🔒 Ushbu mavzu hozircha qulflangan. Oldingi mavzuni kamida 80% natija bilan tugating.':'📚 Mavzu sahifasi tayyor. Video, PDF va mavzuga tegishli testlar administrator tomonidan joylanganda shu yerda ochiladi.'}</p><button type="button" class="geo-close" data-geo-close>Tushunarli</button></div></div>`;return;}if(e.target.closest('[data-geo-close]')||e.target.classList.contains('geo-modal')){const host=document.getElementById('edu-v93-dialog-host');if(host)host.innerHTML='';}});
 })();
