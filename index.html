@@ -3833,6 +3833,13 @@ observer.observe(document.body,{childList:true,subtree:true});
 syncRank();
 })();
 </script>
+<style id="edu-v95-header-fixes">
+.edu-v93 .geo-top{gap:10px;padding:15px 16px;align-items:center}
+.edu-v93 .geo-heading{flex:1;min-width:0;text-align:center}
+.edu-v93 .geo-heading h2{font-size:clamp(17px,4.5vw,22px);line-height:1.2;margin:0;color:#143c32}
+.edu-v93 .geo-heading p{margin:6px 0 0;font-size:clamp(11px,2.8vw,14px);line-height:1.35;color:#56776c;font-weight:650}
+.edu-v93 .geo-count{display:inline-flex;align-items:center;justify-content:center;flex:none;width:auto;min-width:86px;height:44px;min-height:0;padding:0 11px;border-radius:14px;font-size:16px;line-height:1;box-sizing:border-box;box-shadow:0 3px 0 #e1ebe8}
+</style>
 <script id="edu-v93-script">
 (function(){
 const chapters=[["Kirish", "📖", "🌄", ["Geografiya fani haqida tushuncha", "Geografik kashfiyotlar va hozirgi zamon geografiyasi"]], ["Geografik xaritalar", "🗺️", "🧭", ["Geografik xaritalar", "Geografik koordinatalar", "Masshtab", "Amaliy mashg‘ulot"]], ["Geografik qobiq", "🏔️", "🌋", ["Geografik qobiqning chegaralari, xususiyatlari", "Geografik qobiqning rivojlanish bosqichlari", "Litosfera va uning harakatlari", "Yerning iqlim mintaqalari", "Landshaftlar", "Yer yuzi aholisi va uning tabiatga ta’siri"]], ["Dunyo okeani", "🌊", "🐠", ["Dunyo okeani va uning qismlari", "Dunyo okeani tubining geologik tuzilishi va relyefi", "Okean suvining xususiyatlari", "Okean boyliklari va ulardan foydalanish", "Umumlashtiruvchi dars"]], ["Materiklar va okeanlar tabiati", "🌍", "🦒", ["Geografik o‘rni va o‘rganilishi (Afrika)", "Geologik tuzilishi, relyefi va foydali qazilmalari (Afrika)", "Materik iqlimining xususiyatlari. Iqlim mintaqalari (Afrika)", "Afrika materigining ichki suvlari", "Amaliy mashg‘ulot (Afrika)", "Materikning tabiat zonalari (Afrika)", "Tabiiy geografik o‘lkalari. Materik tabiatiga insonning ta’siri (Afrika)", "Atlantika okeani", "Hind okeani", "Amaliy mashg‘ulot", "Umumlashtiruvchi dars", "Geografik o‘rni, o‘rganilishi, geologik tuzilishi, foydali qazilmalari va relyefi (Avstraliya)", "Iqlimi, ichki suvlari va tabiat zonalari (Avstraliya)", "Materik aholisi va uning tabiatga ta’siri (Avstraliya)", "Umumlashtiruvchi dars (Avstraliya)", "Tinch okeani", "Okeaniya", "Amaliy mashg‘ulot (Avstraliya va Okeaniya)", "Geografik o‘rni, o‘rganilishi, geologik tuzilishi, foydali qazilmalari, relyefi (Antarktida)", "Iqlimi va organik dunyosi (Antarktida)", "Geografik o‘rni, o‘rganilishi, geologik tuzilishi, foydali qazilmalari, relyefi (Janubiy Amerika)", "Iqlimi va ichki suvlari (Janubiy Amerika)", "Amaliy mashg‘ulot (Janubiy Amerika)", "Janubiy Amerika tabiat zonalari va balandlik mintaqalari", "Tabiiy geografik o‘lkalari. Aholisi va uning tabiatga ta’siri (Janubiy Amerika)", "Geografik o‘rni, o‘rganilishi, geologik tuzilishi, foydali qazilmalari, relyefi (Shimoliy Amerika)", "Shimoliy Amerika iqlimi va ichki suvlari", "Shimoliy Amerikaning tabiat zonalari va balandlik mintaqalari", "Amaliy mashg‘ulot (Shimoliy Amerika)", "Tabiiy geografik o‘lkalari va aholisining tabiatga ta’siri (Shimoliy Amerika)", "Shimoliy Muz okeani", "Umumlashtiruvchi dars (Shimoliy Amerika)", "Yevrosiyoning geografik o‘rni, o‘rganilishi", "Geologik tuzilishi, foydali qazilmalari. Relyefi (Yevrosiyo)", "Yevrosiyo iqlimi", "Yevrosiyoning iqlim mintaqalari", "Yevrosiyoning ichki suvlari", "Amaliy mashg‘ulot (Yevrosiyo)", "Yevrosiyoning tabiat zonalari", "Yevrosiyo aholisi va uning tabiatga ta’siri", "Yevrosiyo hududining tabiiy geografik o‘lkalarga bo‘linishi", "Amaliy mashg‘ulot (Yevrosiyo, 2)", "Umumlashtiruvchi dars (Yevrosiyo)"]]];
@@ -3843,11 +3850,11 @@ function geoView(){
  let body=chapters.map((c,ci)=>{
   const n=ci+1,lessons=c[3];let count=lessons.filter((_,i)=>done.includes(n+'.'+(i+1))).length;
   const banner=`<section class="geo-chapter" data-ch="${n}"><div class="geo-banner" data-art="${c[2]}"><span class="geo-bicon">${c[1]}</span><span class="geo-btext"><small>${['I','II','III','IV','V'][ci]} BOB · ${lessons.length} TA MAVZU</small><strong>${c[0]}</strong></span><span class="geo-bcount">${count}/${lessons.length}</span></div></section>`;
-  return banner+lessons.map((name,i)=>{let number=n+'.'+(i+1),isDone=done.includes(number),isOpen=isDone||index===0||done.includes((index===0?'':(function(){let k=0;for(let j=0;j<chapters.length;j++){for(let m=0;m<chapters[j][3].length;m++){if(k===index-1)return (j+1)+'.'+(m+1);k++}}return ''})()));let right=index%2===1;index++;return `<div class="geo-lesson ${right?'right':'left'}" data-geo-anchor="${number}"><span class="geo-decor">${['🌿','🧭','🌲','🗺️','🏔️','🌊','🌳'][index%7]}</span><button type="button" class="geo-node ${isDone?'done':isOpen?'active':''}" data-geo-lesson="${number}" aria-label="${number}. ${name}">${isDone?'✓':isOpen?'▶':'<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>'}<span class="geo-num">${number}</span></button><div class="geo-lesson-name">${number}. ${name}</div></div>`}).join('')
+  return banner+lessons.map((name,i)=>{let number=n+'.'+(i+1),isDone=done.includes(number),isOpen=isDone||index===0||done.includes((index===0?'':(function(){let k=0;for(let j=0;j<chapters.length;j++){for(let m=0;m<chapters[j][3].length;m++){if(k===index-1)return (j+1)+'.'+(m+1);k++}}return ''})()));let right=index%2===1;index++;return `<div class="geo-lesson ${right?'right':'left'}" data-geo-anchor="${number}"><span class="geo-decor">${['🌿','🧭','🌲','🗺️','🏔️','🌊','🌳'][index%7]}</span><button type="button" class="geo-node ${isDone?'done':isOpen?'active':''}" data-geo-lesson="${number}" aria-label="${number}. ${name}">${isDone?'✓':isOpen?'▶':'<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="white" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>'}<span class="geo-num">${number}</span></button><div class="geo-lesson-name">${name}</div></div>`}).join('')
  }).join('');
- return `<div class="scr fade edu-v93"><header class="geo-top"><h2>7-sinf geografiya</h2><span class="geo-count">🎓 ${done.length}/60</span></header><main class="geo-map" id="edu-v93-map"><svg class="geo-road" id="edu-v93-road" aria-hidden="true"></svg>${body}<div class="geo-caption">📚 Mavzular darslik mundarijasi tartibida. Keyingi mavzu avvalgisidan kamida 80% natija olinganda ochiladi.</div></main><div id="edu-v93-dialog-host"></div></div>`;
+ return `<div class="scr fade edu-v93"><header class="geo-top"><div class="geo-heading"><h2>7-sinf geografiya</h2><p>Materiklar va okeanlar geografiyasi</p></div><span class="geo-count">🎓 ${done.length}/60</span></header><main class="geo-map" id="edu-v93-map"><svg class="geo-road" id="edu-v93-road" aria-hidden="true"></svg>${body}<div class="geo-caption">📚 Mavzular darslik mundarijasi tartibida. Keyingi mavzu avvalgisidan kamida 80% natija olinganda ochiladi.</div></main><div id="edu-v93-dialog-host"></div></div>`;
 }
-function drawRoad(){const map=document.getElementById('edu-v93-map'),svg=document.getElementById('edu-v93-road');if(!map||!svg)return;const base=map.getBoundingClientRect(),nodes=[...map.querySelectorAll('.geo-node')];if(!nodes.length)return;const pts=nodes.map(el=>{const r=el.getBoundingClientRect();return [r.left+r.width/2-base.left,r.top+r.height/2-base.top]});const w=map.clientWidth,h=map.scrollHeight;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);let d=`M ${pts[0][0]} ${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [x1,y1]=pts[i-1],[x2,y2]=pts[i],mid=(y1+y2)/2;d+=` C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`;}svg.innerHTML=`<path d="${d}" fill="none" stroke="#087f50" stroke-width="43" stroke-linecap="round" opacity=".14"/><path d="${d}" fill="none" stroke="#0c9162" stroke-width="30" stroke-linecap="round" opacity=".92"/><path d="${d}" fill="none" stroke="#e6f8ee" stroke-width="3.5" stroke-dasharray="9 13" stroke-linecap="round"/>`}
+function drawRoad(){const map=document.getElementById('edu-v93-map'),svg=document.getElementById('edu-v93-road');if(!map||!svg)return;const base=map.getBoundingClientRect(),nodes=[...map.querySelectorAll('.geo-node')];if(!nodes.length)return;const pts=nodes.map(el=>{const r=el.getBoundingClientRect();return [r.left+r.width/2-base.left,r.top+r.height/2-base.top]});const w=map.clientWidth,h=map.scrollHeight;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);let d=`M ${pts[0][0]} ${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [x1,y1]=pts[i-1],[x2,y2]=pts[i],mid=(y1+y2)/2;d+=` C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`;}svg.innerHTML=`<path d="${d}" fill="none" stroke="#087f50" stroke-width="34" stroke-linecap="round" opacity=".14"/><path d="${d}" fill="none" stroke="#0c9162" stroke-width="24" stroke-linecap="round" opacity=".92"/><path d="${d}" fill="none" stroke="#e6f8ee" stroke-width="3" stroke-dasharray="7 11" stroke-linecap="round"/>`}
 function init(){requestAnimationFrame(()=>requestAnimationFrame(drawRoad))}
 const old=V['edu-my-section'];V['edu-my-section']=function(){const item=eduMySubjectGroups[eduMySubjectSection?.group]?.items[eduMySubjectSection?.item];return item?.[0]==='7-sinf'?geoView():old()};
 const obs=new MutationObserver(()=>{if(document.getElementById('edu-v93-map'))init()});obs.observe(document.body,{childList:true,subtree:false});
@@ -3855,13 +3862,30 @@ window.addEventListener('resize',()=>{if(document.getElementById('edu-v93-map'))
 window.addEventListener('popstate',function(e){
  if(!document.getElementById('edu-v93-map'))return;
  e.stopImmediatePropagation();
- if(typeof back==='function')back();
- else {cur='edu-subject';render();}
- try{history.pushState({eduone:true},'',location.href)}catch(_){}
+ // 7-sinf sahifasidan doimo Mening fanim sinflar ro'yxatiga qaytish.
+ if(typeof eduSaveScroll==='function')eduSaveScroll();
+ cur='fanlar';
+ stack=[];
+ render();
+ if(typeof eduRestoreScroll==='function')eduRestoreScroll('fanlar');
+ try{history.pushState({eduone:true,geoReturn:true},'',location.href)}catch(_){}
 },true);
 
 document.addEventListener('click',e=>{if(e.target.closest('[data-geo-back]')){if(typeof back==='function')back();else go('edu-subject');return;}const node=e.target.closest('[data-geo-lesson]');if(node){const id=node.dataset.geoLesson,ci=Number(id.split('.')[0])-1,li=Number(id.split('.')[1])-1,name=chapters[ci]?.[3]?.[li];if(!name)return;const locked=!node.classList.contains('active')&&!node.classList.contains('done');const host=document.getElementById('edu-v93-dialog-host');if(!host)return;host.innerHTML=`<div class="geo-modal" role="dialog" aria-modal="true"><div class="geo-dialog"><h3>${id}. ${name}</h3><p>${locked?'🔒 Ushbu mavzu hozircha qulflangan. Oldingi mavzuni kamida 80% natija bilan tugating.':'📚 Mavzu sahifasi tayyor. Video, PDF va mavzuga tegishli testlar administrator tomonidan joylanganda shu yerda ochiladi.'}</p><button type="button" class="geo-close" data-geo-close>Tushunarli</button></div></div>`;return;}if(e.target.closest('[data-geo-close]')||e.target.classList.contains('geo-modal')){const host=document.getElementById('edu-v93-dialog-host');if(host)host.innerHTML='';}});
 })();
 </script>
+
+<style id="edu-v96-compact-path">
+/* V96: dars yo'nalishi ixcham, mavzu nomlari esa o'qishga qulay */
+.edu-v93 .geo-lesson{height:153px}
+.edu-v93 .geo-node{width:78px;height:78px;border-width:5px;font-size:29px}
+.edu-v93 .geo-node svg{width:30px;height:30px}
+.edu-v93 .geo-num{width:31px;height:31px;bottom:-6px;right:-7px;font-size:12px;border-width:2px}
+.edu-v93 .geo-lesson-name{font-size:13px;margin-top:11px;max-width:195px}
+.edu-v93 .geo-decor{font-size:33px}
+.edu-v93 .geo-lesson .geo-decor{top:12px;right:-38px}
+.edu-v93 .geo-lesson.right .geo-decor{left:-34px;right:auto}
+@media(max-width:360px){.edu-v93 .geo-node{width:72px;height:72px}.edu-v93 .geo-lesson{height:148px}}
+</style>
 </body>
 </html>
