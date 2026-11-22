@@ -1655,6 +1655,21 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 .edu-lang-wave{position:absolute;bottom:-105px;left:-15%;width:130%;height:165px;border-top:7px solid #e6bb57;border-radius:50% 50% 0 0;background:linear-gradient(110deg,#004c31,#00965d);box-shadow:0 -6px 15px #a9cdb9;pointer-events:none}
 @media(max-height:760px){.edu-lang-v104{padding-top:8px!important}.edu-lang-brand{margin-top:14px}.edu-lang-art{height:165px}.edu-lang-list{margin-top:15px;gap:7px}.edu-lang-choice{min-height:55px!important}.edu-lang-note{margin:12px 0}.edu-lang-go{min-height:56px!important}}
 :root[data-theme="dark"] .edu-lang-v104{color:#073e2c!important}
+</style><style id="edu-v105-language-cleanup">
+/* V105: Only the language-selection screen is modified. */
+.edu-lang-v104 .edu-lang-brand{display:none!important}
+.edu-lang-v104 .edu-lang-art{
+  margin-top:68px!important;
+  background-color:transparent!important;
+  background-blend-mode:multiply;
+  mix-blend-mode:multiply;
+  -webkit-mask-image:radial-gradient(ellipse 57% 64% at 50% 52%,#000 46%,rgba(0,0,0,.9) 62%,transparent 97%)!important;
+  mask-image:radial-gradient(ellipse 57% 64% at 50% 52%,#000 46%,rgba(0,0,0,.9) 62%,transparent 97%)!important;
+}
+.edu-lang-v104 .edu-lang-heading{margin-top:13px!important}
+.edu-lang-v104 .edu-lang-heading p{display:none!important}
+.edu-lang-v104 .edu-lang-list{margin-top:29px!important}
+@media(max-height:760px){.edu-lang-v104 .edu-lang-art{margin-top:35px!important}.edu-lang-v104 .edu-lang-heading{margin-top:6px!important}.edu-lang-v104 .edu-lang-list{margin-top:17px!important}}
 </style></head>
 <body>
 
@@ -2065,9 +2080,8 @@ V.splash=()=>{const intro=EDU_INTRO_WORDS[S.lang]||EDU_INTRO_WORDS.uz;return `<d
 
 V.tilni=()=>`<div class="scr nonav fade edu-lang-v104">
  <div class="edu-lang-topgold" aria-hidden="true"></div>
- <div class="edu-lang-brand"><span class="edu-lang-cap">🎓</span><span>Edu<span>One</span></span></div>
  <div class="edu-lang-art" role="img" aria-label="Oltin halqali 3D globus va ta’lim ramzlari"></div>
- <div class="edu-lang-heading"><h1 data-edu-language-heading>Tilni tanlang</h1><p>Ilovadan foydalanish uchun tilni tanlang</p></div>
+ <div class="edu-lang-heading"><h1 data-edu-language-heading>Tilni tanlang</h1></div>
  <div class="edu-lang-list">${[['uz',"O‘zbekcha"],['kk','Qaraqalpaqsha'],['ru','Русский'],['en','English']].map(([k,n])=>`<button type="button" class="lang edu-lang-choice ${S.lang===k?'on':''}" data-l="${k}"><span class="edu-lang-flag">${flag(k)}</span><span class="edu-lang-name">${n}</span><span class="r">${S.lang===k?ic('check',19):''}</span></button>`).join('')}</div>
  <p class="edu-lang-note">${ic('settings',17)} <span>Tilni keyin Profil → Sozlamalarda o‘zgartirasiz.</span></p>
  <button class="btn edu-lang-go" id="lgo">Davom etish ${ic('arrow',24)}</button>
