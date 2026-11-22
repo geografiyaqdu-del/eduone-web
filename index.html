@@ -1670,6 +1670,13 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 .edu-lang-v104 .edu-lang-heading p{display:none!important}
 .edu-lang-v104 .edu-lang-list{margin-top:29px!important}
 @media(max-height:760px){.edu-lang-v104 .edu-lang-art{margin-top:35px!important}.edu-lang-v104 .edu-lang-heading{margin-top:6px!important}.edu-lang-v104 .edu-lang-list{margin-top:17px!important}}
+</style><style id="edu-v106-language-final-fixes">
+/* Keep decorative header entirely above the 3D globe, never on top of it. */
+.edu-lang-v104 .edu-lang-topgold{top:-145px!important;height:175px!important;left:-7%!important;width:114%!important;transform:rotate(-4deg)!important;border-bottom:4px solid #e8c165!important;z-index:0!important;pointer-events:none!important}
+.edu-lang-v104 .edu-lang-art{position:relative!important;z-index:2!important;isolation:isolate;mix-blend-mode:normal!important;background-blend-mode:normal!important}
+.edu-lang-v104 .edu-lang-note{display:none!important}
+.edu-lang-v104 .edu-lang-go{margin-top:28px!important}
+@media(max-height:760px){.edu-lang-v104 .edu-lang-go{margin-top:18px!important}}
 </style></head>
 <body>
 
@@ -2083,7 +2090,6 @@ V.tilni=()=>`<div class="scr nonav fade edu-lang-v104">
  <div class="edu-lang-art" role="img" aria-label="Oltin halqali 3D globus va ta’lim ramzlari"></div>
  <div class="edu-lang-heading"><h1 data-edu-language-heading>Tilni tanlang</h1></div>
  <div class="edu-lang-list">${[['uz',"O‘zbekcha"],['kk','Qaraqalpaqsha'],['ru','Русский'],['en','English']].map(([k,n])=>`<button type="button" class="lang edu-lang-choice ${S.lang===k?'on':''}" data-l="${k}"><span class="edu-lang-flag">${flag(k)}</span><span class="edu-lang-name">${n}</span><span class="r">${S.lang===k?ic('check',19):''}</span></button>`).join('')}</div>
- <p class="edu-lang-note">${ic('settings',17)} <span>Tilni keyin Profil → Sozlamalarda o‘zgartirasiz.</span></p>
  <button class="btn edu-lang-go" id="lgo">Davom etish ${ic('arrow',24)}</button>
  <div class="edu-lang-wave" aria-hidden="true"></div>
  </div>`;
