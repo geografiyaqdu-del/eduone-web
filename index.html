@@ -4207,5 +4207,12 @@ body:has(.edu-lang-v104) .app{height:100dvh;min-height:0;}
 /* Extend the existing emerald banner to the very top without moving its curved edge. */
 .edu-lang-v104 .edu-lang-topgold::before{content:"";position:absolute;left:-10%;right:-10%;height:28px;top:-18px;background:#006b45;pointer-events:none;}
 </style>
+<style id="edu-v122-login-top-refresh-only">
+/* Sign-in only: cover the tiny white seam above the emerald top ornament. */
+.edu-login-v108{background:linear-gradient(to bottom,#006a48 0 14px,#fff 14px 100%)!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
+/* Allow Chrome's native pull-to-refresh on the sign-in view; keep its fixed-height layout. */
+html:has(.edu-login-v108),body:has(.edu-login-v108){overscroll-behavior-y:auto!important;touch-action:pan-y!important;overflow-y:auto!important;}
+body:has(.edu-login-v108) #app{overscroll-behavior-y:auto!important;}
+</style>
 </body>
 </html>
