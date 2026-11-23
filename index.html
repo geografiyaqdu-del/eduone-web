@@ -11,7 +11,7 @@
 <meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne V116 — Premium 3D</title>
+<title>EduOne V118 — EduOne V116 — Premium 3D</title>
 <meta name="eduone-banner-art" content="V100-reference-based-scenes-inline-webp">
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1882,48 +1882,25 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
  .edu-login-v108 .edu-login-v108-card h1{font-size:23px!important}
  .edu-login-v108 .edu-login-v108-desc{font-size:11px!important}
 }
-</style><style id="edu-v117-auth-viewport-corrections">
-/* V117: onboarding only; all app logic remains intact. */
-html:has(.edu-lang-v104),html:has(.edu-login-v108),
-body:has(.edu-lang-v104),body:has(.edu-login-v108){height:100%!important;overflow:hidden!important;overscroll-behavior:none!important}
-body:has(.edu-lang-v104) #app,body:has(.edu-login-v108) #app{
- height:100dvh!important;min-height:0!important;max-height:100dvh!important;
- margin-top:0!important;padding-top:0!important;overflow:hidden!important}
-.edu-lang-v104,.edu-login-v108{
- margin:0!important;top:0!important;transform:none!important;
- height:100dvh!important;min-height:0!important;max-height:100dvh!important;
- overflow:hidden!important;overscroll-behavior:none!important;background:#fff!important;
- box-sizing:border-box!important}
-.edu-lang-v104{
- display:flex!important;flex-direction:column!important;align-items:stretch!important;
- padding:clamp(64px,8dvh,100px) clamp(16px,5vw,24px) clamp(65px,9dvh,100px)!important;
- gap:0!important;justify-content:flex-start!important}
-.edu-lang-v104 .edu-lang-topgold{top:-175px!important}
-.edu-lang-v104 .edu-lang-art{
- flex:0 1 auto!important;height:clamp(140px,27dvh,295px)!important;
- min-height:0!important;margin:0 auto!important;width:100%!important;
- background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important}
-.edu-lang-v104 .edu-lang-heading{flex:0 0 auto!important;margin:clamp(5px,1dvh,12px) 0 clamp(12px,2dvh,22px)!important}
-.edu-lang-v104 .edu-lang-heading h1{font-size:clamp(28px,7.3vw,42px)!important;line-height:1.12!important}
-.edu-lang-v104 .edu-lang-list{flex:0 1 auto!important;min-height:0!important;margin:0!important;gap:clamp(5px,1dvh,13px)!important}
-.edu-lang-v104 .edu-lang-choice{flex-shrink:1!important;min-height:clamp(48px,8dvh,76px)!important;padding:clamp(5px,1dvh,10px) clamp(12px,3vw,22px)!important}
-.edu-lang-v104 .edu-lang-go{flex:0 0 auto!important;margin-top:clamp(12px,2dvh,22px)!important;min-height:clamp(51px,7.5dvh,72px)!important}
-.edu-lang-v104 .edu-lang-wave{bottom:0!important}
+</style><style id="edu-v118-auth-layout-repair">
+/* Responsive onboarding screens: preserve the complete decorative banners. */
+html:has(.edu-lang-v104),html:has(.edu-login-v108),body:has(.edu-lang-v104),body:has(.edu-login-v108){margin:0!important;overflow:hidden!important;height:100%!important}
+body:has(.edu-lang-v104) #app,body:has(.edu-login-v108) #app{height:100dvh!important;min-height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
+.edu-lang-v104,.edu-login-v108{box-sizing:border-box!important;height:100dvh!important;min-height:0!important;max-height:100dvh!important;margin:0!important;overflow:hidden!important;background:#fff!important}
+.edu-lang-v104{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:0!important;padding:clamp(68px,9dvh,112px) clamp(16px,5vw,26px) clamp(96px,13dvh,145px)!important}
+.edu-lang-v104 .edu-lang-topgold{top:-118px!important;left:-10%!important;width:120%!important;height:clamp(175px,22dvh,240px)!important;transform:none!important;border-radius:0 0 50% 50% / 0 0 38% 38%!important;border-bottom:5px solid #dfb84e!important}
+.edu-lang-v104 .edu-lang-art{position:relative!important;z-index:2!important;flex:0 1 auto!important;width:100%!important;height:clamp(155px,29dvh,315px)!important;min-height:0!important;margin:0 auto!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
+.edu-lang-v104 .edu-lang-heading{flex:0 0 auto!important;margin:clamp(4px,1dvh,10px) 0 clamp(12px,2dvh,23px)!important}
+.edu-lang-v104 .edu-lang-heading h1{font-size:clamp(29px,7vw,43px)!important;line-height:1.13!important}
+.edu-lang-v104 .edu-lang-list{display:flex!important;flex-direction:column!important;flex:0 1 auto!important;min-height:0!important;gap:clamp(7px,1.1dvh,13px)!important;margin:0!important}
+.edu-lang-v104 .edu-lang-choice{box-sizing:border-box!important;flex:1 1 0!important;min-height:0!important;max-height:84px!important;padding:clamp(5px,1dvh,10px) clamp(10px,3vw,20px)!important}
+.edu-lang-v104 .edu-lang-flag{flex-shrink:0!important}
+.edu-lang-v104 .edu-lang-go{position:relative!important;z-index:3!important;flex:0 0 auto!important;min-height:clamp(53px,7.5dvh,77px)!important;margin-top:clamp(14px,2dvh,24px)!important;margin-bottom:0!important}
+.edu-lang-v104 .edu-lang-wave{position:absolute!important;bottom:-115px!important;left:-12%!important;width:124%!important;height:clamp(180px,23dvh,245px)!important;border-radius:50% 50% 0 0 / 25% 25% 0 0!important;z-index:0!important}
+.edu-login-v108{padding-top:clamp(82px,11dvh,135px)!important;padding-bottom:clamp(74px,10dvh,125px)!important}
 .edu-login-v108::before{top:-118px!important}
-@media(max-height:740px){
- .edu-lang-v104{padding-top:clamp(40px,6dvh,65px)!important;padding-bottom:clamp(40px,7dvh,65px)!important}
- .edu-lang-v104 .edu-lang-art{height:clamp(112px,24dvh,190px)!important}
- .edu-lang-v104 .edu-lang-choice{min-height:clamp(42px,7.5dvh,58px)!important}
- .edu-lang-v104 .edu-lang-go{min-height:48px!important}
-}
-@media(max-height:560px){
- .edu-lang-v104{padding-top:22px!important;padding-bottom:30px!important}
- .edu-lang-v104 .edu-lang-art{height:clamp(80px,19dvh,115px)!important}
- .edu-lang-v104 .edu-lang-heading{margin:2px 0 8px!important}
- .edu-lang-v104 .edu-lang-heading h1{font-size:25px!important}
- .edu-lang-v104 .edu-lang-choice{min-height:37px!important}
- .edu-lang-v104 .edu-lang-go{min-height:41px!important;margin-top:7px!important}
-}
+@media(max-height:750px){.edu-lang-v104{padding-top:clamp(55px,8dvh,75px)!important;padding-bottom:clamp(80px,12dvh,95px)!important}.edu-lang-v104 .edu-lang-art{height:clamp(125px,25dvh,185px)!important}.edu-lang-v104 .edu-lang-heading{margin:4px 0 10px!important}.edu-lang-v104 .edu-lang-go{min-height:48px!important;margin-top:10px!important}.edu-lang-v104 .edu-lang-choice{padding:3px 10px!important}}
+@media(max-height:560px){.edu-lang-v104{padding-top:40px!important;padding-bottom:65px!important}.edu-lang-v104 .edu-lang-art{height:clamp(90px,20dvh,125px)!important}.edu-lang-v104 .edu-lang-heading h1{font-size:25px!important}.edu-lang-v104 .edu-lang-list{gap:5px!important}.edu-lang-v104 .edu-lang-go{min-height:40px!important}}
 </style></head>
 <body>
 
