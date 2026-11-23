@@ -4197,5 +4197,15 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-geo-back]')){if
 .edu-v93 .geo-lesson.right .geo-decor{left:-34px;right:auto}
 @media(max-width:360px){.edu-v93 .geo-node{width:72px;height:72px}.edu-v93 .geo-lesson{height:148px}}
 </style>
+
+<style id="edu-v121-language-viewport-only">
+/* Only the language picker: keep the V116 design and positions intact. */
+html:has(.edu-lang-v104),
+body:has(.edu-lang-v104){height:100%;margin:0;overflow:hidden;overscroll-behavior-y:auto;}
+body:has(.edu-lang-v104) .app{height:100dvh;min-height:0;}
+.edu-lang-v104{box-sizing:border-box!important;height:100dvh!important;min-height:0!important;max-height:100dvh!important;overflow:hidden!important;margin-top:0!important;}
+/* Extend the existing emerald banner to the very top without moving its curved edge. */
+.edu-lang-v104 .edu-lang-topgold::before{content:"";position:absolute;left:-10%;right:-10%;height:28px;top:-18px;background:#006b45;pointer-events:none;}
+</style>
 </body>
 </html>
