@@ -1882,6 +1882,19 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
  .edu-login-v108 .edu-login-v108-card h1{font-size:23px!important}
  .edu-login-v108 .edu-login-v108-desc{font-size:11px!important}
 }
+</style><style id="eduone-v125-retry-only">
+/* Only the error-correction quiz: preserve all other app screens. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-clock{background:linear-gradient(135deg,#009b70,#006a4c)!important;color:#fff!important;border:1px solid #087550!important;box-shadow:0 5px 14px #006b4c24!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-tool{background:#e9f7f0!important;color:#087550!important;border:1px solid #99cdb5!important;box-shadow:0 2px 7px #006b4c13!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-tool.active{background:#f4c542!important;color:#765008!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button{background:#fff!important;color:#27344b!important;border:1.5px solid #cbd5d1!important;box-shadow:none!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.correct{background:#dff7e8!important;color:#087943!important;border-color:#20a362!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.incorrect{background:#fee8e8!important;color:#b91c1c!important;border-color:#dc2626!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current{outline:3px solid #747b86!important;outline-offset:1px!important;box-shadow:0 0 0 1px #fff inset!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2{display:block!important;width:100%!important;max-width:100%!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;text-align:left!important;box-sizing:border-box!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 .edu-v74-translate{display:inline!important;white-space:normal!important;max-width:none!important;overflow-wrap:break-word!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-options,.edu-retry-screen:not(.edu-v62-results) .edu-retry-option{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
 </style></head>
 <body>
 
@@ -2644,8 +2657,8 @@ V['edu-progress-detail']=()=>{
  <div class="edu-retry-toolbar">
  <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'🔖':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4-6 4z"/></svg>'}</button>
  <span class="edu-retry-clock" id="edu-retry-clock"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V3"/></svg> <span class="edu-v69-time">${eduRetryClockText()}</span></span>
- <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash">⚑</button></div></div>
- <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduSettingsRead().showCorrect?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):'answered'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
+ <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash"><svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true"><path d="M4 2v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 3h16v13H5z" fill="white" stroke="#1e293b" stroke-width="1"/><path d="M5 3h4v4H5zm8 0h4v4h-4zM9 7h4v4H9zm8 0h4v4h-4zM5 11h4v5H5zm8 0h4v5h-4z" fill="#111827"/></svg></button></div></div>
+ <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
  <div class="edu-retry-paper edu-v69-font-${eduSettingsRead().fontSize} edu-v69-style-${eduSettingsRead().fontStyle}" id="edu-retry-swipe"><h2><span>${i+1}. </span><span class="edu-v74-translate">${esc(q.question)}</span></h2><div class="edu-retry-options">${eduSettingsOptionOrder().map(k=>`<label class="edu-retry-option ${eduRetry.answers[i]===k?'selected':''} ${eduRetry.answers[i]?(eduRetry.answers[i]===k?(k===q.correct?'correct':'incorrect'):(eduSettingsRead().showCorrect&&k===q.correct?'correct':'')):''}"><input type="radio" name="edu-retry-answer" value="${k}" data-edu-retry-answer="${k}" ${eduRetry.answers[i]===k?'checked':''} ${eduRetry.answers[i]?'disabled':''}><b>${k}</b><span class="edu-v74-translate">${esc(q.options[k])}</span></label>`).join('')}</div></div>
  </div>`;
 };
