@@ -1912,14 +1912,48 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 .edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current.correct{border:2px solid #737373!important}
 .edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current.incorrect{border:2px solid #737373!important}
 .edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2{
- text-align:justify!important;text-align-last:left!important;
+ text-align:left!important;text-align-last:auto!important;
  width:100%!important;max-width:none!important;
  overflow-wrap:anywhere!important;word-break:normal!important;
 }
 .edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 .edu-v74-translate{
  display:inline!important;white-space:normal!important;overflow-wrap:anywhere!important;
 }
-</style></head>
+</style>
+<style id="edu-v129-question-text-and-colors">
+/* V129: question text uses natural word spacing and the full available width. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 span,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 .edu-v74-translate {
+ text-align:left!important;text-align-last:left!important;
+ word-spacing:normal!important;letter-spacing:normal!important;
+ white-space:normal!important;word-break:normal!important;
+ overflow-wrap:break-word!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 {width:100%!important;max-width:none!important;display:block!important;}
+/* Slightly lighter answer-status fills, with legible white numerals. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.correct,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current.correct {
+ background:#10966D!important;color:#fff!important;border-color:#087653!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.incorrect,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current.incorrect {
+ background:#DC3545!important;color:#fff!important;border-color:#C42B3B!important;
+}
+/* Current question retains its existing thin grey border, irrespective of status. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current {border:2px solid #737373!important;}
+</style>
+<style id="edu-v128-bookmark-only">
+/* Only the retry-test bookmark button; preserve its light background in both states. */
+.edu-retry-screen .edu-retry-bookmark,
+.edu-retry-screen .edu-retry-bookmark.active {
+ background:#f3f8f5!important; color:#087653!important; border:1px solid #b9d9ca!important;
+ box-shadow:0 3px 10px rgba(0,90,55,.10)!important;
+ font-size:inherit!important;
+}
+.edu-retry-screen .edu-retry-bookmark svg {width:29px;height:29px;}
+</style>
+</head>
 <body>
 
 <div class="app" id="app"></div>
@@ -2679,7 +2713,7 @@ V['edu-progress-detail']=()=>{
  const i=eduRetry.index,q=eduRetry.items[i],answered=Object.values(eduRetry.answers).filter(Boolean).length;
  return `<div class="scr fade edu-progress-detail edu-retry-screen">
  <div class="edu-retry-toolbar">
- <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash">${eduRetryIsSaved(q)?'🔖':'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M6 3.5h12v17l-6-4-6 4z"/></svg>'}</button>
+ <button class="edu-retry-tool edu-retry-bookmark ${eduRetryIsSaved(q)?'active':''}" data-edu-retry-save title="Savolni saqlash" aria-label="Savolni saqlash"><svg viewBox="0 0 48 48" width="29" height="29" aria-hidden="true" style="display:block;overflow:visible"><defs><linearGradient id="eduBookmarkGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#18B781"/><stop offset="100%" stop-color="#005B3C"/></linearGradient></defs><path d="M12 6 H36 Q38 6 38 9 V42 L24 33 L10 42 V9 Q10 6 12 6 Z" fill="${eduRetryIsSaved(q)?'url(#eduBookmarkGradient)':'none'}" stroke="${eduRetryIsSaved(q)?'#006A48':'currentColor'}" stroke-width="2.4" stroke-linejoin="round"/>${eduRetryIsSaved(q)?'<path d="M17 20 L22 25 L31 15" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>':''}</svg></button>
  <span class="edu-retry-clock" id="edu-retry-clock"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V3"/></svg> <span class="edu-v69-time">${eduRetryClockText()}</span></span>
  <div class="edu-retry-tools-right"><button class="edu-retry-tool" data-edu-retry-settings title="Sozlamalar" aria-label="Sozlamalar">⚙</button><button class="edu-retry-tool" data-edu-retry-finish title="Testni yakunlash" aria-label="Testni yakunlash"><svg viewBox="0 0 24 24" width="25" height="25" aria-hidden="true"><path d="M4 2v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 3h16v13H5z" fill="white" stroke="#1e293b" stroke-width="1"/><path d="M5 3h4v4H5zm8 0h4v4h-4zM9 7h4v4H9zm8 0h4v4h-4zM5 11h4v5H5zm8 0h4v5h-4z" fill="#111827"/></svg></button></div></div>
  <div class="edu-retry-dots edu-retry-dots-top">${eduRetry.items.map((_,j)=>`<button data-edu-retry-jump="${j}" class="${j===i?'current':''} ${eduRetry.answers[j]?(eduRetry.answers[j]===eduRetry.items[j].correct?'correct':'incorrect'):''}" aria-label="${j+1}-savol">${j+1}</button>`).join('')}</div>
