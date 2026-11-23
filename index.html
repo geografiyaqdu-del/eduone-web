@@ -4207,12 +4207,15 @@ body:has(.edu-lang-v104) .app{height:100dvh;min-height:0;}
 /* Extend the existing emerald banner to the very top without moving its curved edge. */
 .edu-lang-v104 .edu-lang-topgold::before{content:"";position:absolute;left:-10%;right:-10%;height:28px;top:-18px;background:#006b45;pointer-events:none;}
 </style>
-<style id="edu-v122-login-top-refresh-only">
-/* Sign-in only: cover the tiny white seam above the emerald top ornament. */
-.edu-login-v108{background:linear-gradient(to bottom,#006a48 0 14px,#fff 14px 100%)!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
-/* Allow Chrome's native pull-to-refresh on the sign-in view; keep its fixed-height layout. */
-html:has(.edu-login-v108),body:has(.edu-login-v108){overscroll-behavior-y:auto!important;touch-action:pan-y!important;overflow-y:auto!important;}
-body:has(.edu-login-v108) #app{overscroll-behavior-y:auto!important;}
+<style id="edu-v123-login-seam-refresh">
+/* V123: Login-only patch. Keep all artwork, positions, cards and language page unchanged. */
+/* Paint the first pixels behind the existing curved ornament, rather than recolouring the whole login page. */
+.edu-login-v108{background:linear-gradient(to bottom,#006b49 0px,#006b49 18px,#fff 18px,#fff 100%)!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;overflow:clip!important;}
+/* The ornament is still rendered by the original ::before pseudo-element. */
+.edu-login-v108::before{top:-118px!important;}
+/* Let the document, rather than the fixed-height screen, own native Chrome pull-to-refresh. */
+html:has(.edu-login-v108),body:has(.edu-login-v108){overflow-y:auto!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
+body:has(.edu-login-v108) #app,body:has(.edu-login-v108) .app{overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
 </style>
 </body>
 </html>
