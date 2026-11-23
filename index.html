@@ -1943,6 +1943,23 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 /* Current question retains its existing thin grey border, irrespective of status. */
 .edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top button.current {border:2px solid #737373!important;}
 </style>
+
+<style id="edu-v130-question-balanced-width">
+/* Keep natural spaces, but distribute the question text more evenly across the full card. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 {
+  display:block!important; width:100%!important; max-width:100%!important;
+  text-align:left!important; text-align-last:left!important;
+  text-wrap:balance!important; white-space:normal!important;
+  word-spacing:normal!important; letter-spacing:normal!important;
+  overflow-wrap:normal!important; word-break:normal!important;
+  hyphens:auto;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 .edu-v74-translate {
+  display:inline!important; text-wrap:inherit!important;
+  white-space:normal!important; word-spacing:normal!important;
+  letter-spacing:normal!important;
+}
+</style>
 <style id="edu-v128-bookmark-only">
 /* Only the retry-test bookmark button; preserve its light background in both states. */
 .edu-retry-screen .edu-retry-bookmark,
