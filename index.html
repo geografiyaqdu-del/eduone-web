@@ -3166,6 +3166,68 @@ html body .edu-v136-results .edu-v62-result-section{
  background:#f3f8f5!important;color:#087653!important;border:1px solid #b9d9ca!important;
 }
 </style>
+
+<style id="edu-v142-results-and-retry-layout">
+/* V142 — results statistics: upper-left icons, larger labels, 7 columns. */
+html body .edu-v136-results .edu-v62-result-stats .stat{
+ position:relative!important;justify-content:flex-end!important;
+ padding:clamp(25px,3.8dvh,39px) 3px clamp(7px,1.1dvh,13px)!important;
+ gap:clamp(1px,.3dvh,4px)!important;
+}
+html body .edu-v136-results .edu-v62-result-stats .stat > span:first-child{
+ position:absolute!important;top:clamp(5px,.8dvh,10px)!important;
+ left:clamp(7px,1.7vw,15px)!important;
+ margin:0!important;transform:none!important;
+ width:clamp(23px,3.3dvh,36px)!important;
+ height:clamp(23px,3.3dvh,36px)!important;
+ font-size:clamp(16px,2.5dvh,27px)!important;
+}
+html body .edu-v136-results .edu-v62-result-stats .stat small{
+ font-size:clamp(12px,1.85dvh,18px)!important;
+ line-height:1.12!important;white-space:nowrap!important;
+ font-weight:850!important;
+}
+html body .edu-v136-results .edu-v62-result-actions button{
+ font-size:clamp(13px,2.25dvh,20px)!important;
+ font-weight:850!important;white-space:nowrap!important;
+}
+html body .edu-v136-results .edu-v62-result-questions{
+ display:grid!important;
+ grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:clamp(4px,1.2vw,10px)!important;
+ justify-content:stretch!important;
+ align-content:start!important;
+ overflow-y:auto!important;
+}
+html body .edu-v136-results .edu-v62-result-questions button{
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ height:auto!important;aspect-ratio:1 / 1!important;
+ font-size:clamp(13px,2.2dvh,20px)!important;
+}
+/* Quiz: lock the overall screen; scroll only question/answers content. */
+html body .edu-retry-screen:not(.edu-v62-results){
+ height:100dvh!important;max-height:100dvh!important;
+ min-height:0!important;overflow:hidden!important;
+ display:flex!important;flex-direction:column!important;
+ box-sizing:border-box!important;
+ overscroll-behavior:none!important;
+ padding-bottom:max(10px,env(safe-area-inset-bottom))!important;
+}
+html body .edu-retry-screen:not(.edu-v62-results) .edu-retry-toolbar,
+html body .edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top{
+ flex:0 0 auto!important;
+}
+html body .edu-retry-screen:not(.edu-v62-results) .edu-retry-paper{
+ flex:1 1 auto!important;min-height:0!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+ overscroll-behavior-y:contain!important;
+ -webkit-overflow-scrolling:touch!important;
+}
+@media(max-height:650px){
+ html body .edu-v136-results .edu-v62-result-stats .stat{padding-top:22px!important}
+ html body .edu-v136-results .edu-v62-result-stats .stat small{font-size:11px!important}
+}
+</style>
 </head>
 <body>
 
