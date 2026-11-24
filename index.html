@@ -3273,6 +3273,30 @@ html body .edu-v136-results .edu-v135-arc-cap{display:none!important}
 .edu-home-v54 .edu-home-v54-section{margin-top:0!important}
 @media(max-width:365px){.edu-home-v54 .edu-home-top .edu-home-name{font-size:27px!important}.edu-home-v54 .edu-home-top > .row > .ib{width:31px!important}.edu-home-v54 .edu-v80-master-card .edu-v67-exam-line.edu-v84-exam-bottom{padding-left:7px!important}.edu-home-v54 .edu-v80-master-card .edu-v67-days{font-size:10px!important}}
 </style>
+
+<style id="edu-v145-compact-home">
+/* Align brand and avatar on their shared top edge; bell centers on avatar. */
+.edu-home-v54 .edu-home-top{align-items:flex-start!important;padding-top:0!important;padding-bottom:0!important;min-height:0!important}
+.edu-home-v54 .edu-home-top .edu-home-brand{align-items:center!important;align-self:flex-start!important;min-height:0!important;padding-top:0!important;margin-top:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-brand-stack{align-self:flex-start!important;justify-content:flex-start!important;margin-top:0!important;padding-top:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-brand-stack .edu-home-name{margin-top:0!important}
+.edu-home-v54 .edu-home-top > .row{align-self:flex-start!important;align-items:flex-start!important;padding-top:0!important;margin-top:0!important}
+.edu-home-v54 .edu-home-top > .row > .ib{align-self:flex-start!important;margin-top:8px!important;width:38px!important;height:38px!important}
+.edu-home-v54 .edu-home-top .edu-v139-user{align-self:flex-start!important;justify-content:flex-start!important;margin-top:0!important;padding-top:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-user .home-avatar{margin:0!important}
+/* Mastery panel: a true horizontal, accessible progress bar. */
+.edu-home-v54 .edu-v66-home-progress .edu-v67-master-card.edu-v80-master-card{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;row-gap:9px!important;column-gap:0!important;padding:12px 14px!important}
+.edu-home-v54 .edu-v80-master-card .edu-v84-master-heading{grid-column:1!important;grid-row:1!important}
+.edu-home-v54 .edu-v80-master-card .edu-v84-master-middle{grid-column:1!important;grid-row:2!important;display:block!important;min-height:0!important;padding:0!important;width:100%!important}
+.edu-home-v54 .edu-v145-progress{display:flex;align-items:center;gap:12px;width:100%;min-width:0}
+.edu-home-v54 .edu-v145-progress-track{height:12px;flex:1;min-width:0;border-radius:999px;overflow:hidden;background:#e1efe9;box-shadow:inset 0 2px 4px #1e60401c}
+.edu-home-v54 .edu-v145-progress-fill{height:100%;border-radius:999px;background:linear-gradient(180deg,#1bc88a,#007f50);box-shadow:inset 0 1px 2px #ffffff80;transition:width .25s ease}
+.edu-home-v54 .edu-v145-progress strong{font-size:clamp(17px,4.5vw,23px);font-weight:850;color:#087f50;min-width:44px;text-align:right;line-height:1.2}
+.edu-home-v54 .edu-v80-master-card .edu-v67-exam-line.edu-v84-exam-bottom{grid-column:1!important;grid-row:3!important;display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-between!important;border-left:0!important;border-top:1px solid #e9efec!important;padding:8px 0 0!important;margin:0!important;min-height:0!important;gap:8px!important}
+.edu-home-v54 .edu-v80-master-card .edu-v67-exam-label{min-width:0!important;white-space:nowrap!important}
+.edu-home-v54 .edu-v80-master-card .edu-v67-days{flex-shrink:0!important}
+@media(max-width:370px){.edu-home-v54 .edu-v80-master-card .edu-v67-exam-label{font-size:11px!important}.edu-home-v54 .edu-v80-master-card .edu-v67-days{font-size:10px!important}.edu-home-v54 .edu-v145-progress{gap:8px}}
+</style>
 </head>
 <body>
 
@@ -3813,7 +3837,7 @@ function eduHomeProgressCards(isFan,fan,lang){
  return `<section class="edu-v66-home-progress edu-v80-home-progress" aria-label="O‘quv natijalari">
   <div class="edu-v67-master-card edu-v80-master-card">
    <div class="edu-v84-master-heading"><span class="edu-v84-master-name"><span class="edu-v84-master-icon" aria-hidden="true"><svg viewBox="0 0 100 100" width="40" height="40" role="img" aria-label="O‘sib boruvchi diagramma"><defs><linearGradient id="eduV98Growth" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#087F50"/><stop offset="100%" stop-color="#2CCB88"/></linearGradient></defs><rect x="10" y="60" width="17" height="29" rx="4" fill="url(#eduV98Growth)"/><rect x="40" y="43" width="17" height="46" rx="4" fill="url(#eduV98Growth)"/><rect x="70" y="26" width="17" height="63" rx="4" fill="url(#eduV98Growth)"/><path d="M12 43 L42 25 L61 31 L85 9" fill="none" stroke="#087F50" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><path d="M72 9 H85 V22" fill="none" stroke="#087F50" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>${masteryLabel}</b></span><div class="edu-v67-counts" data-i18n-ignore><b class="edu-v67-correct">✓ ${stats.correct}</b><b class="edu-v67-wrong">✕ ${wrong}</b><b class="edu-v67-total">− ${stats.total}</b></div></div>
-   <div class="edu-v84-master-middle"><div class="edu-v80-progress-ring" style="--edu-v80-pct:${pct}%" aria-label="${masteryLabel} ${pct}%"><strong>${pct}%</strong></div></div>
+   <div class="edu-v84-master-middle"><div class="edu-v145-progress" role="progressbar" aria-label="${masteryLabel}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="edu-v145-progress-track"><div class="edu-v145-progress-fill" style="width:${pct}%"></div></div><strong>${pct}%</strong></div></div>
    <div class="edu-v67-exam-line edu-v84-exam-bottom"><span class="edu-v67-exam-label">📅 <b>${eduV80Copy('Imtihongacha','До экзамена','Until exam','Imtixanǵa shekem')}</b> <button type="button" class="edu-v67-edit-date" data-edu-exam-date aria-label="Imtihon sanasini kalendardan tanlash">✎</button></span><strong class="edu-v67-days" data-i18n-ignore>⌛ ${eduExamCountdownLocalized()}</strong></div>
   </div>
   <div class="edu-v66-home-actions edu-v80-home-actions">
