@@ -3108,21 +3108,41 @@ html body .edu-v136-results .edu-v62-result-section{
 
 <style id="edu-v139-header-profile-level">
 /* V139: surname beneath profile avatar, level beneath brand, no greeting row. */
-.edu-home-header .edu-v139-brand-stack{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;gap:0}
-.edu-home-header .edu-v139-brand-stack .edu-home-name{line-height:1.05!important}
-.edu-home-header .edu-v139-user{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:60px;max-width:100px}
-.edu-home-header .edu-v139-user .home-avatar{flex-shrink:0}
-.edu-home-header .edu-v139-surname{background:#fff;border:1px solid #e3e9f0;border-radius:999px;padding:3px 9px;color:#12203e;font-size:clamp(10px,2.6vw,13px);font-weight:750;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 3px 10px #172c4920;cursor:pointer}
-.edu-home-header .edu-v139-top-rank{display:flex!important;align-items:center!important;min-height:20px!important;margin:2px 0 0!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;width:auto!important}
-.edu-home-header .edu-v139-top-rank .edu-v86-rank-trigger{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;min-height:0!important;width:auto!important;color:#07834d!important;font-size:clamp(12px,3.4vw,16px)!important}
-.edu-home-header .edu-v139-top-rank .edu-v89-rank-text{display:inline-flex!important;flex-direction:row!important;align-items:center!important;gap:0!important}
-.edu-home-header .edu-v139-top-rank .edu-v89-rank-text small{display:none!important}
-.edu-home-header .edu-v139-top-rank .edu-v89-rank-text strong{font-size:inherit!important;color:#07834d!important;font-weight:800!important}
-.edu-home-header .edu-v139-top-rank .edu-v86-mini{display:none!important}
-.edu-home-header .edu-v139-top-rank .edu-v86-chevron{font-size:19px!important;color:#07834d!important;line-height:1!important}
+.edu-home-top .edu-v139-brand-stack{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;gap:0}
+.edu-home-top .edu-v139-brand-stack .edu-home-name{line-height:1.05!important}
+.edu-home-top .edu-v139-user{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:60px;max-width:100px}
+.edu-home-top .edu-v139-user .home-avatar{flex-shrink:0}
+.edu-home-top .edu-v139-surname{background:#fff;border:1px solid #e3e9f0;border-radius:999px;padding:3px 9px;color:#12203e;font-size:clamp(10px,2.6vw,13px);font-weight:750;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;box-shadow:0 3px 10px #172c4920;cursor:pointer}
+.edu-home-top .edu-v139-top-rank{display:flex!important;align-items:center!important;min-height:20px!important;margin:2px 0 0!important;padding:0!important;background:none!important;border:0!important;box-shadow:none!important;width:auto!important}
+.edu-home-top .edu-v139-top-rank .edu-v86-rank-trigger{display:inline-flex!important;align-items:center!important;gap:5px!important;padding:0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;min-height:0!important;width:auto!important;color:#07834d!important;font-size:clamp(12px,3.4vw,16px)!important}
+.edu-home-top .edu-v139-top-rank .edu-v89-rank-text{display:inline-flex!important;flex-direction:row!important;align-items:center!important;gap:0!important}
+.edu-home-top .edu-v139-top-rank .edu-v89-rank-text small{display:none!important}
+.edu-home-top .edu-v139-top-rank .edu-v89-rank-text strong{font-size:inherit!important;color:#07834d!important;font-weight:800!important}
+.edu-home-top .edu-v139-top-rank .edu-v86-mini{display:none!important}
+.edu-home-top .edu-v139-top-rank .edu-v86-chevron{font-size:19px!important;color:#07834d!important;line-height:1!important}
 .edu-home-v54 .edu-home-greeting{display:none!important}
 .edu-v84-master-middle:has(> .edu-v80-progress-ring){justify-content:flex-start!important}
-@media(max-width:370px){.edu-home-header .edu-v139-user{min-width:51px}.edu-home-header .edu-v139-surname{font-size:10px;padding:2px 5px}}
+@media(max-width:370px){.edu-home-top .edu-v139-user{min-width:51px}.edu-home-top .edu-v139-surname{font-size:10px;padding:2px 5px}}
+</style>
+
+<style id="edu-v140-compact-identity-fix">
+/* Scope to actual home topbar, not a nonexistent header. */
+.edu-home-v54 .edu-home-top{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;padding-top:5px!important;padding-bottom:5px!important;min-height:88px!important}
+.edu-home-v54 .edu-home-top .edu-home-brand{display:flex!important;align-items:center!important;gap:9px!important;flex:1!important;min-width:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-brand-stack{display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:3px!important;flex:1!important;min-width:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-brand-stack .edu-home-name{line-height:1!important;margin:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank{display:block!important;flex:none!important;width:auto!important;min-height:0!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v86-rank-trigger{display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;gap:5px!important;width:auto!important;min-width:0!important;max-width:100%!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;color:#087f50!important;font-size:clamp(12px,3.6vw,16px)!important;font-weight:800!important;line-height:1.2!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v86-mini{display:none!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v89-rank-text{display:inline!important;flex:none!important;width:auto!important;min-width:0!important;line-height:1.2!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v89-rank-text small{display:none!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v89-rank-text strong{display:inline!important;font-size:inherit!important;font-weight:800!important;color:#087f50!important;white-space:nowrap!important}
+.edu-home-v54 .edu-home-top .edu-v139-top-rank .edu-v86-chevron{display:inline!important;margin:0 0 0 3px!important;font-size:19px!important;color:#087f50!important;line-height:1!important}
+.edu-home-v54 .edu-home-top .edu-v139-user{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;min-width:55px!important;max-width:100px!important;flex-shrink:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-user .home-avatar{flex-shrink:0!important;margin:0!important}
+.edu-home-v54 .edu-home-top .edu-v139-user .edu-v139-surname{display:block!important;position:static!important;max-width:100%!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;background:#f2f5fb!important;border:0!important;border-radius:999px!important;box-shadow:none!important;padding:3px 9px!important;font-size:clamp(10px,2.7vw,13px)!important;font-weight:750!important;line-height:1.2!important;color:#142443!important}
+.edu-home-v54 .edu-home-greeting{display:none!important}
+@media(max-width:390px){.edu-home-v54 .edu-home-top .edu-home-brand{gap:6px!important}.edu-home-v54 .edu-home-top .edu-v139-user{max-width:78px!important}.edu-home-v54 .edu-home-top .edu-v139-user .edu-v139-surname{font-size:10px!important;padding:3px 6px!important}}
 </style>
 </head>
 <body>
