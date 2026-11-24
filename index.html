@@ -3144,6 +3144,28 @@ html body .edu-v136-results .edu-v62-result-section{
 .edu-home-v54 .edu-home-greeting{display:none!important}
 @media(max-width:390px){.edu-home-v54 .edu-home-top .edu-home-brand{gap:6px!important}.edu-home-v54 .edu-home-top .edu-v139-user{max-width:78px!important}.edu-home-v54 .edu-home-top .edu-v139-user .edu-v139-surname{font-size:10px!important;padding:3px 6px!important}}
 </style>
+
+<style id="edu-v141-retry-polish">
+/* Only the errors-correction quiz: hide the horizontal scrollbar/underline.
+   Horizontal swipe of question numbers remains enabled. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top{
+ scrollbar-width:none!important;-ms-overflow-style:none!important;
+ border-bottom:0!important;box-shadow:none!important;
+ padding-bottom:7px!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top::after,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-dots-top::before{display:none!important;content:none!important}
+/* Green saved state, never yellow; original green bookmark symbol preserved. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-bookmark.active{
+ background:linear-gradient(145deg,#e5f7ee,#c9ecdc)!important;
+ color:#006b48!important;border:1px solid #78bea0!important;
+ box-shadow:0 3px 10px rgba(0,90,55,.13)!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-bookmark:not(.active){
+ background:#f3f8f5!important;color:#087653!important;border:1px solid #b9d9ca!important;
+}
+</style>
 </head>
 <body>
 
