@@ -11,7 +11,7 @@
 <meta name="eduone-auth-recovery" content="V55-supabase-2.112.4-lockless"/>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>EduOne V116 — Premium 3D</title>
+<title>EduOne V131 — Premium 3D</title>
 <meta name="eduone-banner-art" content="V100-reference-based-scenes-inline-webp">
 <meta name="eduone-release" content="brand-v11-2026-11-06">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1970,6 +1970,115 @@ button.ib[aria-label="Bildirishnomalar"] svg{width:25px!important;height:25px!im
 }
 .edu-retry-screen .edu-retry-bookmark svg {width:29px;height:29px;}
 </style>
+
+<style id="edu-v131-quiz-layout-fix">
+/* EduOne V131 — responsive quiz: natural wrapping and full-width answer rows.
+   Presentation only; does not affect timing, scores, navigation or saved answers. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper,
+.edu-cert81 .edu-cert-question {
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+/* A prior revision used text-wrap:balance, leaving unusually large right gaps.
+   Keep each question number and its text on the same natural text line. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2,
+.edu-cert81 .edu-cert-question h3 {
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  text-align:left!important;
+  text-align-last:left!important;
+  text-wrap:wrap!important;
+  white-space:normal!important;
+  word-spacing:normal!important;
+  letter-spacing:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  hyphens:none!important;
+  line-height:1.42!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 > span,
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2 > .edu-v74-translate {
+  display:inline!important;
+  box-sizing:content-box!important;
+  width:auto!important;
+  max-width:none!important;
+  white-space:normal!important;
+  text-wrap:wrap!important;
+  word-spacing:normal!important;
+  letter-spacing:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+
+/* Each answer occupies the card width, with the A–D badge fixed and
+   all remaining space available for the answer text. */
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-options,
+.edu-cert81 .edu-cert-question {
+  box-sizing:border-box!important;
+  min-width:0!important;
+  width:100%!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-option,
+.edu-cert81 .edu-cert-choice {
+  box-sizing:border-box!important;
+  display:grid!important;
+  align-items:center!important;
+  grid-template-columns:37px minmax(0,1fr)!important;
+  column-gap:12px!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  padding:12px 13px!important;
+  line-height:1.38!important;
+  text-align:left!important;
+  white-space:normal!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-option > b,
+.edu-cert81 .edu-cert-choice > .edu-cert-letter {
+  grid-column:1!important;
+  justify-self:start!important;
+  display:grid!important;
+  place-items:center!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-option > span.edu-v74-translate,
+.edu-cert81 .edu-cert-choice > span.edu-translatable-content {
+  grid-column:2!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  text-align:left!important;
+  text-wrap:wrap!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper {
+  padding:17px 14px!important;
+}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-paper h2,
+.edu-cert81 .edu-cert-question h3 {margin:0 0 16px!important;}
+.edu-retry-screen:not(.edu-v62-results) .edu-retry-options {gap:10px!important;}
+.edu-cert81 .edu-cert-choice {margin:9px 0!important;}
+
+@media(max-width:380px) {
+  .edu-retry-screen:not(.edu-v62-results) .edu-retry-paper {padding:15px 12px!important;}
+  .edu-retry-screen:not(.edu-v62-results) .edu-retry-option,
+  .edu-cert81 .edu-cert-choice {
+    grid-template-columns:35px minmax(0,1fr)!important;
+    padding:11px 10px!important;
+    column-gap:10px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
