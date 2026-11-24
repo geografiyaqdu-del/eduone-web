@@ -3015,6 +3015,47 @@ html body .edu-v136-results .edu-v62-result-actions button{
  html body .edu-v136-results .edu-v62-result-ring{width:min(45vw,27dvh)!important;height:min(45vw,27dvh)!important}
 }
 </style>
+
+<style id="edu-v137-ring-and-header-fix">
+/* V137: Remove ONLY the results-page decorative EduOne banner. */
+html body .scr.edu-v136-results::before,
+html body .scr.edu-v136-results::after{
+  content:none!important;display:none!important;background:none!important;
+}
+html body .scr.edu-progress-detail.edu-retry-screen.edu-v62-results.edu-v136-results{
+  padding-top:clamp(8px,1.6dvh,18px)!important;
+  padding-bottom:clamp(8px,1.3dvh,14px)!important;
+  height:100dvh!important;max-height:100dvh!important;
+  overflow:hidden!important;
+}
+/* Conic progress lives inside the silver ring; at zero it is completely absent. */
+html body .edu-v136-results .edu-v62-result-ring{
+  --ring-track:#e9eff1;
+  background:conic-gradient(from 0deg,
+    var(--ring) 0%,var(--ring) calc(var(--result-percent) * 1%),
+    #f6fafb calc(var(--result-percent) * 1%),#e5edef 100%)!important;
+  box-shadow:0 5px 0 #e0e9e9,0 15px 24px #00574325,
+             0 22px 30px #006d4824,inset 0 3px 5px #fff,
+             inset -4px -5px 8px #adc1c338!important;
+  overflow:visible!important;
+}
+/* Remove incorrect floating red cap for every score, including 0%. */
+html body .edu-v136-results .edu-v135-arc-cap{
+  display:none!important;visibility:hidden!important;opacity:0!important;
+}
+html body .edu-v136-results .edu-v62-result-ring::before{
+  background:radial-gradient(circle at 42% 20%,#fff 0%,#fbfefe 65%,#f0f8f6 100%)!important;
+}
+/* Keep the card balanced now that the header is gone. */
+html body .edu-v136-results .edu-v62-result-panel{
+  grid-template-rows:minmax(50px,11fr) minmax(115px,36fr) minmax(82px,18fr) minmax(83px,25fr) minmax(48px,10fr)!important;
+}
+@media(max-height:680px){
+ html body .edu-v136-results .edu-v62-result-panel{
+  grid-template-rows:minmax(38px,11fr) minmax(80px,35fr) minmax(60px,18fr) minmax(62px,26fr) minmax(38px,10fr)!important;
+ }
+}
+</style>
 </head>
 <body>
 
