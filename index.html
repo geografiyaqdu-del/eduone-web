@@ -3350,45 +3350,6 @@ html body .edu-v136-results .edu-v135-arc-cap{display:none!important}
 .edu-v80-home-actions button:active{transform:translateY(3px);filter:brightness(.96)}
 @media(max-width:365px){.edu-v80-home-actions button.edu-v66-octagon,.edu-v80-home-actions button.edu-v66-errors{padding:9px 6px!important;gap:5px!important;min-height:100px!important}.edu-v80-home-actions button .edu-v66-action-icon{flex-basis:35px!important;font-size:33px!important}.edu-v80-home-actions button .edu-v80-action-copy strong{font-size:14px!important}.edu-v80-home-actions button .edu-v80-action-copy small{font-size:9px!important;padding:4px 5px!important}}
 </style>
-<style id="edu-v148-typography-and-badges">
-/* V148: typography and matched yellow badge heights; visual-only changes. */
-.edu-home-v54 .edu-v146-master-label>b{font-size:clamp(23px,5.7vw,29px)!important;font-weight:900!important;line-height:1.14!important;letter-spacing:-.45px!important}
-.edu-v80-home-actions button .edu-v80-action-copy strong{font-size:clamp(17px,4.45vw,23px)!important;font-weight:900!important;line-height:1.12!important;letter-spacing:-.35px!important}
-.edu-v80-home-actions button .edu-v80-action-copy small{
- box-sizing:border-box!important;height:30px!important;min-height:30px!important;max-height:30px!important;
- padding:0 7px!important;line-height:1!important;display:inline-flex!important;
- align-items:center!important;justify-content:center!important;white-space:nowrap!important;
- font-size:clamp(9px,2.4vw,12px)!important;flex-shrink:0!important;
-}
-@media(max-width:365px){.edu-v80-home-actions button .edu-v80-action-copy strong{font-size:16px!important}.edu-v80-home-actions button .edu-v80-action-copy small{height:28px!important;min-height:28px!important;max-height:28px!important;padding:0 4px!important;font-size:9px!important}}
-</style>
-<style id="edu-v149-visible-fixes">
-/* V149: intentionally noticeable typography changes; no behavior changes. */
-.edu-v80-home-progress .edu-v146-master-label > b{
- font-size:clamp(26px,6.2vw,34px)!important;font-weight:950!important;
- line-height:1.1!important;letter-spacing:-.7px!important;
-}
-.edu-v80-home-actions button .edu-v80-action-copy strong{
- font-size:clamp(19px,4.9vw,26px)!important;font-weight:950!important;
- line-height:1.08!important;letter-spacing:-.45px!important;
-}
-.edu-v80-home-actions button .edu-v80-action-copy small{
- height:34px!important;min-height:34px!important;max-height:34px!important;
- box-sizing:border-box!important;padding:0 8px!important;
- display:flex!important;align-items:center!important;justify-content:center!important;
- line-height:1!important;white-space:nowrap!important;
- font-size:clamp(9px,2.45vw,12px)!important;
- margin:0!important;vertical-align:middle!important;
-}
-.edu-v80-home-actions button .edu-v80-action-copy{
- display:flex!important;flex-direction:column!important;align-items:flex-start!important;
- justify-content:center!important;gap:8px!important;
-}
-@media(max-width:365px){
- .edu-v80-home-actions button .edu-v80-action-copy strong{font-size:18px!important}
- .edu-v80-home-actions button .edu-v80-action-copy small{height:32px!important;min-height:32px!important;max-height:32px!important;padding:0 5px!important;font-size:9px!important}
-}
-</style>
 </head>
 <body>
 
@@ -5742,49 +5703,122 @@ body:has(.edu-login-v108) .app,body:has(.edu-login-v108) #app{height:100dvh!impo
 .edu-login-v108{background:linear-gradient(to bottom,#006d49 0px,#006d49 18px,#fff 18px,#fff 100%)!important;}
 </style>
 
-<style id="edu-v150-verified-home-action-layout">
-/* V150: overrides earlier V147-V149 rules after all other styles. */
-.edu-v80-home-progress .edu-v146-master-label > b,
-.edu-v80-home-progress .edu-v146-master-label b{
- font-size:clamp(23px,5.7vw,29px)!important;
- font-weight:900!important;line-height:1.12!important;letter-spacing:-.5px!important;
+<style id="edu-v151-home-actions-fixed">
+/* V151: exact live DOM selectors, not mockups. Scope every edit to EduOne home. */
+/* Override the old V144 heading rule with its same full ancestry. */
+html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card
+.edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {
+  display:block!important;
+  font-size:clamp(27px,7.25vw,32px)!important;
+  font-weight:900!important;
+  letter-spacing:-.65px!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
 }
-/* Keep both cards identical in height and keep their yellow badges on one baseline. */
-.edu-v66-home-actions.edu-v80-home-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;gap:10px!important}
-.edu-v80-home-actions button.edu-v66-octagon,
-.edu-v80-home-actions button.edu-v66-errors{
- height:116px!important;min-height:116px!important;max-height:116px!important;
- display:flex!important;align-items:center!important;justify-content:flex-start!important;
- padding:11px 8px!important;gap:6px!important;
+/* Two balanced 3D cards. Only their internal text layout changes. */
+html body .edu-home-v54 .edu-v80-home-actions {
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:10px!important;
 }
-.edu-v80-home-actions button .edu-v66-action-icon{
- flex:0 0 42px!important;font-size:36px!important;align-self:center!important;
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon,
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors {
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:6px!important;
+  padding:11px 8px!important;
+  height:112px!important;
+  min-height:112px!important;
+  max-height:112px!important;
 }
-.edu-v80-home-actions button .edu-v80-action-copy{
- display:flex!important;flex:1 1 0!important;min-width:0!important;
- height:90px!important;max-height:90px!important;
- flex-direction:column!important;align-items:flex-start!important;
- justify-content:flex-end!important;gap:5px!important;align-self:center!important;
+html body .edu-home-v54 .edu-v80-home-actions > button .edu-v66-action-icon {
+  flex:0 0 clamp(34px,9.5vw,42px)!important;
+  font-size:clamp(30px,8.5vw,39px)!important;
+  align-self:center!important;
+  line-height:1.05!important;
 }
-.edu-v80-home-actions button .edu-v80-action-copy strong{
- display:flex!important;align-items:flex-end!important;
- height:49px!important;min-height:49px!important;max-height:49px!important;
- margin:0!important;padding:0!important;
- font-size:clamp(17px,4.1vw,22px)!important;font-weight:900!important;
- line-height:1.09!important;letter-spacing:-.4px!important;
- text-align:left!important;
+/* A fixed two-row grid keeps Oktagon at the TOP, with both pills on the SAME BASELINE. */
+html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy {
+  box-sizing:border-box!important;
+  display:grid!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  height:81px!important;
+  max-height:81px!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:48px 27px!important;
+  column-gap:0!important;
+  row-gap:6px!important;
+  align-self:center!important;
+  align-items:start!important;
+  justify-items:start!important;
+  justify-content:stretch!important;
+  padding:0!important;
+  margin:0!important;
+  text-align:left!important;
 }
-.edu-v80-home-actions button .edu-v80-action-copy small{
- box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;
- height:34px!important;min-height:34px!important;max-height:34px!important;
- margin:0!important;padding:0 6px!important;
- font-size:clamp(9px,2.3vw,11px)!important;line-height:1!important;
- white-space:nowrap!important;text-align:center!important;
+html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy > strong {
+  box-sizing:border-box!important;
+  display:block!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  align-self:start!important;
+  text-align:left!important;
+  font-size:clamp(18px,4.65vw,21px)!important;
+  font-weight:900!important;
+  line-height:1.13!important;
+  letter-spacing:-.35px!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  hyphens:none!important;
 }
-@media(max-width:370px){
- .edu-v80-home-actions button .edu-v66-action-icon{flex-basis:33px!important;font-size:30px!important}
- .edu-v80-home-actions button .edu-v80-action-copy strong{font-size:16px!important}
- .edu-v80-home-actions button .edu-v80-action-copy small{font-size:9px!important;padding:0 4px!important}
+html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy > small {
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:27px!important;
+  min-height:27px!important;
+  max-height:27px!important;
+  padding:0 8px!important;
+  margin:0!important;
+  align-self:end!important;
+  justify-self:start!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:clamp(9px,2.5vw,11px)!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+  border-radius:999px!important;
+}
+@media(max-width:360px){
+ html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon,
+ html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors {
+   gap:4px!important;padding:10px 5px!important;
+ }
+ html body .edu-home-v54 .edu-v80-home-actions > button .edu-v66-action-icon {
+   flex-basis:30px!important;font-size:28px!important;
+ }
+ html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy > strong {
+   font-size:17px!important;
+ }
+ html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy > small {
+   font-size:9px!important;padding:0 5px!important;
+ }
+ html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card
+ .edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {
+   font-size:25px!important;
+ }
 }
 </style>
 </body>
