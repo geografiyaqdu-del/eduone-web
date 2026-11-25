@@ -5741,5 +5741,51 @@ body:has(.edu-login-v108) .app,body:has(.edu-login-v108) #app{height:100dvh!impo
 .edu-login-v108::before{top:-118px!important;}
 .edu-login-v108{background:linear-gradient(to bottom,#006d49 0px,#006d49 18px,#fff 18px,#fff 100%)!important;}
 </style>
+
+<style id="edu-v150-verified-home-action-layout">
+/* V150: overrides earlier V147-V149 rules after all other styles. */
+.edu-v80-home-progress .edu-v146-master-label > b,
+.edu-v80-home-progress .edu-v146-master-label b{
+ font-size:clamp(23px,5.7vw,29px)!important;
+ font-weight:900!important;line-height:1.12!important;letter-spacing:-.5px!important;
+}
+/* Keep both cards identical in height and keep their yellow badges on one baseline. */
+.edu-v66-home-actions.edu-v80-home-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important;gap:10px!important}
+.edu-v80-home-actions button.edu-v66-octagon,
+.edu-v80-home-actions button.edu-v66-errors{
+ height:116px!important;min-height:116px!important;max-height:116px!important;
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ padding:11px 8px!important;gap:6px!important;
+}
+.edu-v80-home-actions button .edu-v66-action-icon{
+ flex:0 0 42px!important;font-size:36px!important;align-self:center!important;
+}
+.edu-v80-home-actions button .edu-v80-action-copy{
+ display:flex!important;flex:1 1 0!important;min-width:0!important;
+ height:90px!important;max-height:90px!important;
+ flex-direction:column!important;align-items:flex-start!important;
+ justify-content:flex-end!important;gap:5px!important;align-self:center!important;
+}
+.edu-v80-home-actions button .edu-v80-action-copy strong{
+ display:flex!important;align-items:flex-end!important;
+ height:49px!important;min-height:49px!important;max-height:49px!important;
+ margin:0!important;padding:0!important;
+ font-size:clamp(17px,4.1vw,22px)!important;font-weight:900!important;
+ line-height:1.09!important;letter-spacing:-.4px!important;
+ text-align:left!important;
+}
+.edu-v80-home-actions button .edu-v80-action-copy small{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ height:34px!important;min-height:34px!important;max-height:34px!important;
+ margin:0!important;padding:0 6px!important;
+ font-size:clamp(9px,2.3vw,11px)!important;line-height:1!important;
+ white-space:nowrap!important;text-align:center!important;
+}
+@media(max-width:370px){
+ .edu-v80-home-actions button .edu-v66-action-icon{flex-basis:33px!important;font-size:30px!important}
+ .edu-v80-home-actions button .edu-v80-action-copy strong{font-size:16px!important}
+ .edu-v80-home-actions button .edu-v80-action-copy small{font-size:9px!important;padding:0 4px!important}
+}
+</style>
 </body>
 </html>
