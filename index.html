@@ -3629,6 +3629,46 @@ html body .scr.edu-my-subject > .edu-geography-premium-banner::after {content:no
 .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-chevron,
 .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-grade-progress{z-index:3!important}
 </style>
+
+<style id="edu-v169-grade-typography-and-book-balance">
+/* Only the four Geography class tiles. Keep V168 card geometry and gloss. */
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-name{
+  font-size:clamp(17px,4.05vw,21px)!important;
+  font-weight:950!important;letter-spacing:-.65px!important;
+  left:45%!important;right:12%!important;
+  line-height:1.08!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-chevron{
+  right:4%!important;font-size:clamp(21px,4.9vw,27px)!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-grade-topics{
+  font-size:clamp(10px,2.55vw,13px)!important;
+  font-weight:850!important;letter-spacing:-.45px!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-grade-percent{
+  background:linear-gradient(160deg,color-mix(in srgb,var(--grade-color) 70%,white),var(--grade-color))!important;
+  border:1px solid color-mix(in srgb,var(--grade-color) 45%,white)!important;
+  box-shadow:inset 0 1px 2px #ffffffa0,0 2px 5px color-mix(in srgb,var(--grade-color) 40%,transparent)!important;
+  color:#fff!important;font-weight:950!important;
+}
+/* Match perceived book sizes, not just their image canvases. */
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(2):has(.edu-grade-progress) .edu-my-emoji{
+  font-size:clamp(79px,20vw,105px)!important;
+  line-height:1!important;
+  transform:scale(1.08)!important;transform-origin:center center!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(3):has(.edu-grade-progress) .edu-real-book{
+  transform:scale(1.17)!important;transform-origin:center center!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(4):has(.edu-grade-progress) .edu-real-book-10{
+  transform:scale(1.13)!important;transform-origin:center center!important;
+}
+@media(max-width:370px){
+ .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-name{font-size:clamp(15px,4.1vw,17px)!important;letter-spacing:-.65px!important}
+ .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-grade-topics{font-size:clamp(9px,2.5vw,10px)!important}
+ .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(2):has(.edu-grade-progress) .edu-my-emoji{font-size:clamp(72px,20vw,85px)!important}
+}
+</style>
 </head>
 <body>
 
