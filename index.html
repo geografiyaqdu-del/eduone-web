@@ -5845,5 +5845,45 @@ html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card
  html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card .edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {font-size:clamp(20px,5.3vw,24px)!important;}
 }
 </style>
+
+<style id="edu-v153-home-spacing-and-icons">
+/* V153: only home mastery card and the two action tiles. */
+html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card{
+ padding:10px 14px!important;gap:5px!important;
+}
+html body .edu-home-v54 .edu-v80-master-card .edu-v84-master-heading{margin:0!important;min-height:0!important;}
+html body .edu-home-v54 .edu-v80-master-card .edu-v84-master-middle{margin:0!important;padding:0!important;min-height:0!important;}
+html body .edu-home-v54 .edu-v80-master-card .edu-v67-exam-line.edu-v84-exam-bottom{
+ padding-top:6px!important;margin-top:0!important;min-height:0!important;
+}
+html body .edu-home-v54 .edu-v80-home-actions{margin-top:0!important;gap:10px!important;}
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon,
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors{
+ height:108px!important;min-height:108px!important;max-height:108px!important;
+}
+html body .edu-home-v54 .edu-v80-home-actions > button .edu-v66-action-icon{
+ flex:0 0 clamp(39px,11vw,48px)!important;
+ font-size:clamp(37px,10.3vw,46px)!important;
+ line-height:1.1!important;align-self:center!important;
+}
+/* Center the Oktagon title vertically with the icon, not pinned to the top. */
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon .edu-v80-action-copy{
+ display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+ justify-content:center!important;gap:7px!important;height:79px!important;max-height:79px!important;
+}
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon .edu-v80-action-copy > strong{
+ align-self:auto!important;line-height:1.12!important;
+}
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon .edu-v80-action-copy > small{
+ align-self:auto!important;flex:0 0 27px!important;
+}
+/* Give the next section a deliberate breathing space. */
+html body .edu-home-v54 .edu-home-v54-section{margin-top:12px!important;}
+@media(max-width:360px){
+ html body .edu-home-v54 .edu-v80-home-actions > button .edu-v66-action-icon{flex-basis:34px!important;font-size:34px!important;}
+ html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon,
+ html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors{padding-left:6px!important;padding-right:6px!important;}
+}
+</style>
 </body>
 </html>
