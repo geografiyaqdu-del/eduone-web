@@ -3669,6 +3669,36 @@ html body .scr.edu-my-subject > .edu-geography-premium-banner::after {content:no
  .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(2):has(.edu-grade-progress) .edu-my-emoji{font-size:clamp(72px,20vw,85px)!important}
 }
 </style>
+
+<style id="edu-v170-grade-final-adjustments">
+/* Scope all refinements to the four Geography progress tiles. */
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(2):has(.edu-grade-progress) .edu-my-emoji{
+  font-size:clamp(54px,15vw,72px)!important;
+  transform:none!important;
+  line-height:1!important;
+}
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-name{
+  left:48%!important;
+  right:12%!important;
+  font-size:clamp(17px,4.35vw,21px)!important;
+  font-weight:950!important;
+  letter-spacing:-.6px!important;
+  white-space:nowrap!important;
+}
+/* Slightly deeper crimson only for the tenth-grade tile. */
+.edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(4):has(.edu-grade-progress){
+  --grade-color:#cf1939!important;
+  --grade-pale:#fff0f2!important;
+}
+@media(max-width:370px){
+ .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:has(.edu-grade-progress) .edu-my-name{
+  left:47%!important;font-size:clamp(16px,4.35vw,18px)!important;
+ }
+ .edu-my-subject .edu-my-group:first-of-type .edu-my-tile:nth-child(2):has(.edu-grade-progress) .edu-my-emoji{
+  font-size:clamp(51px,15vw,63px)!important;
+ }
+}
+</style>
 </head>
 <body>
 
