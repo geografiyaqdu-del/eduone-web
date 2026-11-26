@@ -3885,7 +3885,7 @@ function eduHomeProgressCards(isFan,fan,lang){
  const stats=eduProgressStats((isFan?'fan:':'til:')+sid);
  const wrong=Math.max(0,stats.total-stats.correct);
  const pct=Math.min(100,Math.max(0,Number(stats.pct)||0));
- const masteryLabel=eduV80Copy('O‘zlashtirish','Прогресс','Progress','Ózlestiriw');
+ const masteryLabel=eduV80Copy('Oʻzlashtirish','Прогресс','Progress','Ózlestiriw');
  const totalLabel=eduV80Copy(`Jami: ${stats.total} savol`,`Всего: ${stats.total} вопросов`,`Total: ${stats.total} questions`,`Jámi: ${stats.total} soraw`);
  return `<section class="edu-v66-home-progress edu-v80-home-progress" aria-label="O‘quv natijalari">
   <div class="edu-v67-master-card edu-v80-master-card">
@@ -5819,6 +5819,30 @@ html body .edu-home-v54 .edu-v80-home-actions > button .edu-v80-action-copy > sm
  .edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {
    font-size:25px!important;
  }
+}
+
+/* EduOne V152 — home header and mastery refinements */
+html body .edu-home-v54 .edu-home-top > .row { align-items:flex-start!important; align-self:flex-start!important; }
+html body .edu-home-v54 .edu-home-top > .row > button.ib[aria-label="Bildirishnomalar"] {
+  align-self:flex-start!important; margin-top:0!important; padding-top:0!important;
+  display:flex!important; align-items:flex-start!important; justify-content:center!important;
+  height:48px!important; min-height:48px!important;
+}
+html body .edu-home-v54 .edu-home-top > .row > button.ib[aria-label="Bildirishnomalar"] svg {margin-top:0!important;}
+html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card .edu-v84-master-heading {
+  align-items:flex-start!important;
+}
+html body .edu-home-v54 .edu-v80-master-card .edu-v84-master-heading .edu-v67-counts {
+  align-self:flex-start!important; margin-top:0!important; padding-top:1px!important;
+}
+html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card
+.edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {
+  font-size:clamp(21px,5.4vw,27px)!important; font-weight:850!important;
+  line-height:1.16!important; letter-spacing:-.025em!important;
+}
+@media(max-width:390px){
+ html body .edu-home-v54 .edu-home-top > .row > button.ib[aria-label="Bildirishnomalar"] {height:44px!important;min-height:44px!important;}
+ html body .edu-home-v54 .edu-v80-home-progress .edu-v80-master-card .edu-v84-master-heading .edu-v84-master-name .edu-v146-master-label > b {font-size:clamp(20px,5.3vw,24px)!important;}
 }
 </style>
 </body>
