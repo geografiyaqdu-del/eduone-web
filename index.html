@@ -5598,7 +5598,7 @@ function percentage(){try{const isFan=eduReadHomeMode()==='fan';const c=isFan?ed
 function levelFor(p){return Math.max(0,levels.findIndex(l=>p>=l.min&&p<=l.max))}
 function anchor(){const a=document.getElementById('edu-v86-rank-anchor');if(!a)return;const pct=percentage(),l=levels[levelFor(pct)];a.innerHTML='<button type="button" class="edu-v86-rank-trigger" data-edu-v86-open aria-label="'+tr('Darajalar tizimini ochish','Открыть уровни','Open levels','Dárejelerdi ashıw')+'"><span class="edu-v86-mini">'+l.emoji+'</span><span class="edu-v89-rank-text"><small>'+tr('Sizning darajangiz','Ваш уровень','Your level','Sizdiń dárejeńiz')+'</small><strong>'+name(l)+'</strong></span><span class="edu-v86-chevron">›</span></button>'}
 function open(){const pct=percentage(),idx=levelFor(pct),l=levels[idx],next=levels[idx+1];document.getElementById('edu-v86-overlay')?.remove();const overlay=document.createElement('div');overlay.className='edu-v86-overlay';overlay.id='edu-v86-overlay';const left=next?Math.max(0,next.min-pct):0;const progress=next?Math.min(100,Math.max(0,(pct-l.min)/(next.min-l.min)*100)):100;
-overlay.innerHTML='<div class="edu-v86-panel" role="dialog" aria-modal="true" aria-label="'+tr('Darajalar tizimi','Система уровней','Level system','Dárejeler sisteması')+'"><button type="button" class="edu-v86-close" data-edu-v86-close aria-label="Yopish">×</button><header class="edu-v86-head"><div class="edu-v86-crown">👑</div><h2>EduOne<br>'+tr('Darajalar tizimi','Система уровней','Level system','Dárejeler sisteması')+'</h2><p>'+tr('Bilimlaringizni oshirib, yangi darajalarga erishing!','Учитесь и открывайте новые уровни!','Learn and unlock new levels!','Bilimińizdi asırıp, jańa dárejelerge erisiń!')+'</p></header><section class="edu-v86-feature"><div class="edu-v86-emblem"><span>'+l.emoji+'</span></div><div><small>'+tr('Sizning darajangiz','Ваш уровень','Your level','Sizdiń dárejeńiz')+'</small><h3>'+name(l)+'</h3><span class="edu-v86-range">'+l.min+'–'+l.max+'%</span></div></section><section class="edu-v86-next"><div class="edu-v86-next-top"><span>'+ (next?tr('Keyingi darajagacha: ','До следующего уровня: ','To next level: ','Keyingi dárejege: ')+left+'%':tr('Eng yuqori daraja!','Высший уровень!','Highest level!','Eń joqarı dáreje!'))+'</span><span>'+pct+'%</span></div><div class="edu-v86-track"><div class="edu-v86-fill" style="width:'+progress+'%"></div></div></section><div class="edu-v86-list">'+levels.map((v,i)=>'<div class="edu-v86-level '+(i===idx?'current':'')+'"><div class="edu-v86-level-icon" style="background:linear-gradient(135deg,'+v.color+',#182e48)">'+v.emoji+'</div><div class="edu-v86-level-text"><b>'+name(v)+'</b><small>'+v.min+'–'+v.max+'%</small></div><span class="edu-v86-level-status">'+(i===idx?tr('✓ Joriy','✓ Текущий','✓ Current','✓ Házirgi'):i<idx?'✓': '🔒')+'</span></div>').join('')+'</div><p class="edu-v86-note">'+tr('Darajalar o‘zlashtirish foiziga qarab avtomatik yangilanadi.','Уровни обновляются по проценту успеваемости.','Levels update based on learning progress.','Dárejeler ózlestiriw boyınsha jańalanadı.')+'</p></div>';
+overlay.innerHTML='<div class="edu-v86-panel" role="dialog" aria-modal="true" aria-label="'+tr('Darajalar tizimi','Система уровней','Level system','Dárejeler sisteması')+'"><button type="button" class="edu-v86-close" data-edu-v86-close aria-label="Yopish">×</button><header class="edu-v86-head"><div class="edu-v86-crown">👑</div><h2><span class="edu-v155-brand"><span class="edu-v155-edu">Edu</span><span class="edu-v155-one">One</span></span><br>'+tr('Darajalar tizimi','Система уровней','Level system','Dárejeler sisteması')+'</h2><p>'+tr('Bilimlaringizni oshirib, yangi darajalarga erishing!','Учитесь и открывайте новые уровни!','Learn and unlock new levels!','Bilimińizdi asırıp, jańa dárejelerge erisiń!')+'</p></header><section class="edu-v86-feature"><div class="edu-v86-emblem"><span>'+l.emoji+'</span></div><div><small>'+tr('Sizning darajangiz','Ваш уровень','Your level','Sizdiń dárejeńiz')+'</small><h3>'+name(l)+'</h3><span class="edu-v86-range">'+l.min+'–'+l.max+'%</span></div></section><section class="edu-v86-next"><div class="edu-v86-next-top"><span>'+ (next?tr('Keyingi darajagacha: ','До следующего уровня: ','To next level: ','Keyingi dárejege: ')+left+'%':tr('Eng yuqori daraja!','Высший уровень!','Highest level!','Eń joqarı dáreje!'))+'</span><span>'+pct+'%</span></div><div class="edu-v86-track"><div class="edu-v86-fill" style="width:'+progress+'%"></div></div></section><div class="edu-v86-list">'+levels.map((v,i)=>'<div class="edu-v86-level '+(i===idx?'current':'')+'"><div class="edu-v86-level-icon" style="background:linear-gradient(135deg,'+v.color+',#182e48)">'+v.emoji+'</div><div class="edu-v86-level-text"><b>'+name(v)+'</b><small>'+v.min+'–'+v.max+'%</small></div><span class="edu-v86-level-status">'+(i===idx?tr('✓ Joriy','✓ Текущий','✓ Current','✓ Házirgi'):i<idx?'✓': '🔒')+'</span></div>').join('')+'</div><p class="edu-v86-note">'+tr('Darajalar o‘zlashtirish foiziga qarab avtomatik yangilanadi.','Уровни обновляются по проценту успеваемости.','Levels update based on learning progress.','Dárejeler ózlestiriw boyınsha jańalanadı.')+'</p></div>';
 document.body.appendChild(overlay);overlay.addEventListener('click',e=>{if(e.target===overlay||e.target.closest('[data-edu-v86-close]'))overlay.remove()});}
 document.addEventListener('click',e=>{if(e.target.closest('[data-edu-v86-open]'))open()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('edu-v86-overlay')?.remove()});
@@ -5936,6 +5936,29 @@ html body .edu-home-v54 .edu-home-top .edu-v139-user .home-avatar img{
  html body .edu-home-v54 .edu-home-switcher .edu-home-mode{height:57px!important;min-height:57px!important;max-height:57px!important}
  html body .edu-home-v54 .edu-home-switcher .edu-home-mode-symbol{width:37px!important;height:37px!important;flex-basis:37px!important}
 }
+</style>
+
+<style id="edu-v155-fixes">
+/* Identical badge baseline and height in both 3D action tiles. */
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon .edu-v80-action-copy,
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors .edu-v80-action-copy{
+ display:grid!important;grid-template-rows:48px 27px!important;row-gap:6px!important;
+ height:81px!important;max-height:81px!important;align-items:start!important;align-self:center!important;
+ justify-items:start!important;justify-content:stretch!important;padding:0!important;margin:0!important;
+}
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-octagon .edu-v80-action-copy > small,
+html body .edu-home-v54 .edu-v80-home-actions > button.edu-v66-errors .edu-v80-action-copy > small{
+ box-sizing:border-box!important;height:27px!important;min-height:27px!important;max-height:27px!important;
+ padding:0 8px!important;margin:0!important;align-self:end!important;justify-self:start!important;
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ line-height:1!important;white-space:nowrap!important;width:max-content!important;max-width:100%!important;
+}
+/* Text only: keep subject/language card dimensions unchanged. */
+html body .edu-home-v54 .edu-home-switcher .edu-home-mode-copy small{font-size:clamp(12px,3.15vw,14px)!important;}
+html body .edu-home-v54 .edu-home-switcher .edu-home-mode-copy strong{font-size:clamp(14px,3.8vw,18px)!important;}
+/* Rank modal: consistent EduOne brand treatment. */
+html body .edu-v86-overlay .edu-v155-edu{color:#101b35!important;}
+html body .edu-v86-overlay .edu-v155-one{color:#00865b!important;}
 </style>
 </body>
 </html>
