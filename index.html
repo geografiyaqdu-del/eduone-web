@@ -5466,10 +5466,12 @@ const eduMySubjectGroups=[
 let eduMySubjectSection=null;
 /* Grade progress uses actual catalog lesson completion flags only; no invented demo percentages. */
 function eduGeoGradeProgress(grade,subject){
+ // Mundarija bo‘yicha tasdiqlangan jami mavzular: 8-sinf hozircha noma’lum.
+ const gradeTotals={'7-sinf':60,'8-sinf':0,'9-sinf':58,'10-sinf':60};
+ const total=Object.prototype.hasOwnProperty.call(gradeTotals,grade)?gradeTotals[grade]:0;
  const id=eduSubjectId(subject);
  const lessons=(eduCatalog.lessons||[]).filter(x=>x.subject_id===id&&((x.title||'')+' '+(x.description||'')+' '+(x.grade||'')).toLowerCase().includes(grade.toLowerCase()));
- const total=lessons.length;
- const done=lessons.filter(x=>x.completed===true||x.is_completed===true||x.status==='completed').length;
+ const done=total?Math.min(total,lessons.filter(x=>x.completed===true||x.is_completed===true||x.status==='completed').length):0;
  return {total,done,percent:total?Math.round(100*done/total):0};
 }
 function eduSubjectDetail(inTab=false){
